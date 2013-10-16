@@ -41,9 +41,7 @@ public abstract class EntitySentry extends EntityGuardians implements IMob
         setPosition(d, d1, d2);
     }
 
-    /**
-     * Called when the entity is attacked.
-     */
+    @Override
     public boolean attackEntityFrom(DamageSource damagesource, int i)
     {
         if ((damagesource.getEntity() instanceof EntityLiving) && okToAttack(damagesource.getEntity()))
@@ -83,18 +81,14 @@ public abstract class EntitySentry extends EntityGuardians implements IMob
         angerMap.put(entity, Integer.valueOf(400 + rand.nextInt(400)));
     }
 
-    /**
-     * Called to update the entity's position/logic.
-     */
+    @Override
     public void onUpdate()
     {
         onEntityUpdate();
         onLivingUpdate();
     }
 
-    /**
-     * Basic mob attack. Default to touch of death in EntityCreature. Overridden by each mob to define their attack.
-     */
+    @Override
     protected void attackEntity(Entity entity, float f)
     {
         if (okToAttack(entity))
@@ -114,6 +108,7 @@ public abstract class EntitySentry extends EntityGuardians implements IMob
         }
     }
 
+    @Override
     protected void updateEntityActionState()
     {
         if (!isDead)
@@ -156,10 +151,7 @@ public abstract class EntitySentry extends EntityGuardians implements IMob
         }
     }
 
-    /**
-     * Finds the closest player within 16 blocks to attack, or null if this Entity isn't interested in attacking
-     * (Animals, Spiders at day, peaceful PigZombies).
-     */
+    @Override
     protected Entity findPlayerToAttack()
     {
         EntityLiving entityliving = getNearestAnger(this);
@@ -211,9 +203,7 @@ public abstract class EntitySentry extends EntityGuardians implements IMob
         return entityliving;
     }
 
-    /**
-     * changes pitch and yaw so that the entity calling the function is facing the entity provided as an argument
-     */
+    @Override
     public void faceEntity(Entity entity, float f, float f1)
     {
         if (!okToAttack(entity))
@@ -257,36 +247,26 @@ public abstract class EntitySentry extends EntityGuardians implements IMob
         return f + f3;
     }
 
-    /**
-     * Returns the item ID for the item the mob drops on death.
-     */
+    @Override
     protected int getDropItemId()
     {
         return gun.requiredBullet.itemID;
     }
 
-    /**
-     * Returns the sound this mob makes when it is hurt.
-     */
+    @Override
     protected String getHurtSound()
     {
         return "modernwarfare:mechhurt";
     }
 
-    /**
-     * Returns the sound this mob makes on death.
-     */
+    @Override
     protected String getDeathSound()
     {
         return null;
     }
 
-    /**
-     * knocks back this entity
-     */
-    public void knockBack(Entity entity, int i, double d, double d1)
-    {
-    }
+    @Override
+    public void knockBack(Entity entity, float i, double d, double d1) {}
 
     public void setEntityDead()
     {
@@ -295,9 +275,7 @@ public abstract class EntitySentry extends EntityGuardians implements IMob
         gun = null;
     }
 
-    /**
-     * Called when a player interacts with a mob. e.g. gets milk from a cow, gets into the saddle on a pig.
-     */
+    @Override
     public boolean interact(EntityPlayer entityplayer)
     {
         if (entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().itemID == ModernWarfare.itemWrench.itemID)

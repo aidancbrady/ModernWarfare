@@ -42,18 +42,13 @@ public class EntityParachute extends EntityLiving
         setMotionAndPosition();
     }
 
-    /**
-     * Checks if the entity is in range to render by using the past in distance and comparing it to its average edge
-     * length * 64 * renderDistanceWeight Args: distance
-     */
+    @Override
     public boolean isInRangeToRenderDist(double d)
     {
         return true;
     }
 
-    /**
-     * Called to update the entity's position/logic.
-     */
+    @Override
     public void onUpdate()
     {
         if (entityWearing == null)
@@ -128,12 +123,8 @@ public class EntityParachute extends EntityLiving
         rotationYaw = entityWearing.rotationYaw;
     }
 
-    /**
-     * Called by a player entity when they collide with an entity
-     */
-    public void onCollideWithPlayer(EntityPlayer entityplayer)
-    {
-    }
+    @Override
+    public void onCollideWithPlayer(EntityPlayer entityplayer) {}
     
 	@Override
     protected void applyEntityAttributes()

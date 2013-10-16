@@ -14,6 +14,7 @@ public class RenderBulletCasing extends Render
     public void renderArrow(EntityBulletCasing entitybulletcasing, double d, double d1, double d2, float f, float f1)
     {
         GL11.glPushMatrix();
+        bindTexture(getEntityTexture(entitybulletcasing));
         GL11.glTranslatef((float)d, (float)d1, (float)d2);
         GL11.glRotatef(entitybulletcasing.prevRotationYaw + (entitybulletcasing.rotationYaw - entitybulletcasing.prevRotationYaw) * f1, 0.0F, 1.0F, 0.0F);
         GL11.glRotatef(0.0F, 0.0F, 0.0F, 1.0F);

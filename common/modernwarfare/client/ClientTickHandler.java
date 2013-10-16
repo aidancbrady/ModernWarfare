@@ -15,7 +15,7 @@ public class ClientTickHandler implements ITickHandler
 	@Override
 	public void tickStart(EnumSet<TickType> type, Object... tickData) 
 	{
-		
+		System.out.println(ModernWarfareClient.currentUtilityZoom);
 	}
 
 	@Override

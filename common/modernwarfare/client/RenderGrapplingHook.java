@@ -15,6 +15,7 @@ public class RenderGrapplingHook extends Render
     public void doRenderFishHook(EntityGrapplingHook entitygrapplinghook, double d, double d1, double d2, float f, float f1)
     {
         GL11.glPushMatrix();
+        bindTexture(getEntityTexture(entitygrapplinghook));
         GL11.glTranslatef((float)d, (float)d1, (float)d2);
         GL11.glEnable(GL12.GL_RESCALE_NORMAL);
         GL11.glScalef(0.5F, 0.5F, 0.5F);
@@ -84,17 +85,13 @@ public class RenderGrapplingHook extends Render
         }
     }
 
-    /**
-     * Actually renders the given argument. This is a synthetic bridge method, always casting down its argument and then
-     * handing it off to a worker function which does the actual work. In all probabilty, the class Render is generic
-     * (Render<T extends Entity) and this method has signature public void doRender(T entity, double d, double d1,
-     * double d2, float f, float f1). But JAD is pre 1.5 so doesn't do that.
-     */
+    @Override
     public void doRender(Entity entity, double d, double d1, double d2, float f, float f1)
     {
         doRenderFishHook((EntityGrapplingHook)entity, d, d1, d2, f, f1);
     }
     
+    @Override
     protected ResourceLocation getEntityTexture(Entity par1Entity)
     {
         return new ResourceLocation("modernwarfare:render/GrapplingHookThrown.png");

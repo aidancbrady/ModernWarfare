@@ -46,9 +46,7 @@ public abstract class ItemCustomUseDelay extends ItemWar
         }
     }
 
-    /**
-     * Called whenever this item is equipped and the right mouse button is pressed. Args: itemStack, world, entityPlayer
-     */
+    @Override
     public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
     {
         if (world.getWorldTime() == doNotUseThisTick)

@@ -14,6 +14,7 @@ public class RenderBulletRocketLaser extends Render
     public void renderArrow(EntityBullet entitybullet, double d, double d1, double d2, float f, float f1)
     {
         GL11.glPushMatrix();
+        bindTexture(getEntityTexture(entitybullet));
         GL11.glTranslatef((float)d, (float)d1, (float)d2);
         GL11.glRotatef((entitybullet.prevRotationYaw + (entitybullet.rotationYaw - entitybullet.prevRotationYaw) * f1) - 90F, 0.0F, 1.0F, 0.0F);
         GL11.glRotatef(entitybullet.prevRotationPitch + (entitybullet.rotationPitch - entitybullet.prevRotationPitch) * f1, 0.0F, 0.0F, 1.0F);

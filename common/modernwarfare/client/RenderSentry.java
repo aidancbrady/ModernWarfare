@@ -11,6 +11,7 @@ public class RenderSentry extends RenderLiving
         super(new ModelSentry(), 0.5F);
     }
     
+    @Override
     protected ResourceLocation getEntityTexture(Entity par1Entity)
     {
         return new ResourceLocation("modernwarfare:render/Sentry.png");

@@ -2,7 +2,6 @@ package modernwarfare.common;
 
 public class ObfuscatedNames 
 {
-	public static String[] TextureMap_mapRegisteredSprites = new String[] {"mapRegisteredSprites"};
 	public static String[] TextureManager_listTickables = new String[] {"listTickables", "field_110583_b", "c"};
 	public static String[] Minecraft_leftClickCounter = new String[] {"leftClickCounter", "aa"};
 	public static String[] Minecraft_ticksRan = new String[] {"ticksRan", "Z"};

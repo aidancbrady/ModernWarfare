@@ -39,14 +39,13 @@ public abstract class ItemGun extends ItemCustomUseDelay
         maxStackSize = 1;
     }
 
-    /**
-     * Returns the damage against a given entity.
-     */
-    public int getDamageVsEntity(Entity entity)
+    @Override
+    public float getDamageVsEntity(Entity entity, ItemStack itemstack)
     {
         return 4;
     }
 
+    @Override
     public boolean use(ItemStack itemstack, World world, Entity entity, float f, float f1, float f2, float f3, float f4)
     {
         return fireBullet(world, entity, itemstack, false, f, f1, f2, f3, f4);
@@ -156,9 +155,7 @@ public abstract class ItemGun extends ItemCustomUseDelay
         return false;
     }
 
-    /**
-     * Returns True is the item is renderer in full 3D when hold.
-     */
+    @Override
     public boolean isFull3D()
     {
         return true;

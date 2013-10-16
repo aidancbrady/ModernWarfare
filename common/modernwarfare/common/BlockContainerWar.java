@@ -8,6 +8,5 @@ public abstract class BlockContainerWar extends BlockContainer
     protected BlockContainerWar(int i, Material material)
     {
         super(i, material);
-        setCreativeTab(ModernWarfare.tabModernWarfare);
     }
 }

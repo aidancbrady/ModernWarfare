@@ -23,9 +23,7 @@ public class EntitySentryFlamethrower extends EntitySentry
         range = 16F;
     }
 
-    /**
-     * Returns the item ID for the item the mob drops on death.
-     */
+    @Override
     protected int getDropItemId()
     {
         return 0;
