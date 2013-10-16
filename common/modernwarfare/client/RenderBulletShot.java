@@ -76,6 +76,6 @@ public class RenderBulletShot extends Render
     
     protected ResourceLocation getEntityTexture(Entity par1Entity)
     {
-        return new ResourceLocation("render/Shot.png");
+        return new ResourceLocation("modernwarfare:render/Shot.png");
     }
 }

@@ -234,7 +234,7 @@ public class EntityBulletFlame extends EntityBullet
         setRotationToVelocity();
     }
 
-    public float getEntityBrightness(float f)
+    public float getBrightness(float f)
     {
         return 2.0F;
     }

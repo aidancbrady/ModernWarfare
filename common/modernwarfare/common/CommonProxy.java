@@ -33,7 +33,7 @@ public class CommonProxy implements IGuiHandler
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z) 
 	{
-		switch (ID) 
+		switch(ID) 
 		{
 			case 0:
 				return new ContainerCraftingPack(player.inventory, world);
@@ -50,6 +50,8 @@ public class CommonProxy implements IGuiHandler
 		return null;
 	}
 	
+	public void initSounds() {}
+	
 	public void loadRenderers() {}
 	
 	public void loadUtilities() {}
@@ -57,6 +59,11 @@ public class CommonProxy implements IGuiHandler
 	public void resetData() {}
 	
 	public void useZoom() {}
+	
+	public Object reloadLightometerIcon() 
+	{
+		return null;
+	}
 	
 	public int getArmorIndex(String string)
 	{

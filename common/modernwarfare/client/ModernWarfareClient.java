@@ -142,7 +142,7 @@ public class ModernWarfareClient extends ModernWarfare
     
     public static boolean useJetPackFuel(Minecraft minecraft)
     {
-        if(/*WarTools.useItemInInventory(minecraft.thePlayer, itemOil.itemID) > 0*/true)
+        if(WarTools.useItemInInventory(minecraft.thePlayer, itemOil.itemID) > 0)
         {
             setJetPack(true);
             return true;

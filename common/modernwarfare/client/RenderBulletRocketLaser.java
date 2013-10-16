@@ -76,6 +76,6 @@ public class RenderBulletRocketLaser extends Render
     
     protected ResourceLocation getEntityTexture(Entity par1Entity)
     {
-        return new ResourceLocation("render/RocketsLaser.png");
+        return new ResourceLocation("modernwarfare:render/RocketsLaser.png");
     }
 }

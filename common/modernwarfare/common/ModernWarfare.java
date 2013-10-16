@@ -158,6 +158,7 @@ public class ModernWarfare
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {
+    	proxy.initSounds();
     	configuration = new Configuration(event.getSuggestedConfigurationFile());
     }
     
@@ -178,6 +179,7 @@ public class ModernWarfare
         proxy.loadRenderers();
         
         TickRegistry.registerTickHandler(new CommonTickHandler(), Side.SERVER);
+        
         NetworkRegistry.instance().registerConnectionHandler(new CommonConnectionHandler());
         NetworkRegistry.instance().registerGuiHandler(this, proxy);
     }
@@ -526,7 +528,7 @@ public class ModernWarfare
 
     public void addItems()
     {
-        itemLightometer = (new Item(13236)).setMaxStackSize(1).setUnlocalizedName("itemLightometer");
+        itemLightometer = (new ItemWar(13236)).setMaxStackSize(1).setUnlocalizedName("itemLightometer");
         itemParachute = (new ItemParachute(13237, proxy.getArmorIndex("parachute"))).setUnlocalizedName("itemParachute");
         itemTelescope = (new ItemTelescope(13238)).setUnlocalizedName("itemTelescope");
         itemBulletCasing = (new ItemWar(13239)).setUnlocalizedName("itemBulletCasing");

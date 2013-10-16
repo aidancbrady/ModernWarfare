@@ -13,6 +13,6 @@ public class RenderParachute extends RenderLiving
     
     protected ResourceLocation getEntityTexture(Entity par1Entity)
     {
-        return new ResourceLocation("render/Parachute.png");
+        return new ResourceLocation("modernwarfare:render/Parachute.png");
     }
 }

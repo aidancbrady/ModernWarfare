@@ -97,6 +97,6 @@ public class RenderGrapplingHook extends Render
     
     protected ResourceLocation getEntityTexture(Entity par1Entity)
     {
-        return new ResourceLocation("render/GrapplingHookThrown.png");
+        return new ResourceLocation("modernwarfare:render/GrapplingHookThrown.png");
     }
 }

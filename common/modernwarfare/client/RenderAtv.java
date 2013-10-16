@@ -94,6 +94,6 @@ public class RenderAtv extends Render
     @Override
     protected ResourceLocation getEntityTexture(Entity par1Entity)
     {
-        return new ResourceLocation("render/Atv.png");
+        return new ResourceLocation("modernwarfare:render/Atv.png");
     }
 }

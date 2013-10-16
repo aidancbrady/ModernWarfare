@@ -76,6 +76,6 @@ public class RenderBulletFlame extends Render
     
     protected ResourceLocation getEntityTexture(Entity par1Entity)
     {
-        return new ResourceLocation("render/Flames.png");
+        return new ResourceLocation("modernwarfare:render/Flames.png");
     }
 }

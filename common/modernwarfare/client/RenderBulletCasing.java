@@ -76,6 +76,6 @@ public class RenderBulletCasing extends Render
     
     protected ResourceLocation getEntityTexture(Entity par1Entity)
     {
-        return new ResourceLocation("render/BulletCasings.png");
+        return new ResourceLocation("modernwarfare:render/BulletCasings.png");
     }
 }

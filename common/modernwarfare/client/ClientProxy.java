@@ -32,6 +32,7 @@ import cpw.mods.fml.relauncher.Side;
 public class ClientProxy extends CommonProxy
 {
 	public static int RENDER_ID = RenderingRegistry.getNextAvailableRenderId();
+	public static Minecraft mc = Minecraft.getMinecraft();
 	
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
@@ -50,9 +51,6 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void loadRenderers()
 	{
-		Map spritesMap = (Map)WarTools.getPrivateValue(getTextureMap(1), TextureMap.class, ObfuscatedNames.TextureMap_mapRegisteredSprites);
-		spritesMap.put("modernwarfare:itemLightometer", new TextureLightometer("modernwarfare:itemLightometer"));
-		
         RenderingRegistry.registerEntityRenderingHandler(EntityBullet.class, new RenderBullet());
         RenderingRegistry.registerEntityRenderingHandler(EntityBulletShot.class, new RenderBulletShot());
         RenderingRegistry.registerEntityRenderingHandler(EntityBulletCasing.class, new RenderBulletCasing());
@@ -72,7 +70,7 @@ public class ClientProxy extends CommonProxy
 	public static TextureMap getTextureMap(int type) 
 	{
 		try {
-			List l = (List)WarTools.getPrivateValue(Minecraft.getMinecraft().renderEngine, TextureManager.class, ObfuscatedNames.TextureManager_listTickables);
+			List l = (List)WarTools.getPrivateValue(mc.renderEngine, TextureManager.class, ObfuscatedNames.TextureManager_listTickables);
 
 			for(Object obj : l) 
 			{
@@ -91,13 +89,40 @@ public class ClientProxy extends CommonProxy
 	
 	@Override
 	public void loadUtilities()
-	{
-		MinecraftForge.EVENT_BUS.register(new SoundHandler());
-		
+	{		
 		TickRegistry.registerTickHandler(new RenderTickHandler(), Side.CLIENT);
 		TickRegistry.registerTickHandler(new ClientTickHandler(), Side.CLIENT);
 		
 		KeyBindingRegistry.registerKeyBinding(new KeyBindingHandler());
+	}
+	
+	@Override
+	public void initSounds()
+	{
+		mc.sndManager.addSound("modernwarfare:ak.ogg");
+		mc.sndManager.addSound("modernwarfare:deagle.ogg");
+		mc.sndManager.addSound("modernwarfare:flamethrower.ogg");
+		mc.sndManager.addSound("modernwarfare:grenadebounce.ogg");
+		mc.sndManager.addSound("modernwarfare:grunt.ogg");
+		mc.sndManager.addSound("modernwarfare:gunempty.ogg");
+		mc.sndManager.addSound("modernwarfare:impact.ogg");
+		mc.sndManager.addSound("modernwarfare:jetpack.ogg");
+		mc.sndManager.addSound("modernwarfare:laser.ogg");
+		mc.sndManager.addSound("modernwarfare:m.ogg");
+		mc.sndManager.addSound("modernwarfare:mechhurt.ogg");
+		mc.sndManager.addSound("modernwarfare:minigun.ogg");
+		mc.sndManager.addSound("modernwarfare:mp.ogg");
+		mc.sndManager.addSound("modernwarfare:parachute.ogg");
+		mc.sndManager.addSound("modernwarfare:reload.ogg");
+		mc.sndManager.addSound("modernwarfare:rocket.ogg");
+		mc.sndManager.addSound("modernwarfare:sg.ogg");
+		mc.sndManager.addSound("modernwarfare:shotgun.ogg");
+		mc.sndManager.addSound("modernwarfare:smokegrenade.ogg");
+		mc.sndManager.addSound("modernwarfare:smokegrenadebounce.ogg");
+		mc.sndManager.addSound("modernwarfare:sniper.ogg");
+		mc.sndManager.addSound("modernwarfare:stungrenade.ogg");
+		mc.sndManager.addSound("modernwarfare:stungrenadebounce.ogg");
+		mc.sndManager.addSound("modernwarfare:wrench.ogg");
 	}
 	
 	@Override
@@ -113,6 +138,13 @@ public class ClientProxy extends CommonProxy
 		ModernWarfareClient.lastUtilityZoom = ModernWarfareClient.currentUtilityZoom;
 		ModernWarfareClient.currentGunZoom = 1.0F;
 		ModernWarfareClient.lastGunZoom = ModernWarfareClient.currentGunZoom;
+	}
+	
+	@Override
+	public TextureLightometer reloadLightometerIcon()
+	{
+		getTextureMap(1).setTextureEntry("modernwarfare:itemLightometer", new TextureLightometer("modernwarfare:itemLightometer"));
+		return (TextureLightometer)getTextureMap(1).getTextureExtry("modernwarfare:itemLightometer");
 	}
 	
 	@Override
