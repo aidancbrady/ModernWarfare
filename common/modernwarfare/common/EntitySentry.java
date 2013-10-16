@@ -270,7 +270,7 @@ public abstract class EntitySentry extends EntityGuardians implements IMob
      */
     protected String getHurtSound()
     {
-        return "war.mechhurt";
+        return "modernwarfare:mechhurt";
     }
 
     /**
@@ -304,7 +304,7 @@ public abstract class EntitySentry extends EntityGuardians implements IMob
         {
             if (getHealth() > 0 && getHealth() < 20)
             {
-                worldObj.playSoundAtEntity(this, "war.wrench", 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
+                worldObj.playSoundAtEntity(this, "modernwarfare:wrench", 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
                 setHealth(Math.min(getHealth() + 2, 20));
                 entityplayer.swingItem();
                 entityplayer.getCurrentEquippedItem().damageItem(1, entityplayer);

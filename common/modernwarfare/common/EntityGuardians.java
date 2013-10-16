@@ -17,8 +17,6 @@ public abstract class EntityGuardians extends EntityCreature
 {
     protected int attackStrength;
     protected float range;
-    private static boolean aiManagerIsPetNotFound = false;
-    private static Method aiManagerIsPet = null;
 
     public EntityGuardians(World world)
     {
@@ -112,41 +110,7 @@ public abstract class EntityGuardians extends EntityCreature
 
     protected boolean okToAttack(Entity entity)
     {
-        boolean flag = false;
-
-        if (!aiManagerIsPetNotFound && (entity instanceof EntityLiving))
-        {
-            try
-            {
-                if (aiManagerIsPet == null)
-                {
-                    Class class1;
-
-                    try
-                    {
-                        class1 = Class.forName("mod_AIManager");
-                    }
-                    catch (Exception exception1)
-                    {
-                        class1 = Class.forName("net.minecraft.src.mod_AIManager");
-                    }
-
-                    aiManagerIsPet = class1.getDeclaredMethod("isPet", new Class[] {EntityLiving.class});
-                }
-
-                flag = ((Boolean)aiManagerIsPet.invoke(null, new Object[]
-                        {
-                            (EntityLiving)entity
-                        })).booleanValue();
-            }
-            catch (Exception exception)
-            {
-                System.out.println("mod_AIManager not found in EntityGuardians. Ignore this exception if you do not have it installed.");
-                aiManagerIsPetNotFound = true;
-            }
-        }
-
-        return !flag && !(entity instanceof EntityGuardians) && (!(entity instanceof EntityPlayer) || !((EntityPlayer)entity).username.equals(getOwner())) && (!(entity instanceof EntityWolf) || !((EntityWolf)entity).isTamed() || !((EntityWolf)entity).getOwner().equals(getOwner()));
+        return !(entity instanceof EntityGuardians) && (!(entity instanceof EntityPlayer) || !((EntityPlayer)entity).username.equals(getOwner())) && (!(entity instanceof EntityWolf) || !((EntityWolf)entity).isTamed() || !((EntityWolf)entity).getOwner().equals(getOwner()));
     }
 
     /**

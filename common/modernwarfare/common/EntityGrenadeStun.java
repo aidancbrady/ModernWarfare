@@ -22,21 +22,21 @@ public class EntityGrenadeStun extends EntityGrenade
     public EntityGrenadeStun(World world)
     {
         super(world);
-        BOUNCE_SOUND = "war.stungrenadebounce";
+        BOUNCE_SOUND = "modernwarfare:stungrenadebounce";
         setEntityItemStack(new ItemStack(ModernWarfare.itemGrenadeStun, 1, 0));
     }
 
     public EntityGrenadeStun(World world, double d, double d1, double d2)
     {
         super(world, d, d1, d2);
-        BOUNCE_SOUND = "war.stungrenadebounce";
+        BOUNCE_SOUND = "modernwarfare:stungrenadebounce";
         setEntityItemStack(new ItemStack(ModernWarfare.itemGrenadeStun, 1, 0));
     }
 
     public EntityGrenadeStun(World world, EntityLivingBase entityliving)
     {
         super(world, entityliving);
-        BOUNCE_SOUND = "war.stungrenadebounce";
+        BOUNCE_SOUND = "modernwarfare:stungrenadebounce";
         setEntityItemStack(new ItemStack(ModernWarfare.itemGrenadeStun, 1, 0));
     }
 
@@ -45,7 +45,7 @@ public class EntityGrenadeStun extends EntityGrenade
         if (!exploded)
         {
             exploded = true;
-            worldObj.playSoundAtEntity(this, "war.stungrenade", 4F, 1.0F / (rand.nextFloat() * 0.1F + 0.95F));
+            worldObj.playSoundAtEntity(this, "modernwarfare:stungrenade", 4F, 1.0F / (rand.nextFloat() * 0.1F + 0.95F));
             ArrayList arraylist = getEntityLivingsInRange(32D);
 
             for (int i = 0; i < arraylist.size(); i++)

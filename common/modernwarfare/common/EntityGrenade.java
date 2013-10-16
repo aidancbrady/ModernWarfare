@@ -24,7 +24,7 @@ public class EntityGrenade extends EntityItem
     public EntityGrenade(World world)
     {
         super(world);
-        bounceSound = "war.grenadebounce";
+        bounceSound = "modernwarfare:grenadebounce";
         bounceFactor = 0.14999999999999999D;
         bounceSlowFactor = 0.80000000000000004D;
         initialVelocity = 1.0D;

@@ -17,7 +17,7 @@ public class ItemGrenade extends ItemWar
     public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
     {
         itemstack.stackSize--;
-        world.playSoundAtEntity(entityplayer, "war.grunt", 1.0F, 1.0F / (itemRand.nextFloat() * 0.1F + 0.95F));
+        world.playSoundAtEntity(entityplayer, "modernwarfare:grunt", 1.0F, 1.0F / (itemRand.nextFloat() * 0.1F + 0.95F));
 
         if (!world.isRemote)
         {

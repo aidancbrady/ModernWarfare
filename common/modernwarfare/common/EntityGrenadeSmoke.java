@@ -14,21 +14,21 @@ public class EntityGrenadeSmoke extends EntityGrenade
     public EntityGrenadeSmoke(World world)
     {
         super(world);
-        BOUNCE_SOUND = "war.smokegrenadebounce";
+        BOUNCE_SOUND = "modernwarfare:smokegrenadebounce";
         setEntityItemStack(new ItemStack(ModernWarfare.itemGrenadeSmoke, 1, 0));
     }
 
     public EntityGrenadeSmoke(World world, double d, double d1, double d2)
     {
         super(world, d, d1, d2);
-        BOUNCE_SOUND = "war.smokegrenadebounce";
+        BOUNCE_SOUND = "modernwarfare:smokegrenadebounce";
         setEntityItemStack(new ItemStack(ModernWarfare.itemGrenadeSmoke, 1, 0));
     }
 
     public EntityGrenadeSmoke(World world, EntityLivingBase entityliving)
     {
         super(world, entityliving);
-        BOUNCE_SOUND = "war.smokegrenadebounce";
+        BOUNCE_SOUND = "modernwarfare:smokegrenadebounce";
         setEntityItemStack(new ItemStack(ModernWarfare.itemGrenadeSmoke, 1, 0));
     }
 
@@ -37,7 +37,7 @@ public class EntityGrenadeSmoke extends EntityGrenade
         if (!exploded)
         {
             exploded = true;
-            worldObj.playSoundAtEntity(this, "war.smokegrenade", 1.0F, 1.0F / (rand.nextFloat() * 0.1F + 0.95F));
+            worldObj.playSoundAtEntity(this, "modernwarfare:smokegrenade", 1.0F, 1.0F / (rand.nextFloat() * 0.1F + 0.95F));
         }
 
         if (fuse < -500)

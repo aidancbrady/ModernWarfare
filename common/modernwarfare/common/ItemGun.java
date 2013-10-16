@@ -148,7 +148,7 @@ public abstract class ItemGun extends ItemCustomUseDelay
 
             if (lastEmptySound == 0L || world.getWorldTime() - lastEmptySound > 20L)
             {
-                world.playSoundAtEntity(entity, "war.gunempty", 1.0F, 1.0F / (itemRand.nextFloat() * 0.1F + 0.95F));
+                world.playSoundAtEntity(entity, "modernwarfare:gunempty", 1.0F, 1.0F / (itemRand.nextFloat() * 0.1F + 0.95F));
                 lastEmptySound = world.getWorldTime();
             }
         }
