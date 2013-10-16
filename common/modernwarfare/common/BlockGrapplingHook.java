@@ -6,6 +6,7 @@ import modernwarfare.client.ClientProxy;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import cpw.mods.fml.relauncher.Side;
@@ -145,7 +146,7 @@ public class BlockGrapplingHook extends BlockWar
     /**
      * Called upon the block being destroyed by an explosion
      */
-    public void onBlockDestroyedByExplosion(World world, int i, int j, int k)
+    public void onBlockDestroyedByExplosion(World world, int i, int j, int k, Explosion explosion)
     {
         onBlockDestroyed(world, i, j, k);
     }

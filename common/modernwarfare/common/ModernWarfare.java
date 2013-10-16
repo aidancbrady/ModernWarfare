@@ -533,7 +533,7 @@ public class ModernWarfare
         itemBulletLight = (new ItemWar(13240)).setMaxStackSize(32).setUnlocalizedName("itemBullet9mm");
         itemBulletMedium = (new ItemWar(13241)).setMaxStackSize(8).setUnlocalizedName("itemBullet357");
         itemBulletShell = (new ItemWar(13242)).setMaxStackSize(8).setUnlocalizedName("itemBulletShell");
-        itemGunAk47 = (new ItemGunAk47(13243)).setUnlocalizedName("gunAk47");
+        itemGunAk47 = (new ItemGunAk47(13243)).setUnlocalizedName("itemGunAk47");
         itemGunMp5 = (new ItemGunMp5(13244)).setUnlocalizedName("itemGunMp5");
         itemGunShotgun = (new ItemGunShotgun(13245)).setUnlocalizedName("itemGunShotgun");
         itemGunDeagle = (new ItemGunDeagle(13246)).setUnlocalizedName("itemGunDeagle");
@@ -559,7 +559,7 @@ public class ModernWarfare
         itemScope = (new ItemWar(13277)).setUnlocalizedName("itemScope");
         itemWrench = (new ItemWar(13278)).setMaxStackSize(1).setMaxDamage(15).setUnlocalizedName("itemWrench");
         itemSentry = (new ItemSentry(13279)).setMaxStackSize(1).setMaxDamage(0).setUnlocalizedName("itemSentry");
-        itemNightvisionGoggles = (new ItemArmorWar(13281, EnumArmorMaterial.CLOTH, proxy.getArmorIndex("nightvision"), 0)).setUnlocalizedName("itemNightvision");
+        itemNightvisionGoggles = (new ItemArmorWar(13281, EnumArmorMaterial.CLOTH, proxy.getArmorIndex("nightvision"), 0)).setUnlocalizedName("itemNightvisionGoggles");
         itemScubaTank = (new ItemArmorWar(13282, EnumArmorMaterial.CLOTH, proxy.getArmorIndex("scubaTank"), 1)).setUnlocalizedName("itemScubaTank");
         itemGhillieHelmet = (new ItemArmorWar(13283, EnumArmorMaterial.CLOTH, proxy.getArmorIndex("ghillie"), 0)).setUnlocalizedName("itemGhillieHelmet");
         itemGhillieChest = (new ItemArmorWar(13284, EnumArmorMaterial.CLOTH, proxy.getArmorIndex("ghillie"), 1)).setUnlocalizedName("itemGhillieChest");

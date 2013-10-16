@@ -21,41 +21,44 @@ public class ClientTickHandler implements ITickHandler
 	@Override
 	public void tickEnd(EnumSet<TickType> type, Object... tickData) 
 	{
-		if(!mc.thePlayer.isEntityAlive()) 
+		if(mc.theWorld != null)
 		{
-			ModernWarfareClient.currentGunZoom = 1.0F;
-
-			if(ModernWarfareClient.reloadTimes.containsKey(mc.thePlayer))
+			if(!mc.thePlayer.isEntityAlive()) 
 			{
-				ModernWarfareClient.reloadTimes.remove(mc.thePlayer);
+				ModernWarfareClient.currentGunZoom = 1.0F;
+	
+				if(ModernWarfareClient.reloadTimes.containsKey(mc.thePlayer))
+				{
+					ModernWarfareClient.reloadTimes.remove(mc.thePlayer);
+				}
+	
+				ModernWarfare.currentRecoilV = 0.0D;
+				ModernWarfare.currentRecoilH = 0.0D;
 			}
-
-			ModernWarfare.currentRecoilV = 0.0D;
-			ModernWarfare.currentRecoilH = 0.0D;
+	
+			ModernWarfareClient.handleRecoil(mc);
+			ModernWarfareClient.handleGunZoom(mc);
+			ModernWarfareClient.handleBurstShots(mc.theWorld);
+	
+			ModernWarfareClient.handleGuns(mc);
+			ModernWarfareClient.setJetPack(ModernWarfareClient.handleJetPack(mc));
+			
+	        ItemStack itemstack = mc.thePlayer.inventory.armorItemInSlot(2);
+	
+	        if (itemstack != null && itemstack.itemID == ModernWarfare.itemScubaTank.itemID)
+	        {
+	            mc.thePlayer.setAir(300);
+	        }
+	
+	        ItemStack itemstack1 = mc.thePlayer.inventory.armorItemInSlot(3);
+	
+	        if (itemstack1 == null || itemstack1.itemID != ModernWarfare.itemNightvisionGoggles.itemID)
+	        {
+	            ModernWarfareClient.nightvisionEnabled = false;
+	        }
+	
+	        ModernWarfareClient.handleUtilityZoom(mc);
 		}
-
-		ModernWarfareClient.handleRecoil(mc);
-		ModernWarfareClient.handleGunZoom(mc);
-		ModernWarfareClient.handleBurstShots(mc.theWorld);
-
-		ModernWarfareClient.handleGuns(mc);
-		ModernWarfareClient.setJetPack(ModernWarfareClient.handleJetPack(mc));
-		
-        ItemStack itemstack = mc.thePlayer.inventory.armorItemInSlot(2);
-
-        if (itemstack != null && itemstack.itemID == ModernWarfare.itemScubaTank.itemID)
-        {
-            mc.thePlayer.setAir(300);
-        }
-
-        ItemStack itemstack1 = mc.thePlayer.inventory.armorItemInSlot(3);
-
-        if (itemstack1 == null || itemstack1.itemID != ModernWarfare.itemNightvisionGoggles.itemID)
-        {
-            ModernWarfareClient.nightvisionEnabled = false;
-        }
-
-        ModernWarfareClient.handleUtilityZoom(mc);
 	}
 
 	@Override

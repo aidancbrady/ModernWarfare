@@ -24,9 +24,7 @@ public class BlockRope extends BlockContainerWar
         descensionSpeed = -0.15F;
     }
 
-    /**
-     * Triggered whenever an entity collides with this block (enters into the block). Args: world, x, y, z, entity
-     */
+    @Override
     public void onEntityCollidedWithBlock(World world, int i, int j, int k, Entity entity)
     {
         if (entity instanceof EntityLiving)
@@ -51,10 +49,7 @@ public class BlockRope extends BlockContainerWar
         return new TileEntityRope();
     }
 
-    /**
-     * Returns a bounding box from the pool of bounding boxes (this means this box can change after the pool has been
-     * cleared to be reused)
-     */
+    @Override
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int i, int j, int k)
     {
         int l = world.getBlockMetadata(i, j, k);
@@ -83,9 +78,7 @@ public class BlockRope extends BlockContainerWar
         return super.getCollisionBoundingBoxFromPool(world, i, j, k);
     }
 
-    /**
-     * Returns the bounding box of the wired rectangular prism to render.
-     */
+    @Override
     public AxisAlignedBB getSelectedBoundingBoxFromPool(World world, int i, int j, int k)
     {
         int l = world.getBlockMetadata(i, j, k);
@@ -114,35 +107,26 @@ public class BlockRope extends BlockContainerWar
         return super.getSelectedBoundingBoxFromPool(world, i, j, k);
     }
 
-    /**
-     * Is this block (a) opaque and (b) a full 1m cube?  This determines whether or not to render the shared face of two
-     * adjacent blocks and also whether the player can attach torches, redstone wire, etc to this block.
-     */
+    @Override
     public boolean isOpaqueCube()
     {
         return false;
     }
 
-    /**
-     * If this block doesn't render as an ordinary block it will return False (examples: signs, buttons, stairs, etc)
-     */
+    @Override
     public boolean renderAsNormalBlock()
     {
         return false;
     }
 
-    /**
-     * The type of render function that is called for this block
-     */
+    @Override
     @SideOnly(Side.CLIENT)
     public int getRenderType()
     {
         return ClientProxy.RENDER_ID;
     }
 
-    /**
-     * Returns the quantity of items to drop on block destruction.
-     */
+    @Override
     public int quantityDropped(Random random)
     {
         return 0;

@@ -5,7 +5,6 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.src.ModLoader;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.world.World;
@@ -203,7 +202,7 @@ public abstract class EntityLandVehicle extends Entity
         {
             if (riddenByEntity != null)
             {
-                Minecraft minecraft = ModLoader.getMinecraftInstance();
+                Minecraft minecraft = Minecraft.getMinecraft();
 
                 if (getSpeed() != 0.0D)
                 {

@@ -80,7 +80,7 @@ public class ClientProxy extends CommonProxy
 				{
 					if(((TextureMap)obj).textureType == type) 
 					{
-						return (TextureMap) obj;
+						return (TextureMap)obj;
 					}
 				}
 			}
@@ -95,7 +95,7 @@ public class ClientProxy extends CommonProxy
 		MinecraftForge.EVENT_BUS.register(new SoundHandler());
 		
 		TickRegistry.registerTickHandler(new RenderTickHandler(), Side.CLIENT);
-		TickRegistry.registerTickHandler(new RenderTickHandler(), Side.CLIENT);
+		TickRegistry.registerTickHandler(new ClientTickHandler(), Side.CLIENT);
 		
 		KeyBindingRegistry.registerKeyBinding(new KeyBindingHandler());
 	}

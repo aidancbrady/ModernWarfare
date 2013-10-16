@@ -10,6 +10,7 @@ import modernwarfare.common.ModernWarfare;
 import modernwarfare.common.ObfuscatedNames;
 import modernwarfare.common.WarTools;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiMainMenu;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.Item;
@@ -22,15 +23,24 @@ public class RenderTickHandler implements ITickHandler
 {
 	public Minecraft mc = Minecraft.getMinecraft();
 	
+	public boolean didMenuReset = false;
+	
 	@Override
-	public void tickStart(EnumSet<TickType> type, Object... tickData) 
-	{
-		
-	}
+	public void tickStart(EnumSet<TickType> type, Object... tickData) {}
 
 	@Override
 	public void tickEnd(EnumSet<TickType> type, Object... tickData) 
 	{
+		if(!didMenuReset && mc.currentScreen instanceof GuiMainMenu)
+		{
+			ModernWarfare.proxy.resetData();
+			didMenuReset = true;
+		}
+		else if(!(mc.currentScreen instanceof GuiMainMenu))
+		{
+			didMenuReset = false;
+		}
+		
 		if(mc.theWorld != null)
 		{
 	        renderNightvisionOverlay(mc);
