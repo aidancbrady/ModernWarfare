@@ -8,7 +8,7 @@ public class ItemGunMinigun extends ItemGun
     public ItemGunMinigun(int i)
     {
         super(i);
-        firingSound = "war.minigun";
+        firingSound = "modernwarfare:minigun";
         requiredBullet = ModernWarfare.itemBulletLight;
         numBullets = 1;
         damage = 4;

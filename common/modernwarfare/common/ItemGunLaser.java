@@ -9,7 +9,7 @@ public class ItemGunLaser extends ItemGun
     public ItemGunLaser(int i)
     {
         super(i);
-        firingSound = "war.laser";
+        firingSound = "modernwarfare:laser";
         requiredBullet = Item.redstone;
         numBullets = 1;
         damage = 10;

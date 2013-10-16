@@ -8,7 +8,7 @@ public class ItemGunSniper extends ItemGun
     public ItemGunSniper(int i)
     {
         super(i);
-        firingSound = "war.sniper";
+        firingSound = "modernwarfare:sniper";
         requiredBullet = ModernWarfare.itemBulletHeavy;
         numBullets = 1;
         damage = 12;

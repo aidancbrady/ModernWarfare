@@ -8,7 +8,7 @@ public class ItemGunMp5 extends ItemGun
     public ItemGunMp5(int i)
     {
         super(i);
-        firingSound = "war.mp";
+        firingSound = "modernwarfare:mp";
         requiredBullet = ModernWarfare.itemBulletLight;
         numBullets = 1;
         damage = 4;

@@ -8,7 +8,7 @@ public class ItemGunRocketLauncherLaser extends ItemGun
     public ItemGunRocketLauncherLaser(int i)
     {
         super(i);
-        firingSound = "war.rocket";
+        firingSound = "modernwarfare:rocket";
         requiredBullet = ModernWarfare.itemBulletRocketLaser;
         numBullets = 1;
         damage = 10;

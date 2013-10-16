@@ -8,7 +8,7 @@ public class ItemGunSg552 extends ItemGun
     public ItemGunSg552(int i)
     {
         super(i);
-        firingSound = "war.sg";
+        firingSound = "modernwarfare:sg";
         requiredBullet = ModernWarfare.itemBulletMedium;
         numBullets = 1;
         damage = 8;

@@ -8,7 +8,7 @@ public class ItemGunFlamethrower extends ItemGun
     public ItemGunFlamethrower(int i)
     {
         super(i);
-        firingSound = "war.flamethrower";
+        firingSound = "modernwarfare:flamethrower";
         requiredBullet = ModernWarfare.itemOil;
         numBullets = 1;
         damage = 1;

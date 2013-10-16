@@ -8,7 +8,7 @@ public class ItemGunDeagle extends ItemGun
     public ItemGunDeagle(int i)
     {
         super(i);
-        firingSound = "war.deagle";
+        firingSound = "modernwarfare:deagle";
         requiredBullet = ModernWarfare.itemBulletMedium;
         numBullets = 1;
         damage = 10;
