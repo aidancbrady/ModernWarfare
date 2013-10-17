@@ -492,7 +492,7 @@ public class ModernWarfare
         LanguageRegistry.addName(itemParachute, "Parachute");
         LanguageRegistry.addName(itemTelescope, "Telescope");
         LanguageRegistry.addName(itemGhillieHelmet, "Ghillie Suit Helmet");
-        LanguageRegistry.addName(itemGhillieChest, "Ghillie Suit Chest");
+        LanguageRegistry.addName(itemGhillieChest, "Ghillie Suit Shirt");
         LanguageRegistry.addName(itemGhilliePants, "Ghillie Suit Pants");
         LanguageRegistry.addName(itemGhillieBoots, "Ghillie Suit Boots");
         LanguageRegistry.addName(itemCraftingPack, "CraftingPack");
@@ -552,7 +552,7 @@ public class ModernWarfare
         itemGunLaser = (new ItemGunLaser(13262)).setUnlocalizedName("itemGunLaser");
         itemGunM4 = (new ItemGunM4(13263)).setUnlocalizedName("itemGunM4");
         itemGrenadeIncendiary = (new ItemGrenadeIncendiary(13264)).setMaxStackSize(4).setUnlocalizedName("itemGrenadeIncendiary");
-        itemGrenadeIncendiaryLit = (new ItemGrenadeIncendiary(13265)).setMaxStackSize(4).setUnlocalizedName("itemGrenadeIncendiaryLit");
+        itemGrenadeIncendiaryLit = (new ItemGrenadeIncendiary(13265)).setMaxStackSize(4).setCreativeTab(null).setUnlocalizedName("itemGrenadeIncendiaryLit");
         itemScope = (new ItemWar(13277)).setUnlocalizedName("itemScope");
         itemWrench = (new ItemWar(13278)).setMaxStackSize(1).setMaxDamage(15).setUnlocalizedName("itemWrench");
         itemSentry = (new ItemSentry(13279)).setMaxStackSize(1).setMaxDamage(0).setUnlocalizedName("itemSentry");
@@ -576,6 +576,60 @@ public class ModernWarfare
         itemAtv = (new ItemAtv(13298)).setUnlocalizedName("itemAtv");
         itemAtvBody = (new ItemWar(13299)).setUnlocalizedName("itemAtvBody");
         itemAtvWheel = (new ItemWar(13300)).setUnlocalizedName("itemAtvWheel");
+        
+        GameRegistry.registerItem(itemLightometer, "itemLightometer");
+        GameRegistry.registerItem(itemParachute, "itemParachute");
+        GameRegistry.registerItem(itemTelescope, "itemTelescope");
+        GameRegistry.registerItem(itemBulletCasing, "itemBulletCasing");
+        GameRegistry.registerItem(itemBulletLight, "itemBullet9mm");
+        GameRegistry.registerItem(itemBulletMedium, "itemBullet357");
+        GameRegistry.registerItem(itemBulletShell, "itemBulletShell");
+        GameRegistry.registerItem(itemGunAk47, "itemGunAk47");
+        GameRegistry.registerItem(itemGunMp5, "itemGunMp5");
+        GameRegistry.registerItem(itemGunShotgun, "itemGunShotgun");
+        GameRegistry.registerItem(itemGunDeagle, "itemGunDeagle");
+        GameRegistry.registerItem(itemGrenade, "itemGrenade");
+        GameRegistry.registerItem(itemBulletRocket, "itemBulletRocket");
+        GameRegistry.registerItem(itemGunRocketLauncher, "itemGunRocketLauncher");
+        GameRegistry.registerItem(itemBulletRocketLaser, "itemBulletRocketLaser");
+        GameRegistry.registerItem(itemGunRocketLauncherLaser, "itemGunRocketLauncherLaser");
+        GameRegistry.registerItem(itemBulletHeavy, "itemBullet50Cal");
+        GameRegistry.registerItem(itemGunSniper, "itemGunSniper");
+        GameRegistry.registerItem(itemGrenadeStun, "itemGrenadeStun");
+        GameRegistry.registerItem(itemGrenadeSmoke, "itemGrenadeSmoke");
+        GameRegistry.registerItem(itemBulletCasingShell, "itemBulletCasingShell");
+        GameRegistry.registerItem(itemOil, "itemOil");
+        GameRegistry.registerItem(itemGunFlamethrower, "itemGunFlamethrower");
+        GameRegistry.registerItem(itemGrenadeSticky, "itemGrenadeSticky");
+        GameRegistry.registerItem(itemGunSg552, "itemGunSg552");
+        GameRegistry.registerItem(itemGunMinigun, "itemGunMinigun");
+        GameRegistry.registerItem(itemGunLaser, "itemGunLaser");
+        GameRegistry.registerItem(itemGunM4, "itemGunM4");
+        GameRegistry.registerItem(itemGrenadeIncendiary, "itemGrenadeIncendiary");
+        GameRegistry.registerItem(itemGrenadeIncendiaryLit, "itemGrenadeIncendiaryLit");
+        GameRegistry.registerItem(itemScope, "itemScope");
+        GameRegistry.registerItem(itemWrench, "itemWrench");
+        GameRegistry.registerItem(itemSentry, "itemSentry");
+        GameRegistry.registerItem(itemJetPack, "itemJetPack");
+        GameRegistry.registerItem(itemRope, "itemRope");
+        GameRegistry.registerItem(itemGrapplingHook, "itemGrapplingHook");
+        GameRegistry.registerItem(itemNightvisionGoggles, "itemNightvisionGoggles");
+        GameRegistry.registerItem(itemScubaTank, "itemScubaTank");
+        GameRegistry.registerItem(itemGhillieHelmet, "itemGhillieHelmet");
+        GameRegistry.registerItem(itemGhillieChest, "itemGhillieChest");
+        GameRegistry.registerItem(itemGhilliePants, "itemGhilliePants");
+        GameRegistry.registerItem(itemGhillieBoots, "itemGhillieBoots");
+        GameRegistry.registerItem(itemCraftingPack, "itemCraftingPack");
+        GameRegistry.registerItem(itemWoodGrip, "itemWoodGrip");
+        GameRegistry.registerItem(itemMetalGrip, "itemMetalGrip");
+        GameRegistry.registerItem(itemSmallBarrel, "itemSmallBarrel");
+        GameRegistry.registerItem(itemMediumBarrel, "itemMediumBarrel");
+        GameRegistry.registerItem(itemLongBarrel, "itemLongBarrel");
+        GameRegistry.registerItem(itemFatBarrel, "itemFatBarrel");
+        GameRegistry.registerItem(itemAtv, "itemATV");
+        GameRegistry.registerItem(itemAtvBody, "itemATVBody");
+        GameRegistry.registerItem(itemAtvWheel, "itemATVWheel");
+        GameRegistry.registerItem(itemFuelTank, "itemFuelTank");
     }
 
     public static void useParachute(ItemStack itemstack, World world, EntityPlayer entityplayer)

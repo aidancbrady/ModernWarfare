@@ -154,6 +154,13 @@ public class ClientProxy extends CommonProxy
 	}
 	
 	@Override
+	public void doRecoil(double v, double h)
+	{
+        ModernWarfareClient.currentRecoilV += v;
+        ModernWarfareClient.currentRecoilH += h;
+	}
+	
+	@Override
 	public void useZoom()
 	{
 		ModernWarfareClient.useZoom();

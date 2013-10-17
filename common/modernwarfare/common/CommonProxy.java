@@ -60,6 +60,8 @@ public class CommonProxy implements IGuiHandler
 	
 	public void useZoom() {}
 	
+	public void doRecoil(double v, double h) {}
+	
 	public Object reloadLightometerIcon() 
 	{
 		return null;

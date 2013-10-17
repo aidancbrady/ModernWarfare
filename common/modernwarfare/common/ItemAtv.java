@@ -50,7 +50,7 @@ public class ItemAtv extends ItemWar
             int j = movingobjectposition.blockY;
             int k = movingobjectposition.blockZ;
 
-            if (!world.isRemote)
+            if(!world.isRemote)
             {
                 world.spawnEntityInWorld(new EntityAtv(world, (float)i + 0.5F, (float)j + 1.0F, (float)k + 0.5F));
             }

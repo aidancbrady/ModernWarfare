@@ -5,6 +5,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Icon;
 
 public class ItemArmorWar extends ItemArmor
 {
@@ -14,7 +15,7 @@ public class ItemArmorWar extends ItemArmor
     {
         super(i, enumarmormaterial, j, k);
         materialName = material;
-       // setCreativeTab(ModernWarfare.tabModernWarfare);
+        setCreativeTab(ModernWarfare.tabModernWarfare);
     }
     
     @Override
@@ -22,6 +23,12 @@ public class ItemArmorWar extends ItemArmor
 	{
 		itemIcon = register.registerIcon("modernwarfare:" + getUnlocalizedName().replace("item.", ""));
 	}
+    
+    @Override
+    public Icon getIconFromDamageForRenderPass(int par1, int par2)
+    {
+    	return itemIcon;
+    }
     
 	@Override
     public String getArmorTexture(ItemStack stack, Entity entity, int slot, int layer)
