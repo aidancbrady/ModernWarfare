@@ -14,7 +14,11 @@ public class ItemTelescope extends ItemWar
     @Override
     public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
     {
-        ModernWarfare.proxy.useZoom();
+    	if(world.isRemote)
+    	{
+            ModernWarfare.proxy.useZoom();
+    	}
+    	
         return itemstack;
     }
 }

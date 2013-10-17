@@ -138,6 +138,7 @@ public class ModernWarfare
         EntitySentryAk47.class, EntitySentryMp5.class, EntitySentryShotgun.class, EntitySentryDeagle.class, EntitySentryRocketLauncher.class, EntitySentryRocketLauncherLaser.class, EntitySentrySniper.class, EntitySentryFlamethrower.class, EntitySentrySg552.class, EntitySentryMinigun.class,
         EntitySentryLaser.class, EntitySentryM4.class
     });
+    
     public static String sentryNames[] =
     {
         "AK47", "MP5", "Shotgun", "Desert Eagle", "Rocket Launcher", "Laser-Guided Rocket Launcher", "Sniper Rifle", "Flamethrower", "SG552", "Minigun",

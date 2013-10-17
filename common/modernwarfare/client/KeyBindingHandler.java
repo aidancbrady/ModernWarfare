@@ -43,51 +43,55 @@ public class KeyBindingHandler extends KeyHandler
 	@Override
 	public void keyDown(EnumSet<TickType> types, KeyBinding kb, boolean tickEnd, boolean isRepeat) 
 	{
-        if(mc.currentScreen == null)
+        if(tickEnd)
         {
-        	if(kb.keyCode == zoomKey.keyCode)
+        	if(mc.currentScreen == null)
         	{
-        		ModernWarfareClient.toggleZoomEnabled();
-        	}
-        	else if(kb.keyCode == reloadKey.keyCode)
-        	{
-                ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
-                DataOutputStream dataoutputstream = new DataOutputStream(bytearrayoutputstream);
+            	if(kb.keyCode == reloadKey.keyCode)
+            	{
+                    ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
+                    DataOutputStream dataoutputstream = new DataOutputStream(bytearrayoutputstream);
 
-                try {
-                    dataoutputstream.writeInt(6);
-                } catch (IOException ioexception) {
-                    System.out.println("[ModernWarfare] An error occured while writing packet data.");
-                    ioexception.printStackTrace();
-                }
+                    try {
+                        dataoutputstream.writeInt(6);
+                    } catch (IOException ioexception) {
+                        System.out.println("[ModernWarfare] An error occured while writing packet data.");
+                        ioexception.printStackTrace();
+                    }
 
-                Packet250CustomPayload packet250custompayload = new Packet250CustomPayload();
-                packet250custompayload.channel = "MDWF";
-                packet250custompayload.data = bytearrayoutputstream.toByteArray();
-                packet250custompayload.length = packet250custompayload.data.length;
-                PacketDispatcher.sendPacketToServer(packet250custompayload);
-                ModernWarfare.handleReload(mc.theWorld, mc.thePlayer, false);
-                System.out.println("[ModernWarfare] Sent '6' packet to server");
+                    Packet250CustomPayload packet250custompayload = new Packet250CustomPayload();
+                    packet250custompayload.channel = "MDWF";
+                    packet250custompayload.data = bytearrayoutputstream.toByteArray();
+                    packet250custompayload.length = packet250custompayload.data.length;
+                    PacketDispatcher.sendPacketToServer(packet250custompayload);
+                    ModernWarfare.handleReload(mc.theWorld, mc.thePlayer, false);
+                    System.out.println("[ModernWarfare] Sent '6' packet to server");
+            	}
+            	else if(kb.keyCode == zoomKey.keyCode)
+	        	{
+	        		ModernWarfareClient.toggleZoomEnabled();
+	        	}
+	        	else if(kb.keyCode == parachuteKey.keyCode)
+	        	{
+	        		ModernWarfareClient.handleParachuteKey(mc);
+	        	}
+	        	else if(kb.keyCode == nightvisionKey.keyCode)
+	        	{
+	        		ModernWarfareClient.handleNightvisionKey();
+	        	}
+	        	else if(kb.keyCode == atvFireKey.keyCode)
+	        	{
+	        		ModernWarfareClient.handleAtvFireKey(mc, mc.thePlayer);
+	        	}
         	}
-        	else if(kb.keyCode == parachuteKey.keyCode)
+        	
+          	if(kb.keyCode == atvInventoryKey.keyCode)
         	{
-        		ModernWarfareClient.handleParachuteKey(mc);
-        	}
-        	else if(kb.keyCode == nightvisionKey.keyCode)
-        	{
-        		ModernWarfareClient.handleNightvisionKey();
+        		ModernWarfareClient.handleInventoryAtvKey(mc, mc.thePlayer);
         	}
         	else if(kb.keyCode == craftingPackKey.keyCode)
         	{
         		ModernWarfareClient.handleCraftingPackKey(mc, mc.thePlayer);
-        	}
-        	else if(kb.keyCode == atvFireKey.keyCode)
-        	{
-        		ModernWarfareClient.handleAtvFireKey(mc, mc.thePlayer);
-        	}
-        	else if(kb.keyCode == atvInventoryKey.keyCode)
-        	{
-        		ModernWarfareClient.handleInventoryAtvKey(mc, mc.thePlayer);
         	}
         }
 	}

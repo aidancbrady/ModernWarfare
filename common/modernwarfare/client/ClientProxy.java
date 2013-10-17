@@ -156,7 +156,6 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void useZoom()
 	{
-		System.out.println("Yup");
 		ModernWarfareClient.useZoom();
 	}
 }

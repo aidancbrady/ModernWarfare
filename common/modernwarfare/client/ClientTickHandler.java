@@ -42,13 +42,6 @@ public class ClientTickHandler implements ITickHandler
 	
 			ModernWarfareClient.handleGuns(mc);
 			ModernWarfareClient.setJetPack(ModernWarfareClient.handleJetPack(mc));
-			
-	        ItemStack itemstack = mc.thePlayer.inventory.armorItemInSlot(2);
-	
-	        if (itemstack != null && itemstack.itemID == ModernWarfare.itemScubaTank.itemID)
-	        {
-	            mc.thePlayer.setAir(300);
-	        }
 	
 	        ItemStack itemstack1 = mc.thePlayer.inventory.armorItemInSlot(3);
 	
