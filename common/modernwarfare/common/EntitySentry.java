@@ -73,7 +73,7 @@ public abstract class EntitySentry extends EntityGuardians implements IMob
 
     private void becomeAngryAt(Entity entity)
     {
-        if (angerMap.containsKey(entity))
+        if(angerMap.containsKey(entity))
         {
             angerMap.remove(entity);
         }
@@ -91,17 +91,21 @@ public abstract class EntitySentry extends EntityGuardians implements IMob
     @Override
     protected void attackEntity(Entity entity, float f)
     {
-        if (okToAttack(entity))
+        if(okToAttack(entity))
         {
-            if (attackTime == 0 && worldObj != null && gun != null && worldObj.rand != null)
+            if(attackTime == 0 && !worldObj.isRemote && worldObj != null && gun != null && worldObj.rand != null)
             {
-                if (itemStack == null)
+                if(itemStack == null)
                 {
                     itemStack = new ItemStack(gun);
                 }
 
-                gun.use(itemStack, worldObj, this, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
-                attackTime = ATTACK_DELAY;
+                if(ItemGun.canFire(itemStack))
+                {
+                	ItemGun.addDelay(itemStack);
+                	gun.fireBullet(worldObj, this, itemStack, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
+                	attackTime = ATTACK_DELAY;
+                }
             }
 
             hasAttacked = true;
@@ -111,41 +115,39 @@ public abstract class EntitySentry extends EntityGuardians implements IMob
     @Override
     protected void updateEntityActionState()
     {
-        if (!isDead)
+        if(!isDead)
         {
-            if (worldObj.getWorldTime() % 20L == 0L)
+            if(worldObj.getWorldTime() % 20L == 0L)
             {
                 entityToAttack = findPlayerToAttack();
             }
 
-            if (entityToAttack != null && canEntityBeSeen(entityToAttack))
+            if(entityToAttack != null && canEntityBeSeen(entityToAttack))
             {
                 restricted = false;
                 faceEntity(entityToAttack, 10F, 10F);
 
-                if (!restricted)
+                if(!restricted)
                 {
                     attackEntity(entityToAttack, range);
                 }
             }
-            else
-            {
+            else {
                 rotationYaw++;
                 rotationPitch = 0.0F;
             }
         }
 
-        for (Iterator iterator = angerMap.entrySet().iterator(); iterator.hasNext();)
+        for(Iterator iterator = angerMap.entrySet().iterator(); iterator.hasNext();)
         {
             java.util.Map.Entry entry = (java.util.Map.Entry)iterator.next();
             int i = ((Integer)entry.getValue()).intValue() - 1;
 
-            if (i <= 0)
+            if(i <= 0)
             {
                 iterator.remove();
             }
-            else
-            {
+            else {
                 entry.setValue(Integer.valueOf(i));
             }
         }
@@ -156,12 +158,11 @@ public abstract class EntitySentry extends EntityGuardians implements IMob
     {
         EntityLiving entityliving = getNearestAnger(this);
 
-        if (entityliving != null)
+        if(entityliving != null)
         {
             return entityliving;
         }
-        else
-        {
+        else {
             return super.findPlayerToAttack();
         }
     }
@@ -177,9 +178,8 @@ public abstract class EntitySentry extends EntityGuardians implements IMob
         EntityLiving entityliving = null;
         Iterator iterator = angerMap.entrySet().iterator();
 
-        do
-        {
-            if (!iterator.hasNext())
+        do {
+            if(!iterator.hasNext())
             {
                 break;
             }
@@ -187,18 +187,18 @@ public abstract class EntitySentry extends EntityGuardians implements IMob
             java.util.Map.Entry entry = (java.util.Map.Entry)iterator.next();
             Entity entity = (Entity)entry.getKey();
 
-            if ((entity instanceof EntityLiving) && entity.isEntityAlive())
+            if((entity instanceof EntityLiving) && entity.isEntityAlive())
             {
                 double d4 = entity.getDistanceSq(d, d1, d2);
 
-                if (d3 == -1D || d4 < d3 && canEntityBeSeen(entity) && okToAttack(entity))
+                if(d3 == -1D || d4 < d3 && canEntityBeSeen(entity) && okToAttack(entity))
                 {
                     d3 = d4;
                     entityliving = (EntityLiving)entity;
                 }
             }
         }
-        while (true);
+        while(true);
 
         return entityliving;
     }
@@ -206,17 +206,16 @@ public abstract class EntitySentry extends EntityGuardians implements IMob
     @Override
     public void faceEntity(Entity entity, float f, float f1)
     {
-        if (!okToAttack(entity))
+        if(!okToAttack(entity))
         {
             return;
         }
-        else
-        {
-            double d = entity.posX - posX;
-            double d1 = entity.posZ - posZ;
-            double d2 = (entity.boundingBox.minY + entity.boundingBox.maxY) / 2D - (posY + (double)getEyeHeight());
-            double d3 = MathHelper.sqrt_double(d * d + d1 * d1);
-            float f2 = (float)((Math.atan2(d1, d) * 180D) / Math.PI) - 90F;
+        else {
+            double xDiff = entity.posX - posX;
+            double zDiff = entity.posZ - posZ;
+            double d2 = (entity.boundingBox.minY + entity.boundingBox.maxY) / 2D - (posY + getEyeHeight());
+            double d3 = MathHelper.sqrt_double(xDiff * xDiff + zDiff * zDiff);
+            float f2 = (float)((Math.atan2(zDiff, xDiff) * 180D) / Math.PI) - 90F;
             float f3 = (float)((Math.atan2(d2, d3) * 180D) / Math.PI);
             rotationPitch = -updateRotation(-rotationPitch, f3, f1);
             rotationYaw = updateRotation(rotationYaw, f2, f);
@@ -278,16 +277,16 @@ public abstract class EntitySentry extends EntityGuardians implements IMob
     @Override
     public boolean interact(EntityPlayer entityplayer)
     {
-        if (entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().itemID == ModernWarfare.itemWrench.itemID)
+        if(entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().itemID == ModernWarfare.itemWrench.itemID)
         {
-            if (getHealth() > 0 && getHealth() < 20)
+            if(getHealth() > 0 && getHealth() < 20)
             {
                 worldObj.playSoundAtEntity(this, "modernwarfare:wrench", 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
                 setHealth(Math.min(getHealth() + 2, 20));
                 entityplayer.swingItem();
                 entityplayer.getCurrentEquippedItem().damageItem(1, entityplayer);
 
-                if (entityplayer.getCurrentEquippedItem().getItemDamage() <= 0)
+                if(entityplayer.getCurrentEquippedItem().getItemDamage() <= 0)
                 {
                     entityplayer.inventory.mainInventory[entityplayer.inventory.currentItem] = null;
                 }
@@ -295,8 +294,7 @@ public abstract class EntitySentry extends EntityGuardians implements IMob
 
             return true;
         }
-        else
-        {
+        else {
             return false;
         }
     }

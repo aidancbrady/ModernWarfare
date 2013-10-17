@@ -2,12 +2,10 @@ package modernwarfare.client;
 
 import java.util.EnumSet;
 
-import modernwarfare.common.ItemCustomUseDelay;
 import modernwarfare.common.ItemGun;
 import modernwarfare.common.ItemGunFlamethrower;
 import modernwarfare.common.ItemGunLaser;
 import modernwarfare.common.ModernWarfare;
-import modernwarfare.common.ObfuscatedNames;
 import modernwarfare.common.WarTools;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiMainMenu;
@@ -47,7 +45,6 @@ public class RenderTickHandler implements ITickHandler
 	        renderUtilityScopeOverlay(mc);
 	        renderGunScopeOverlay(mc);
 	        renderAmmo(mc);
-	        handleArmSwing(mc);
 		}
 	}
 
@@ -157,24 +154,6 @@ public class RenderTickHandler implements ITickHandler
         if (minecraft.gameSettings.thirdPersonView == 0 && ModernWarfareClient.currentUtilityZoom != 1.0F && minecraft.currentScreen == null)
         {
             WarTools.renderTextureOverlay("gui/Telescope.png", 1.0F);
-        }
-    }
-    
-    private void handleArmSwing(Minecraft minecraft)
-    {
-        if (minecraft.thePlayer != null && minecraft.thePlayer.inventory != null)
-        {
-            ItemStack itemstack = minecraft.thePlayer.inventory.getCurrentItem();
-
-            if (itemstack != null && (itemstack.getItem() instanceof ItemCustomUseDelay))
-            {
-                ItemCustomUseDelay itemcustomusedelay = (ItemCustomUseDelay)itemstack.getItem();
-
-                if (itemcustomusedelay.stopArmSwing)
-                {
-                    WarTools.setPrivateValue(minecraft, Integer.valueOf(2), Minecraft.class, ObfuscatedNames.Minecraft_leftClickCounter);
-                }
-            }
         }
     }
 }

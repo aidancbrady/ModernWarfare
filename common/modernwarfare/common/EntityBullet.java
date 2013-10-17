@@ -71,9 +71,9 @@ public abstract class EntityBullet extends Entity
         float f6 = f5 * 0.01745329F;
         double d = f * MathHelper.cos(f6) - f2 * MathHelper.sin(f6);
         double d1 = f * MathHelper.sin(f6) + f2 * MathHelper.cos(f6);
-        setLocationAndAngles(entity.posX + d, entity.posY + (double)entity.getEyeHeight() + (double)f1, entity.posZ + d1, entity.rotationYaw + f3, entity.rotationPitch + f4);
+        setLocationAndAngles(entity.posX + d, entity.posY + entity.getEyeHeight() + f1, entity.posZ + d1, entity.rotationYaw + f3, entity.rotationPitch + f4);
         posX -= MathHelper.cos((rotationYaw / 180F) * (float)Math.PI) * 0.16F;
-        posY -= 0.10000000000000001D;
+        posY -= 0.1D;
         posZ -= MathHelper.sin((rotationYaw / 180F) * (float)Math.PI) * 0.16F;
         setPosition(posX, posY, posZ);
         yOffset = 0.0F;
@@ -81,55 +81,55 @@ public abstract class EntityBullet extends Entity
 
         if (entity instanceof EntityLiving)
         {
-            boolean flag = Math.abs(entity.motionX) > 0.10000000000000001D || Math.abs(entity.motionY) > 0.10000000000000001D || Math.abs(entity.motionZ) > 0.10000000000000001D;
+            boolean flag = Math.abs(entity.motionX) > 0.1D || Math.abs(entity.motionY) > 0.1D || Math.abs(entity.motionZ) > 0.10000000000000001D;
 
             if (flag)
             {
                 f7 *= 2.0F;
 
-                if (itemgun instanceof ItemGunMinigun)
+                if(itemgun instanceof ItemGunMinigun)
                 {
                     f7 *= 2.0F;
                 }
             }
 
-            if (!entity.onGround)
+            if(!entity.onGround)
             {
                 f7 *= 2.0F;
 
-                if (itemgun instanceof ItemGunMinigun)
+                if(itemgun instanceof ItemGunMinigun)
                 {
                     f7 *= 2.0F;
                 }
             }
 
-            if ((entity instanceof EntityPlayer) && (itemgun instanceof ItemGunSniper))
+            if((entity instanceof EntityPlayer) && (itemgun instanceof ItemGunSniper))
             {
                 EntityPlayer entityplayer = (EntityPlayer)entity;
 
-                if (flag)
+                if(flag)
                 {
                     f7 = (float)((double)f7 + 0.25D);
                 }
 
-                if (!entity.onGround)
+                if(!entity.onGround)
                 {
                     f7 = (float)((double)f7 + 0.25D);
                 }
 
-                if (!entityplayer.isSneaking())
+                if(!entityplayer.isSneaking())
                 {
                     f7 = (float)((double)f7 + 0.25D);
                 }
 
-                if (!ModernWarfare.getSniperZoomedIn(entityplayer))
+                if(!ModernWarfare.getSniperZoomedIn(entityplayer))
                 {
                     f7 = 8F;
                 }
             }
         }
 
-        if (entity.riddenByEntity != null && (entity instanceof EntityPlayer))
+        if(entity.riddenByEntity != null && (entity instanceof EntityPlayer))
         {
             owner = entity.riddenByEntity;
         }
@@ -142,13 +142,13 @@ public abstract class EntityBullet extends Entity
         double d3 = 0.0D;
         double d4 = 0.0D;
 
-        if (entity.ridingEntity != null)
+        if(entity.ridingEntity != null)
         {
             d2 = entity.ridingEntity.motionX;
             d3 = entity.ridingEntity.onGround ? 0.0D : entity.ridingEntity.motionY;
             d4 = entity.ridingEntity.motionZ;
         }
-        else if (entity.riddenByEntity != null)
+        else if(entity.riddenByEntity != null)
         {
             d2 = entity.motionX;
             d3 = entity.onGround ? 0.0D : entity.motionY;
@@ -160,9 +160,8 @@ public abstract class EntityBullet extends Entity
         motionZ += d4;
     }
 
-    protected void entityInit()
-    {
-    }
+    @Override
+    protected void entityInit() {}
 
     public void setBulletHeading(double d, double d1, double d2, float f, float f1)
     {
@@ -170,9 +169,9 @@ public abstract class EntityBullet extends Entity
         d /= f2;
         d1 /= f2;
         d2 /= f2;
-        d += rand.nextGaussian() * 0.0074999999999999997D * (double)f1;
-        d1 += rand.nextGaussian() * 0.0074999999999999997D * (double)f1;
-        d2 += rand.nextGaussian() * 0.0074999999999999997D * (double)f1;
+        d += rand.nextGaussian() * 0.0075D * (double)f1;
+        d1 += rand.nextGaussian() * 0.0075D * (double)f1;
+        d2 += rand.nextGaussian() * 0.0075D * (double)f1;
         d *= f;
         d1 *= f;
         d2 *= f;
@@ -185,45 +184,43 @@ public abstract class EntityBullet extends Entity
         timeInTile = 0;
     }
 
-    /**
-     * Checks if the entity is in range to render by using the past in distance and comparing it to its average edge
-     * length * 64 * renderDistanceWeight Args: distance
-     */
+    @Override
     public boolean isInRangeToRenderDist(double d)
     {
         return true;
     }
 
-    /**
-     * Called to update the entity's position/logic.
-     */
+    @Override
     public void onUpdate()
     {
         super.onUpdate();
 
-        if (serverSpawned && !serverSoundPlayed && owner != ModLoader.getMinecraftInstance().thePlayer)
+        if(serverSpawned && !serverSoundPlayed)
         {
-            playServerSound(worldObj);
-            serverSoundPlayed = true;
+        	if(!worldObj.isRemote || owner != ModernWarfare.proxy.getClientPlayer())
+        	{
+                playServerSound(worldObj);
+                serverSoundPlayed = true;
+        	}
         }
 
-        if (timeInAir == 200)
+        if(timeInAir == 200)
         {
             setEntityDead();
         }
 
-        if (prevRotationPitch == 0.0F && prevRotationYaw == 0.0F)
+        if(prevRotationPitch == 0.0F && prevRotationYaw == 0.0F)
         {
             float f = MathHelper.sqrt_double(motionX * motionX + motionZ * motionZ);
             prevRotationYaw = rotationYaw = (float)((Math.atan2(motionX, motionZ) * 180D) / Math.PI);
             prevRotationPitch = rotationPitch = (float)((Math.atan2(motionY, f) * 180D) / Math.PI);
         }
 
-        if (inGround)
+        if(inGround)
         {
             int i = worldObj.getBlockId(xTile, yTile, zTile);
 
-            if (i != inTile)
+            if(i != inTile)
             {
                 inGround = false;
                 motionX *= rand.nextFloat() * 0.2F;
@@ -232,11 +229,10 @@ public abstract class EntityBullet extends Entity
                 timeInTile = 0;
                 timeInAir = 0;
             }
-            else
-            {
+            else {
                 timeInTile++;
 
-                if (timeInTile == 200)
+                if(timeInTile == 200)
                 {
                     setEntityDead();
                 }
@@ -244,8 +240,7 @@ public abstract class EntityBullet extends Entity
                 return;
             }
         }
-        else
-        {
+        else {
             timeInAir++;
         }
 
@@ -255,7 +250,7 @@ public abstract class EntityBullet extends Entity
         vec3d = Vec3.createVectorHelper(posX, posY, posZ);
         vec3d1 = Vec3.createVectorHelper(posX + motionX, posY + motionY, posZ + motionZ);
 
-        if (movingobjectposition != null)
+        if(movingobjectposition != null)
         {
             vec3d1 = Vec3.createVectorHelper(movingobjectposition.hitVec.xCoord, movingobjectposition.hitVec.yCoord, movingobjectposition.hitVec.zCoord);
         }
@@ -265,11 +260,11 @@ public abstract class EntityBullet extends Entity
         double d = 0.0D;
         Vec3 vec3d2 = null;
 
-        for (int j = 0; j < list.size(); j++)
+        for(int j = 0; j < list.size(); j++)
         {
             Entity entity1 = (Entity)list.get(j);
 
-            if (!entity1.canBeCollidedWith() || (entity1 == owner || owner != null && entity1 == owner.ridingEntity || owner != null && entity1 == owner.riddenByEntity) && timeInAir < 5 || serverSpawned)
+            if(!entity1.canBeCollidedWith() || (entity1 == owner || owner != null && entity1 == owner.ridingEntity || owner != null && entity1 == owner.riddenByEntity) && timeInAir < 5 || serverSpawned)
             {
                 continue;
             }
@@ -278,14 +273,14 @@ public abstract class EntityBullet extends Entity
             AxisAlignedBB axisalignedbb = entity1.boundingBox.expand(f4, f4, f4);
             MovingObjectPosition movingobjectposition1 = axisalignedbb.calculateIntercept(vec3d, vec3d1);
 
-            if (movingobjectposition1 == null)
+            if(movingobjectposition1 == null)
             {
                 continue;
             }
 
             double d1 = vec3d.distanceTo(movingobjectposition1.hitVec);
 
-            if (d1 < d || d == 0.0D)
+            if(d1 < d || d == 0.0D)
             {
                 vec3d2 = movingobjectposition1.hitVec;
                 entity = entity1;
@@ -293,34 +288,34 @@ public abstract class EntityBullet extends Entity
             }
         }
 
-        if (entity != null)
+        if(entity != null)
         {
             movingobjectposition = new MovingObjectPosition(entity);
         }
 
-        if (movingobjectposition != null)
+        if(movingobjectposition != null)
         {
             int k = worldObj.getBlockId(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ);
 
-            if (movingobjectposition.entityHit != null || k != Block.tallGrass.blockID)
+            if(movingobjectposition.entityHit != null || k != Block.tallGrass.blockID)
             {
-                if (movingobjectposition.entityHit != null)
+                if(movingobjectposition.entityHit != null)
                 {
                     int l = damage;
 
-                    if ((owner instanceof IMob) && (movingobjectposition.entityHit instanceof EntityPlayer))
+                    if((owner instanceof IMob) && (movingobjectposition.entityHit instanceof EntityPlayer))
                     {
-                        if (worldObj.difficultySetting == 0)
+                        if(worldObj.difficultySetting == 0)
                         {
                             l = 0;
                         }
 
-                        if (worldObj.difficultySetting == 1)
+                        if(worldObj.difficultySetting == 1)
                         {
                             l = l / 3 + 1;
                         }
 
-                        if (worldObj.difficultySetting == 3)
+                        if(worldObj.difficultySetting == 3)
                         {
                             l = (l * 3) / 2;
                         }
@@ -328,12 +323,11 @@ public abstract class EntityBullet extends Entity
 
                     l = checkHeadshot(movingobjectposition, vec3d2, l);
 
-                    if (movingobjectposition.entityHit instanceof EntityLiving)
+                    if(movingobjectposition.entityHit instanceof EntityLiving)
                     {
                         WarTools.attackEntityIgnoreDelay((EntityLiving)movingobjectposition.entityHit, DamageSource.causeThrownDamage(this, owner), l);
                     }
-                    else
-                    {
+                    else {
                         movingobjectposition.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, owner), l);
                     }
                 }

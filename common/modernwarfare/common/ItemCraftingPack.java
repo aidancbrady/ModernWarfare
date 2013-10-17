@@ -15,7 +15,11 @@ public class ItemCraftingPack extends ItemWar
     @Override
     public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
     {
-        entityplayer.openGui(ModernWarfare.instance, 14, world, (int)entityplayer.posX, (int)entityplayer.posY, (int)entityplayer.posZ);
+    	if(!world.isRemote)
+    	{
+    		entityplayer.openGui(ModernWarfare.instance, 0, world, 0, 0, 0);
+    	}
+    	
         return itemstack;
     }
 }

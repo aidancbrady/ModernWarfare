@@ -131,39 +131,34 @@ public abstract class EntityLandVehicle extends Entity
         return true;
     }
 
-    public void onHurt()
-    {
-    }
+    public void onHurt() {}
 
     public void onDeath()
     {
         setDead();
     }
 
-    /**
-     * Returns true if other Entities should be prevented from moving through this Entity.
-     */
+    @Override
     public boolean canBeCollidedWith()
     {
         return !isDead;
     }
 
+    @Override
     public float getShadowSize()
     {
         return 0.0F;
     }
 
-    /**
-     * Called when a player interacts with a mob. e.g. gets milk from a cow, gets into the saddle on a pig.
-     */
-    public boolean interact(EntityPlayer entityplayer)
+    @Override
+    public boolean interactFirst(EntityPlayer entityplayer)
     {
-        if (riddenByEntity != null && (riddenByEntity instanceof EntityPlayer) && riddenByEntity != entityplayer)
+        if(riddenByEntity != null && (riddenByEntity instanceof EntityPlayer) && riddenByEntity != entityplayer)
         {
             return true;
         }
 
-        if (!worldObj.isRemote)
+        if(!worldObj.isRemote)
         {
             entityplayer.mountEntity(this);
         }
@@ -171,9 +166,7 @@ public abstract class EntityLandVehicle extends Entity
         return true;
     }
 
-    /**
-     * Called to update the entity's position/logic.
-     */
+    @Override
     public void onUpdate()
     {
         super.onUpdate();
@@ -181,7 +174,7 @@ public abstract class EntityLandVehicle extends Entity
         prevPosY = posY;
         prevPosZ = posZ;
 
-        if (getSpeed() > 0.0D)
+        if(getSpeed() > 0.0D)
         {
             double d = getMotionYaw();
             double d1 = (double)rotationYaw - d;
@@ -191,33 +184,33 @@ public abstract class EntityLandVehicle extends Entity
         boolean flag = false;
         boolean flag1 = true;
 
-        if (getSpeed() != 0.0D)
+        if(getSpeed() != 0.0D)
         {
             double d2 = ((double)rotationYaw * Math.PI) / 180D;
             double d6 = Math.cos(d2);
             flag1 = -d6 > 0.0D && motionX > 0.0D || -d6 < 0.0D && motionX < 0.0D;
         }
 
-        if (onGround)
+        if(onGround)
         {
-            if (riddenByEntity != null)
+            if(riddenByEntity != null)
             {
                 Minecraft minecraft = Minecraft.getMinecraft();
 
-                if (getSpeed() != 0.0D)
+                if(getSpeed() != 0.0D)
                 {
                     double d4 = 0.0D;
 
-                    if (minecraft.currentScreen == null && Keyboard.isKeyDown(minecraft.gameSettings.keyBindLeft.keyCode))
+                    if(minecraft.currentScreen == null && Keyboard.isKeyDown(minecraft.gameSettings.keyBindLeft.keyCode))
                     {
                         d4 = -getTurnSpeed() * (double)(flag1 ? 1 : -1);
                     }
-                    else if (minecraft.currentScreen == null && Keyboard.isKeyDown(minecraft.gameSettings.keyBindRight.keyCode))
+                    else if(minecraft.currentScreen == null && Keyboard.isKeyDown(minecraft.gameSettings.keyBindRight.keyCode))
                     {
                         d4 = getTurnSpeed() * (double)(flag1 ? 1 : -1);
                     }
 
-                    if (d4 != 0.0D)
+                    if(d4 != 0.0D)
                     {
                         rotationYaw += d4;
                         projectMotion(d4);
@@ -228,21 +221,21 @@ public abstract class EntityLandVehicle extends Entity
 
                 double d5 = 0.0D;
 
-                if (riddenByEntity != null)
+                if(riddenByEntity != null)
                 {
                     if (minecraft.currentScreen == null && Keyboard.isKeyDown(minecraft.gameSettings.keyBindForward.keyCode))
                     {
                         d5 = -(flag1 ? getAccelForward() : ACCEL_BRAKE);
                         flag = true;
                     }
-                    else if (minecraft.currentScreen == null && Keyboard.isKeyDown(minecraft.gameSettings.keyBindBack.keyCode))
+                    else if(minecraft.currentScreen == null && Keyboard.isKeyDown(minecraft.gameSettings.keyBindBack.keyCode))
                     {
                         d5 = flag1 ? ACCEL_BRAKE : getAccelBackward();
                         flag = true;
                     }
                 }
 
-                if (d5 != 0.0D)
+                if(d5 != 0.0D)
                 {
                     double d7 = ((double)rotationYaw * Math.PI) / 180D;
                     double d8 = Math.cos(d7);

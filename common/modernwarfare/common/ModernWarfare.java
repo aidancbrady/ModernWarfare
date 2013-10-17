@@ -128,7 +128,6 @@ public class ModernWarfare
     public static int grapplingHookID = 3451;
     
     public static Map grapplingHooks = new HashMap();
-    public static Map burstShots = new HashMap();
     public static Map reloadTimes = new HashMap();
     public static Map isSniperZoomedIn = new HashMap();
     public static Map jetpackOn = new HashMap();
@@ -725,23 +724,22 @@ public class ModernWarfare
                 int k = -1;
                 boolean flag1 = false;
 
-                do
-                {
+                do {
                     k = -1;
                     InventoryPlayer inventoryplayer = entityplayer.inventory;
 
-                    for (int l = i + 1; l < inventoryplayer.mainInventory.length; l++)
+                    for(int l = i + 1; l < inventoryplayer.mainInventory.length; l++)
                     {
-                        if (inventoryplayer.mainInventory[l] == null || inventoryplayer.mainInventory[l].itemID != item.itemID)
+                        if(inventoryplayer.mainInventory[l] == null || inventoryplayer.mainInventory[l].itemID != item.itemID)
                         {
                             continue;
                         }
 
-                        if (item.getMaxDamage() > 0)
+                        if(item.getMaxDamage() > 0)
                         {
                             int i1 = item.getMaxDamage() + 1;
 
-                            if (i == -1)
+                            if(i == -1)
                             {
                                 j = i1 - inventoryplayer.mainInventory[l].getItemDamage();
 
@@ -750,9 +748,8 @@ public class ModernWarfare
                                     break;
                                 }
                             }
-                            else
-                            {
-                                if (!flag1)
+                            else {
+                                if(!flag1)
                                 {
                                     reload(world, entityplayer);
                                     flag1 = true;
@@ -765,7 +762,7 @@ public class ModernWarfare
                                 inventoryplayer.mainInventory[i].setItemDamage(i1 - j);
                                 inventoryplayer.mainInventory[l].setItemDamage(i1 - k);
 
-                                if (k == 0)
+                                if(k == 0)
                                 {
                                     inventoryplayer.mainInventory[l] = new ItemStack(Item.bucketEmpty);
                                 }
@@ -773,18 +770,17 @@ public class ModernWarfare
                                 break;
                             }
                         }
-                        else if (i == -1)
+                        else if(i == -1)
                         {
                             j = inventoryplayer.mainInventory[l].stackSize;
 
-                            if (!flag && item.getMaxDamage() == 0 && j == item.getItemStackLimit(itemstack))
+                            if(!flag && item.getMaxDamage() == 0 && j == item.getItemStackLimit(itemstack))
                             {
                                 break;
                             }
                         }
-                        else
-                        {
-                            if (!flag1)
+                        else {
+                            if(!flag1)
                             {
                                 reload(world, entityplayer);
                                 flag1 = true;
@@ -797,7 +793,7 @@ public class ModernWarfare
                             inventoryplayer.mainInventory[i].stackSize = j;
                             inventoryplayer.mainInventory[l].stackSize = k;
 
-                            if (k == 0)
+                            if(k == 0)
                             {
                                 inventoryplayer.mainInventory[l] = null;
                             }
@@ -805,18 +801,18 @@ public class ModernWarfare
                             break;
                         }
 
-                        if (i == -1)
+                        if(i == -1)
                         {
                             i = l;
                         }
                     }
 
-                    if (i == -1)
+                    if(i == -1)
                     {
                         break;
                     }
 
-                    if (flag1 || !flag)
+                    if(flag1 || !flag)
                     {
                         continue;
                     }
@@ -824,7 +820,7 @@ public class ModernWarfare
                     reload(world, entityplayer);
                     break;
                 }
-                while (k != -1 && (item.getMaxDamage() != 0 || j != item.getItemStackLimit(itemstack)) && (item.getMaxDamage() <= 0 || j != item.getMaxDamage() + 1));
+                while(k != -1 && (item.getMaxDamage() != 0 || j != item.getItemStackLimit(itemstack)) && (item.getMaxDamage() <= 0 || j != item.getMaxDamage() + 1));
             }
         }
     }
@@ -836,17 +832,13 @@ public class ModernWarfare
 
         if (itemstack != null && itemstack.itemID == itemParachute.itemID)
         {
-            if (server.worldServerForDimension(1).playerEntities.contains(entityplayer))
+            for(Object obj : server.getConfigurationManager().playerEntityList)
             {
-                useParachute(itemstack, server.worldServerForDimension(0), entityplayer);
-            }
-            else if (server.worldServerForDimension(1).playerEntities.contains(entityplayer))
-            {
-                useParachute(itemstack, server.worldServerForDimension(-1), entityplayer);
-            }
-            else if (server.worldServerForDimension(1).playerEntities.contains(entityplayer))
-            {
-                useParachute(itemstack, server.worldServerForDimension(1), entityplayer);
+            	if(obj instanceof EntityPlayerMP)
+            	{
+            		EntityPlayerMP player = (EntityPlayerMP)obj;
+            		useParachute(itemstack, player.worldObj, player);
+            	}
             }
         }
     }
@@ -873,7 +865,7 @@ public class ModernWarfare
 
     public static void reload(World world, EntityPlayer entityplayer)
     {
-        world.playSoundAtEntity(entityplayer, "war.reload", 1.0F, 1.0F / (entityplayer.getRNG().nextFloat() * 0.1F + 0.95F));
+        world.playSoundAtEntity(entityplayer, "modernwarfare:reload", 1.0F, 1.0F / (entityplayer.getRNG().nextFloat() * 0.1F + 0.95F));
         reloadTimes.put(entityplayer, Integer.valueOf(40));
     }
     

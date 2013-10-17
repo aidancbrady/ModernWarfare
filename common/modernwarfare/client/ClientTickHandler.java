@@ -1,7 +1,11 @@
 package modernwarfare.client;
 
 import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
+import modernwarfare.common.ItemGun;
 import modernwarfare.common.ModernWarfare;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
@@ -13,10 +17,7 @@ public class ClientTickHandler implements ITickHandler
 	public Minecraft mc = Minecraft.getMinecraft();
 	
 	@Override
-	public void tickStart(EnumSet<TickType> type, Object... tickData) 
-	{
-		
-	}
+	public void tickStart(EnumSet<TickType> type, Object... tickData) {}
 
 	@Override
 	public void tickEnd(EnumSet<TickType> type, Object... tickData) 
@@ -38,9 +39,7 @@ public class ClientTickHandler implements ITickHandler
 	
 			ModernWarfareClient.handleRecoil(mc);
 			ModernWarfareClient.handleGunZoom(mc);
-			ModernWarfareClient.handleBurstShots(mc.theWorld);
 	
-			ModernWarfareClient.handleGuns(mc);
 			ModernWarfareClient.setJetPack(ModernWarfareClient.handleJetPack(mc));
 	
 	        ItemStack itemstack1 = mc.thePlayer.inventory.armorItemInSlot(3);

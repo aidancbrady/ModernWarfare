@@ -25,7 +25,7 @@ public class KeyBindingHandler extends KeyHandler
 	public static KeyBinding parachuteKey = new KeyBinding("MW Parachute", Keyboard.KEY_P);
 	public static KeyBinding nightvisionKey = new KeyBinding("MW Nightvision", Keyboard.KEY_N);
 	public static KeyBinding craftingPackKey = new KeyBinding("MW Crafting Pack", Keyboard.KEY_C);
-	public static KeyBinding atvFireKey = new KeyBinding("MW ATF Fire", Keyboard.KEY_SPACE);
+	public static KeyBinding atvFireKey = new KeyBinding("MW ATV Fire", Keyboard.KEY_SPACE);
 	public static KeyBinding atvInventoryKey = new KeyBinding("MW ATV Inventory", Keyboard.KEY_I);
 	
 	public KeyBindingHandler()

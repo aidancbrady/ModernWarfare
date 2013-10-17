@@ -2,7 +2,10 @@ package modernwarfare.common;
 
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
@@ -21,6 +24,29 @@ public class CommonTickHandler implements ITickHandler
 	public void tickEnd(EnumSet<TickType> type, Object... tickData) 
 	{
 		MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
+		
+		Set<ItemStack> toRemove = new HashSet<ItemStack>();
+		
+		for(Map.Entry<ItemStack, Integer> entry : ItemGun.fireDelays.entrySet())
+		{
+			if(entry.getKey() == null || entry.getValue() <= 0)
+			{
+				toRemove.add(entry.getKey());
+			}
+			
+			ItemGun.fireDelays.put(entry.getKey(), entry.getValue()-1);
+		}
+		
+		for(ItemStack stack : toRemove)
+		{
+			ItemGun.fireDelays.remove(stack);
+		}
+		
+		for(Map.Entry<ItemStack, Integer> entry : ItemGun.fireDelays.entrySet())
+		{
+			System.out.println(entry.getKey().getItem().getUnlocalizedName() + " - " + entry.getValue());
+		}
+		
         Iterator iterator = (new ArrayList(server.getConfigurationManager().playerEntityList)).iterator();
 
         do {
@@ -41,19 +67,13 @@ public class CommonTickHandler implements ITickHandler
         
         ModernWarfare.handleReload();
 
-        for(int i = 0; i < server.worldServerForDimension(0).playerEntities.size(); i++)
+        for(Object obj : server.getConfigurationManager().playerEntityList)
         {
-            ModernWarfare.handleJetPack(server.worldServerForDimension(0), (EntityPlayerMP)server.worldServerForDimension(0).playerEntities.get(i));
-        }
-
-        for(int j = 0; j < server.worldServerForDimension(-1).playerEntities.size(); j++)
-        {
-        	ModernWarfare.handleJetPack(server.worldServerForDimension(-1), (EntityPlayerMP)server.worldServerForDimension(-1).playerEntities.get(j));
-        }
-
-        for(int k = 0; k < server.worldServerForDimension(1).playerEntities.size(); k++)
-        {
-        	ModernWarfare.handleJetPack(server.worldServerForDimension(1), (EntityPlayerMP)server.worldServerForDimension(1).playerEntities.get(k));
+        	if(obj instanceof EntityPlayerMP)
+        	{
+        		EntityPlayerMP player = (EntityPlayerMP)obj;
+        		ModernWarfare.handleJetPack(player.worldObj, player);
+        	}
         }
 	}
 

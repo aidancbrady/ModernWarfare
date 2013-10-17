@@ -28,7 +28,7 @@ public class EntityAtv extends EntityLandVehicle implements IInventory
         deathTime = -13;
         DEATH_TIME_MAX = 100;
         soundLoopTime = 0;
-        SOUND_RIDING = "war.atv";
+        SOUND_RIDING = "modernwarfare:atv";
         SOUND_LOOP_TIME_MAX = 3;
         setSize(1.0F, 1.0F);
         yOffset = 0.3F;
@@ -48,32 +48,31 @@ public class EntityAtv extends EntityLandVehicle implements IInventory
         prevPosZ = d2;
     }
 
-    /**
-     * Returns true if this entity should push and be pushed by other entities when colliding.
-     */
+    @Override
     public boolean canBePushed()
     {
         return true;
     }
 
-    /**
-     * Returns the Y offset from the entity's position for any entity riding this one.
-     */
+    @Override
     public double getMountedYOffset()
     {
-        return 0.29999999999999999D;
+        return 0.3D;
     }
 
+    @Override
     public float getEyeHeight()
     {
         return 0.7F;
     }
 
+    @Override
     public void onHurt()
     {
-        worldObj.playSoundAtEntity(this, "war.mechhurt", 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
+        worldObj.playSoundAtEntity(this, "modernwarfare:mechhurt", 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
     }
 
+    @Override
     public void onDeath()
     {
         if (deathTime == -13)
@@ -82,33 +81,30 @@ public class EntityAtv extends EntityLandVehicle implements IInventory
         }
     }
 
-    /**
-     * Called to update the entity's position/logic.
-     */
+    @Override
     public void onUpdate()
     {
         super.onUpdate();
 
-        if (rand.nextInt(MAX_HEALTH) > health * 2)
+        if(rand.nextInt(MAX_HEALTH) > health * 2)
         {
             if (Math.random() < 0.75D)
             {
                 spawnParticles("smoke", 4, false);
             }
-            else
-            {
+            else {
                 spawnParticles("largesmoke", 1, false);
             }
         }
 
-        if (health > 0 && deathTime != -13)
+        if(health > 0 && deathTime != -13)
         {
             deathTime = -13;
         }
 
-        if (deathTime >= 0)
+        if(deathTime >= 0)
         {
-            if (deathTime == 0)
+            if(deathTime == 0)
             {
                 Explosion explosion = new Explosion(worldObj, null, posX, (float)posY, (float)posZ, 3F);
                 explosion.doExplosionA();
@@ -125,9 +121,9 @@ public class EntityAtv extends EntityLandVehicle implements IInventory
             deathTime--;
         }
 
-        if (riddenByEntity != null)
+        if(riddenByEntity != null)
         {
-            if (soundLoopTime <= 0)
+            if(soundLoopTime <= 0)
             {
                 worldObj.playSoundEffect(posX + motionX * 1.5D, posY + (onGround ? 0.0D : motionY) * 1.5D, posZ + motionZ * 1.5D, SOUND_RIDING, 1.0F, 1.0F + (float)(getSpeed() / MAX_SPEED / 4D));
                 soundLoopTime = SOUND_LOOP_TIME_MAX;
@@ -135,8 +131,7 @@ public class EntityAtv extends EntityLandVehicle implements IInventory
 
             soundLoopTime--;
         }
-        else
-        {
+        else {
             soundLoopTime = 0;
         }
     }
@@ -152,32 +147,29 @@ public class EntityAtv extends EntityLandVehicle implements IInventory
             double d4 = flag ? rand.nextDouble() - 0.5D : 0.0D;
             double d5 = flag ? rand.nextDouble() - 0.5D : 0.0D;
 
-            if (Math.random() < 0.75D)
+            if(Math.random() < 0.75D)
             {
                 worldObj.spawnParticle(s, d, d1, d2, d3, d4, d5);
             }
-            else
-            {
+            else {
                 worldObj.spawnParticle(s, d, d1, d2, d3, d4, d5);
             }
         }
     }
 
-    /**
-     * Called when a player interacts with a mob. e.g. gets milk from a cow, gets into the saddle on a pig.
-     */
-    public boolean interact(EntityPlayer entityplayer)
+    @Override
+    public boolean interactFirst(EntityPlayer entityplayer)
     {
-        if (entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().itemID == ModernWarfare.itemWrench.itemID)
+        if(entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().itemID == ModernWarfare.itemWrench.itemID)
         {
-            if (health > 0 && health < MAX_HEALTH)
+            if(health > 0 && health < MAX_HEALTH)
             {
-                worldObj.playSoundAtEntity(this, "war.wrench", 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
+                worldObj.playSoundAtEntity(this, "modernwarfare:wrench", 1.0F, (rand.nextFloat() - rand.nextFloat()) * 0.2F + 1.0F);
                 health = Math.min(health + 4, MAX_HEALTH);
                 entityplayer.swingItem();
                 entityplayer.getCurrentEquippedItem().damageItem(1, entityplayer);
 
-                if (entityplayer.getCurrentEquippedItem().getItemDamage() <= 0)
+                if(entityplayer.getCurrentEquippedItem().getItemDamage() <= 0)
                 {
                     entityplayer.inventory.mainInventory[entityplayer.inventory.currentItem] = null;
                 }
@@ -186,23 +178,20 @@ public class EntityAtv extends EntityLandVehicle implements IInventory
             return true;
         }
 
-        if (riddenByEntity != null && (riddenByEntity instanceof EntityPlayer) && riddenByEntity != entityplayer)
+        if(riddenByEntity != null && (riddenByEntity instanceof EntityPlayer) && riddenByEntity != entityplayer)
         {
             return true;
         }
 
-        if (!worldObj.isRemote)
+        if(!worldObj.isRemote)
         {
             entityplayer.mountEntity(this);
-            ItemCustomUseDelay.doNotUseThisTick = worldObj.getWorldTime();
         }
 
         return true;
     }
 
-    /**
-     * Reads the entity from NBT (calls an abstract helper method to read specialized data)
-     */
+    @Override
     public void readFromNBT(NBTTagCompound nbttagcompound)
     {
         NBTTagList nbttaglist = nbttagcompound.getTagList("Pos");
@@ -213,17 +202,17 @@ public class EntityAtv extends EntityLandVehicle implements IInventory
         motionY = ((NBTTagDouble)nbttaglist1.tagAt(1)).data;
         motionZ = ((NBTTagDouble)nbttaglist1.tagAt(2)).data;
 
-        if (Math.abs(motionX) > 10D)
+        if(Math.abs(motionX) > 10D)
         {
             motionX = 0.0D;
         }
 
-        if (Math.abs(motionY) > 10D)
+        if(Math.abs(motionY) > 10D)
         {
             motionY = 0.0D;
         }
 
-        if (Math.abs(motionZ) > 10D)
+        if(Math.abs(motionZ) > 10D)
         {
             motionZ = 0.0D;
         }
@@ -241,19 +230,17 @@ public class EntityAtv extends EntityLandVehicle implements IInventory
         readEntityFromNBT(nbttagcompound);
     }
 
-    /**
-     * (abstract) Protected helper method to read subclass entity data from NBT.
-     */
+    @Override
     public void readEntityFromNBT(NBTTagCompound nbttagcompound)
     {
         NBTTagList nbttaglist = nbttagcompound.getTagList("GunA");
 
-        if (nbttaglist.tagCount() > 0)
+        if(nbttaglist.tagCount() > 0)
         {
             NBTTagCompound nbttagcompound1 = (NBTTagCompound)nbttaglist.tagAt(0);
             byte byte0 = nbttagcompound1.getByte("Slot");
 
-            if (byte0 == 0)
+            if(byte0 == 0)
             {
                 gunA = ItemStack.loadItemStackFromNBT(nbttagcompound1);
             }
@@ -261,12 +248,12 @@ public class EntityAtv extends EntityLandVehicle implements IInventory
 
         NBTTagList nbttaglist1 = nbttagcompound.getTagList("GunB");
 
-        if (nbttaglist1.tagCount() > 0)
+        if(nbttaglist1.tagCount() > 0)
         {
             NBTTagCompound nbttagcompound2 = (NBTTagCompound)nbttaglist1.tagAt(0);
             byte byte1 = nbttagcompound2.getByte("Slot");
 
-            if (byte1 == 0)
+            if(byte1 == 0)
             {
                 gunB = ItemStack.loadItemStackFromNBT(nbttagcompound2);
             }
@@ -276,14 +263,12 @@ public class EntityAtv extends EntityLandVehicle implements IInventory
         deathTime = nbttagcompound.getInteger("DeathTime");
     }
 
-    /**
-     * (abstract) Protected helper method to write subclass entity data to NBT.
-     */
+    @Override
     public void writeEntityToNBT(NBTTagCompound nbttagcompound)
     {
         NBTTagList nbttaglist = new NBTTagList();
 
-        if (gunA != null)
+        if(gunA != null)
         {
             NBTTagCompound nbttagcompound1 = new NBTTagCompound();
             nbttagcompound1.setByte("Slot", (byte)0);
@@ -294,7 +279,7 @@ public class EntityAtv extends EntityLandVehicle implements IInventory
         nbttagcompound.setTag("GunA", nbttaglist);
         NBTTagList nbttaglist1 = new NBTTagList();
 
-        if (gunB != null)
+        if(gunB != null)
         {
             NBTTagCompound nbttagcompound2 = new NBTTagCompound();
             nbttagcompound2.setByte("Slot", (byte)0);
@@ -309,84 +294,74 @@ public class EntityAtv extends EntityLandVehicle implements IInventory
 
     public void fireGuns()
     {
-        if (gunA != null)
+        if(gunA != null && ItemGun.canFire(gunA))
         {
-            ((ItemGun)gunA.getItem()).onItemRightClickEntity(gunA, worldObj, this, -1.8F, 0.0F, 0.5625F, 90F, 0.0F);
+        	ItemGun.addDelay(gunA);
+            ((ItemGun)gunA.getItem()).fireBullet(worldObj, this, gunA, -1.8F, 0.0F, 0.5625F, 90F, 0.0F);
         }
 
-        if (gunB != null)
+        if(gunB != null && ItemGun.canFire(gunB))
         {
-            ((ItemGun)gunB.getItem()).onItemRightClickEntity(gunB, worldObj, this, -1.8F, 0.0F, -0.3125F, 90F, 0.0F);
+        	ItemGun.addDelay(gunB);
+            ((ItemGun)gunB.getItem()).fireBullet(worldObj, this, gunB, -1.8F, 0.0F, -0.3125F, 90F, 0.0F);
         }
     }
 
-    /**
-     * Returns the number of slots in the inventory.
-     */
+    @Override
     public int getSizeInventory()
     {
         return 2;
     }
 
-    /**
-     * Returns the stack in slot i
-     */
+    @Override
     public ItemStack getStackInSlot(int i)
     {
-        if (i == 0)
+        if(i == 0)
         {
             return gunA;
         }
 
-        if (i == 1)
+        if(i == 1)
         {
             return gunB;
         }
-        else
-        {
+        else {
             return null;
         }
     }
 
-    /**
-     * When some containers are closed they call this on each slot, then drop whatever it returns as an EntityItem -
-     * like when you close a workbench GUI.
-     */
+    @Override
     public ItemStack getStackInSlotOnClosing(int i)
     {
-        if (i == 0)
+        if(i == 0)
         {
             ItemStack itemstack = gunA;
             gunA = null;
             return itemstack;
         }
 
-        if (i == 1)
+        if(i == 1)
         {
             ItemStack itemstack1 = gunB;
             gunB = null;
             return itemstack1;
         }
-        else
-        {
+        else {
             return null;
         }
     }
 
-    /**
-     * Decrease the size of the stack in slot (first int arg) by the amount of the second int arg. Returns the new
-     * stack.
-     */
+    @Override
     public ItemStack decrStackSize(int i, int j)
     {
         ItemStack itemstack = null;
 
-        if (i == 0 && gunA != null)
+        if(i == 0 && gunA != null)
         {
             itemstack = gunA;
             gunA = null;
         }
-        else if (i == 1 && gunB != null)
+        else if(i == 1 && gunB != null)
         {
             itemstack = gunB;
             gunB = null;
@@ -395,9 +370,7 @@ public class EntityAtv extends EntityLandVehicle implements IInventory
         return itemstack;
     }
 
-    /**
-     * Sets the given item stack to the specified slot in the inventory (can be crafting or armor sections).
-     */
+	@Override
     public void setInventorySlotContents(int i, ItemStack itemstack)
     {
         if (itemstack == null || (itemstack.getItem() instanceof ItemGun))
@@ -413,33 +386,22 @@ public class EntityAtv extends EntityLandVehicle implements IInventory
         }
     }
 
-    /**
-     * Returns the name of the inventory.
-     */
+    @Override
     public String getInvName()
     {
         return "ATV";
     }
 
-    /**
-     * Returns the maximum stack size for a inventory slot. Seems to always be 64, possibly will be extended. *Isn't
-     * this more of a set than a get?*
-     */
+    @Override
     public int getInventoryStackLimit()
     {
         return 1;
     }
 
-    /**
-     * Called when an the contents of an Inventory change, usually
-     */
-    public void onInventoryChanged()
-    {
-    }
+    @Override
+    public void onInventoryChanged() {}
 
-    /**
-     * Do not make give this method the name canInteractWith because it clashes with Container
-     */
+    @Override
     public boolean isUseableByPlayer(EntityPlayer entityplayer)
     {
         return entityplayer.getDistanceSq(posX, posY, posZ) <= 64D;

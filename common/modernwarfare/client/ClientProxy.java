@@ -126,9 +126,6 @@ public class ClientProxy extends CommonProxy
 	@Override
 	public void resetData()
 	{
-		ModernWarfareClient.minecraft_clickMouse = null;
-		ModernWarfareClient.minecraft_aa = null;
-		ModernWarfareClient.minecraft_ticksRan = null;
 		ModernWarfareClient.jetPackReady = false;
 		ModernWarfareClient.jetPackOn = false;
 		ModernWarfareClient.jetPackLastSound = 0L;
@@ -156,6 +153,12 @@ public class ClientProxy extends CommonProxy
 	{
         ModernWarfareClient.currentRecoilV += v;
         ModernWarfareClient.currentRecoilH += h;
+	}
+	
+	@Override
+	public EntityPlayer getClientPlayer()
+	{
+		return mc.thePlayer;
 	}
 	
 	@Override

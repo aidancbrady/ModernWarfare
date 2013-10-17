@@ -62,6 +62,11 @@ public class CommonProxy implements IGuiHandler
 	
 	public void doRecoil(double v, double h) {}
 	
+	public EntityPlayer getClientPlayer()
+	{
+		return null;
+	}
+	
 	public Object reloadLightometerIcon() 
 	{
 		return null;

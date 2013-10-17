@@ -1,15 +1,21 @@
 package modernwarfare.common;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.lwjgl.input.Mouse;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public abstract class ItemGun extends ItemCustomUseDelay
+public abstract class ItemGun extends ItemWar
 {
     public String firingSound;
     public Item requiredBullet;
+    public int useDelay;
     public int numBullets;
     public int burstShots;
     public int damage;
@@ -21,6 +27,8 @@ public abstract class ItemGun extends ItemCustomUseDelay
     public float soundRangeFactor;
     protected long lastSound;
     protected long lastEmptySound;
+    
+	public static Map<ItemStack, Integer> fireDelays = new HashMap<ItemStack, Integer>();
 
     public ItemGun(int i)
     {
@@ -44,102 +52,111 @@ public abstract class ItemGun extends ItemCustomUseDelay
     {
         return 4;
     }
-
+    
     @Override
-    public boolean use(ItemStack itemstack, World world, Entity entity, float f, float f1, float f2, float f3, float f4)
+    public void onUpdate(ItemStack stack, World world, Entity entity, int i, boolean flag)
     {
-        return fireBullet(world, entity, itemstack, false, f, f1, f2, f3, f4);
+    	if(world.isRemote && flag)
+    	{
+    		if(entity instanceof EntityPlayer)
+    		{
+    			EntityPlayer player = (EntityPlayer)entity;
+    			
+    			if(Mouse.isButtonDown(1))
+    			{
+    				if(canFire(stack))
+    				{
+    					addDelay(stack);
+    					//TODO fire
+    				}
+    			}
+    		}
+    	}
     }
 
-    public boolean fireBullet(World world, Entity entity, ItemStack itemstack, boolean flag, float f, float f1, float f2, float f3, float f4)
+    public boolean fireBullet(World world, Entity entity, ItemStack itemstack, float xOffset, float yOffset, float zOffset, float rotationYawOffset, float rotationPitchOffset)
     {
-        if (!ModernWarfare.reloadTimes.containsKey(entity))
+        if(!ModernWarfare.reloadTimes.containsKey(entity))
         {
-            int i;
+            int ammoUsed;
 
-            if (entity instanceof EntityPlayer)
+            if(entity instanceof EntityPlayer)
             {
-                i = WarTools.useItemInInventory((EntityPlayer)entity, requiredBullet.itemID);
+                ammoUsed = WarTools.useItemInInventory((EntityPlayer)entity, requiredBullet.itemID);
             }
             else if (entity.riddenByEntity != null && (entity.riddenByEntity instanceof EntityPlayer))
             {
-                i = WarTools.useItemInInventory((EntityPlayer)entity.riddenByEntity, requiredBullet.itemID);
+                ammoUsed = WarTools.useItemInInventory((EntityPlayer)entity.riddenByEntity, requiredBullet.itemID);
             }
-            else
-            {
-                i = 1;
+            else {
+                ammoUsed = 1;
             }
 
-            if (i > 0)
+            if(ammoUsed > 0)
             {
-                if (world.getWorldTime() - lastSound < 0L)
+                if(world.getWorldTime() - lastSound < 0L)
                 {
                     lastSound = world.getWorldTime() - (long)soundDelay;
                 }
 
-                if (soundDelay == 0 || lastSound == 0L || world.getWorldTime() - lastSound > (long)soundDelay)
+                if(soundDelay == 0 || lastSound == 0L || world.getWorldTime() - lastSound > (long)soundDelay)
                 {
                     world.playSoundAtEntity(entity, firingSound, 1.0F, 1.0F / (itemRand.nextFloat() * 0.1F + 0.95F));
                     lastSound = world.getWorldTime();
                 }
 
-                if (!world.isRemote)
+                if(!world.isRemote)
                 {
-                    for (int j = 0; j < numBullets; j++)
+                    for(int j = 0; j < numBullets; j++)
                     {
-                        EntityBullet entitybullet = getBulletEntity(world, entity, f, f1, f2, f3, f4);
+                        EntityBullet bullet = getBulletEntity(world, entity, xOffset, yOffset, zOffset, rotationYawOffset, rotationPitchOffset);
 
-                        if (entitybullet != null)
+                        if(bullet != null)
                         {
-                            world.spawnEntityInWorld(entitybullet);
+                            world.spawnEntityInWorld(bullet);
                         }
                     }
 
-                    EntityBulletCasing entitybulletcasing = getBulletCasingEntity(world, entity, f1);
+                    EntityBulletCasing bulletCasing = getBulletCasingEntity(world, entity, yOffset);
 
-                    if ((entity instanceof EntityPlayer) && ModernWarfare.ammoCasings && entitybulletcasing != null)
+                    if((entity instanceof EntityPlayer) && ModernWarfare.ammoCasings && bulletCasing != null)
                     {
-                        world.spawnEntityInWorld(entitybulletcasing);
-                    }
-
-                    if (!flag && burstShots > 0)
-                    {
-                        ModernWarfare.burstShots.put(entity, new BurstShotEntry(burstShots, itemstack));
+                        world.spawnEntityInWorld(bulletCasing);
                     }
                 }
 
-                if (entity instanceof EntityPlayer)
+                if(entity instanceof EntityPlayer)
                 {
-                    double d = Math.min(recoil, entity.rotationPitch + 90F);
-                    double d1 = world.rand.nextFloat() * recoil * 0.5F - recoil * 0.25F;
+                    double verticalRecoil = Math.min(recoil, entity.rotationPitch + 90F);
+                    double horizontalRecoil = world.rand.nextFloat() * recoil * 0.5F - recoil * 0.25F;
 
-                    if (!entity.isSneaking())
+                    if(!entity.isSneaking())
                     {
-                        d *= 2D;
-                        d1 *= 2D;
+                        verticalRecoil *= 2D;
+                        horizontalRecoil *= 2D;
 
-                        if (this instanceof ItemGunMinigun)
+                        if(this instanceof ItemGunMinigun)
                         {
-                            d *= 2D;
-                            d1 *= 2D;
+                            verticalRecoil *= 2D;
+                            horizontalRecoil *= 2D;
                         }
                     }
 
-                    if (!entity.onGround)
+                    if(!entity.onGround)
                     {
-                        d *= 2D;
-                        d1 *= 2D;
+                        verticalRecoil *= 2D;
+                        horizontalRecoil *= 2D;
                     }
 
                     if(world.isRemote)
                     {
-                    	ModernWarfare.proxy.doRecoil(d, d1);
+                    	ModernWarfare.proxy.doRecoil(verticalRecoil, horizontalRecoil);
                     }
                     
-                    entity.rotationPitch -= d;
-                    entity.rotationYaw += d1;
+                    entity.rotationPitch -= verticalRecoil;
+                    entity.rotationYaw += horizontalRecoil;
 
-                    if (i == 2 && !(this instanceof ItemGunMinigun) && !(this instanceof ItemGunLaser))
+                    if(ammoUsed == 2 && !(this instanceof ItemGunMinigun) && !(this instanceof ItemGunLaser))
                     {
                         ModernWarfare.handleReload(world, (EntityPlayer)entity, true);
                     }
@@ -148,7 +165,7 @@ public abstract class ItemGun extends ItemCustomUseDelay
                 return true;
             }
 
-            if (lastEmptySound == 0L || world.getWorldTime() - lastEmptySound > 20L)
+            if(lastEmptySound == 0L || world.getWorldTime() - lastEmptySound > 20L)
             {
                 world.playSoundAtEntity(entity, "modernwarfare:gunempty", 1.0F, 1.0F / (itemRand.nextFloat() * 0.1F + 0.95F));
                 lastEmptySound = world.getWorldTime();
@@ -167,4 +184,14 @@ public abstract class ItemGun extends ItemCustomUseDelay
     public abstract EntityBullet getBulletEntity(World world, Entity entity, float f, float f1, float f2, float f3, float f4);
 
     public abstract EntityBulletCasing getBulletCasingEntity(World world, Entity entity, float f);
+    
+    public static boolean canFire(ItemStack itemStack)
+    {
+    	return fireDelays.get(itemStack) == null || fireDelays.get(itemStack) == 0;
+    }
+    
+    public static void addDelay(ItemStack itemStack)
+    {
+    	fireDelays.put(itemStack, ((ItemGun)itemStack.getItem()).useDelay);
+    }
 }

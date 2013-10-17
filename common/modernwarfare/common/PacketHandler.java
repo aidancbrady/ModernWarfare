@@ -42,11 +42,11 @@ public class PacketHandler implements IPacketHandler
                 {
                     System.out.println((new StringBuilder()).append("[ModernWarfare] Received '3' packet from ").append(entityplayer.username).append(".").toString());
 
-                    if (entityplayer.openContainer instanceof ContainerCraftingPack)
+                    if(entityplayer.openContainer instanceof ContainerCraftingPack)
                     {
                         entityplayer.closeScreen();
                     }
-                    else if (entityplayer.inventory.hasItem(ModernWarfare.itemCraftingPack.itemID))
+                    else if(entityplayer.inventory.hasItem(ModernWarfare.itemCraftingPack.itemID))
                     {
                         entityplayer.openGui(ModernWarfare.instance, 0, entityplayer.worldObj, 0, 0, 0);
                     }
@@ -68,7 +68,7 @@ public class PacketHandler implements IPacketHandler
                 {
                     System.out.println((new StringBuilder()).append("[ModernWarfare] Received '5' packet from ").append(entityplayer.username).append(".").toString());
 
-                    if (entityplayer.ridingEntity instanceof EntityAtv)
+                    if(entityplayer.ridingEntity instanceof EntityAtv)
                     {
                         ((EntityAtv)entityplayer.ridingEntity).fireGuns();
                     }
