@@ -150,12 +150,6 @@ public class ModernWarfare
     
     public static int monsterSpawns = 70;
     
-    public static final double RECOIL_FIX_FACTOR = 0.1D;
-    public static final double MIN_RECOIL_FIX = 0.5D;
-    
-    public static double currentRecoilV = 0.0D;
-    public static double currentRecoilH = 0.0D;
-    
     @EventHandler
     public void preInit(FMLPreInitializationEvent event)
     {

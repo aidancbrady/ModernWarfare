@@ -32,8 +32,8 @@ public class ClientTickHandler implements ITickHandler
 					ModernWarfareClient.reloadTimes.remove(mc.thePlayer);
 				}
 	
-				ModernWarfare.currentRecoilV = 0.0D;
-				ModernWarfare.currentRecoilH = 0.0D;
+				ModernWarfareClient.currentRecoilV = 0.0D;
+				ModernWarfareClient.currentRecoilH = 0.0D;
 			}
 	
 			ModernWarfareClient.handleRecoil(mc);

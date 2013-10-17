@@ -81,17 +81,6 @@ public abstract class EntityBullet extends Entity
 
         if (entity instanceof EntityLiving)
         {
-            if (entity instanceof EntityPlayer)
-            {
-                float f8 = itemgun.recoil / (float)itemgun.useDelay;
-                float f9 = f8 / 0.1F;
-
-                if (f9 > 0.0F)
-                {
-                    f7 = (float)((double)f7 * (1.0D + ModernWarfare.currentRecoilV / (double)f9));
-                }
-            }
-
             boolean flag = Math.abs(entity.motionX) > 0.10000000000000001D || Math.abs(entity.motionY) > 0.10000000000000001D || Math.abs(entity.motionZ) > 0.10000000000000001D;
 
             if (flag)
@@ -383,7 +372,7 @@ public abstract class EntityBullet extends Entity
                     }
                 }
 
-                worldObj.playSoundAtEntity(this, "war.impact", 0.2F, 1.0F / (rand.nextFloat() * 0.1F + 0.95F));
+                worldObj.playSoundAtEntity(this, "modernwarfare:impact", 0.2F, 1.0F / (rand.nextFloat() * 0.1F + 0.95F));
                 setEntityDead();
             }
         }
@@ -458,9 +447,7 @@ public abstract class EntityBullet extends Entity
         return i;
     }
 
-    /**
-     * (abstract) Protected helper method to write subclass entity data to NBT.
-     */
+    @Override
     public void writeEntityToNBT(NBTTagCompound nbttagcompound)
     {
         nbttagcompound.setShort("xTile", (short)xTile);
@@ -470,9 +457,7 @@ public abstract class EntityBullet extends Entity
         nbttagcompound.setByte("inGround", (byte)(inGround ? 1 : 0));
     }
 
-    /**
-     * (abstract) Protected helper method to read subclass entity data from NBT.
-     */
+    @Override
     public void readEntityFromNBT(NBTTagCompound nbttagcompound)
     {
         xTile = nbttagcompound.getShort("xTile");
@@ -482,6 +467,7 @@ public abstract class EntityBullet extends Entity
         inGround = nbttagcompound.getByte("inGround") == 1;
     }
 
+    @Override
     public float getShadowSize()
     {
         return 0.0F;

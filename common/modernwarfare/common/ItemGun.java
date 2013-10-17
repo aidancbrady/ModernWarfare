@@ -1,5 +1,6 @@
 package modernwarfare.common;
 
+import modernwarfare.client.ModernWarfareClient;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -131,10 +132,14 @@ public abstract class ItemGun extends ItemCustomUseDelay
                         d1 *= 2D;
                     }
 
-                    ModernWarfare.currentRecoilV += d;
-                    ModernWarfare.currentRecoilH += d1;
-                    entity.rotationPitch -= d;
-                    entity.rotationYaw += d1;
+                    if(world.isRemote)
+                    {
+	                    ModernWarfareClient.currentRecoilV += d;
+	                    ModernWarfareClient.currentRecoilH += d1;
+	                    
+	                    entity.rotationPitch -= d;
+	                    entity.rotationYaw += d1;
+                    }
 
                     if (i == 2 && !(this instanceof ItemGunMinigun) && !(this instanceof ItemGunLaser))
                     {

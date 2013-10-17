@@ -73,6 +73,12 @@ public class ModernWarfareClient extends ModernWarfare
         1.0F, 0.5F, 0.25F, 0.125F, 0.0625F
     };
     
+    public static final double RECOIL_FIX_FACTOR = 0.1D;
+    public static final double MIN_RECOIL_FIX = 0.5D;
+    
+    public static double currentRecoilV = 0.0D;
+    public static double currentRecoilH = 0.0D;
+    
     public static Method minecraft_clickMouse;
     
     public static Field minecraft_aa;

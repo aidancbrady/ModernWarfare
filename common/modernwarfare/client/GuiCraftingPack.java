@@ -15,18 +15,14 @@ public class GuiCraftingPack extends GuiContainer
         super(new ContainerCraftingPack(inventoryplayer, world));
     }
 
-    /**
-     * Draw the foreground layer for the GuiContainer (everythin in front of the items)
-     */
-    protected void drawGuiContainerForegroundLayer()
+    @Override
+    protected void drawGuiContainerForegroundLayer(int i, int j)
     {
         fontRenderer.drawString("CraftingPack", 28, 6, 0x404040);
         fontRenderer.drawString("Inventory", 8, (ySize - 96) + 2, 0x404040);
     }
 
-    /**
-     * Draw the background layer for the GuiContainer (everything behind the items)
-     */
+    @Override
     protected void drawGuiContainerBackgroundLayer(float f, int i, int j)
     {
         mc.renderEngine.bindTexture(new ResourceLocation("textures/gui/container/crafting_table.png"));
