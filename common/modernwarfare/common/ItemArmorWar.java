@@ -14,7 +14,7 @@ public class ItemArmorWar extends ItemArmor
     {
         super(i, enumarmormaterial, j, k);
         materialName = material;
-        setCreativeTab(ModernWarfare.tabModernWarfare);
+       // setCreativeTab(ModernWarfare.tabModernWarfare);
     }
     
     @Override

@@ -56,6 +56,7 @@ public class EntityGrenadeIncendiary extends EntityGrenade
         explode();
     }
 
+    @Override
     protected void explode()
     {
         if (!exploded)
@@ -73,10 +74,14 @@ public class EntityGrenadeIncendiary extends EntityGrenade
                     for (int j1 = -2; j1 <= 2; j1++)
                     {
                         int k1 = Math.abs(l) + Math.abs(i1) + Math.abs(j1);
+                        
+                        int x = i + l;
+                        int y = j + i1;
+                        int z = k + j1;
 
-                        if (k1 <= 2 && worldObj.isAirBlock(i + l, j + i1, k + j1))
+                        if (k1 <= 2 && (worldObj.isAirBlock(x, y, z) || Block.blocksList[worldObj.getBlockId(x, y, z)].isBlockReplaceable(worldObj, x, y, z)))
                         {
-                            worldObj.setBlock(i + l, j + i1, k + j1, Block.fire.blockID);
+                            worldObj.setBlock(x, y, z, Block.fire.blockID);
                         }
                     }
                 }

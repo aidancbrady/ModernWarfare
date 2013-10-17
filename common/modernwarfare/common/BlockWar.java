@@ -8,6 +8,5 @@ public class BlockWar extends Block
     public BlockWar(int i, Material material)
     {
         super(i, material);
-        setCreativeTab(ModernWarfare.tabModernWarfare);
     }
 }

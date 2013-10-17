@@ -414,71 +414,44 @@ public class ModernWarfareClient extends ModernWarfare
     
     public static void handleCraftingPackKey(Minecraft minecraft, EntityPlayer entityplayer)
     {
-        if (FMLCommonHandler.instance().getEffectiveSide().isClient())
-        {
-            if(minecraft.currentScreen instanceof GuiCraftingPack)
-            {
-                minecraft.displayGuiScreen(null);
-            }
-            else if(entityplayer.inventory.hasItem(itemCraftingPack.itemID))
-            {
-                FMLClientHandler.instance().displayGuiScreen(entityplayer, new GuiCraftingPack(entityplayer.inventory, minecraft.theWorld));
-            }
-        }
-        else
-        {
-            ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
-            DataOutputStream dataoutputstream = new DataOutputStream(bytearrayoutputstream);
+        ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
+        DataOutputStream dataoutputstream = new DataOutputStream(bytearrayoutputstream);
 
-            try
-            {
-                dataoutputstream.writeInt(3);
-            } catch (IOException ioexception) {
-                System.out.println("[ModernWarfare] An error occured while writing packet data.");
-                ioexception.printStackTrace();
-            }
-
-            Packet250CustomPayload packet250custompayload = new Packet250CustomPayload();
-            packet250custompayload.channel = "MDWF";
-            packet250custompayload.data = bytearrayoutputstream.toByteArray();
-            packet250custompayload.length = packet250custompayload.data.length;
-            PacketDispatcher.sendPacketToServer(packet250custompayload);
-            System.out.println("[ModernWarfare] Sent '3' packet to server");
+        try
+        {
+            dataoutputstream.writeInt(3);
+        } catch (IOException ioexception) {
+            System.out.println("[ModernWarfare] An error occured while writing packet data.");
+            ioexception.printStackTrace();
         }
+
+        Packet250CustomPayload packet250custompayload = new Packet250CustomPayload();
+        packet250custompayload.channel = "MDWF";
+        packet250custompayload.data = bytearrayoutputstream.toByteArray();
+        packet250custompayload.length = packet250custompayload.data.length;
+        PacketDispatcher.sendPacketToServer(packet250custompayload);
+        System.out.println("[ModernWarfare] Sent '3' packet to server");
     }
 
     public static void handleInventoryAtvKey(Minecraft minecraft, EntityPlayer entityplayer)
     {
-        if(FMLCommonHandler.instance().getEffectiveSide().isClient())
+        ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
+        DataOutputStream dataoutputstream = new DataOutputStream(bytearrayoutputstream);
+
+        try
         {
-            if(minecraft.currentScreen instanceof GuiAtv)
-            {
-                minecraft.displayGuiScreen(null);
-            }
-            else if(entityplayer.ridingEntity instanceof EntityAtv)
-            {
-                entityplayer.openGui(ModernWarfare.instance, 1, minecraft.theWorld, 0, 0, 0);
-            }
+            dataoutputstream.writeInt(4);
+        } catch (IOException ioexception) {
+            System.out.println("[ModernWarfare] An error occured while writing packet data.");
+            ioexception.printStackTrace();
         }
-        else {
-            ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
-            DataOutputStream dataoutputstream = new DataOutputStream(bytearrayoutputstream);
 
-            try
-            {
-                dataoutputstream.writeInt(4);
-            } catch (IOException ioexception) {
-                System.out.println("[ModernWarfare] An error occured while writing packet data.");
-                ioexception.printStackTrace();
-            }
-
-            Packet250CustomPayload packet250custompayload = new Packet250CustomPayload();
-            packet250custompayload.channel = "MDWF";
-            packet250custompayload.data = bytearrayoutputstream.toByteArray();
-            packet250custompayload.length = packet250custompayload.data.length;
-            PacketDispatcher.sendPacketToServer(packet250custompayload);
-            System.out.println("[ModernWarfare] Sent '4' packet to server");
-        }
+        Packet250CustomPayload packet250custompayload = new Packet250CustomPayload();
+        packet250custompayload.channel = "MDWF";
+        packet250custompayload.data = bytearrayoutputstream.toByteArray();
+        packet250custompayload.length = packet250custompayload.data.length;
+        PacketDispatcher.sendPacketToServer(packet250custompayload);
+        System.out.println("[ModernWarfare] Sent '4' packet to server");
     }
 
     public static void handleAtvFireKey(Minecraft minecraft, EntityPlayer entityplayer)

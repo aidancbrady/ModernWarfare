@@ -23,6 +23,7 @@ public class RenderAtv extends Render
     public void render(EntityAtv entityatv, double d, double d1, double d2, float f, float f1)
     {
         GL11.glPushMatrix();
+        bindTexture(getEntityTexture(entityatv));
         float f2 = entityatv.prevRotationPitch + (entityatv.rotationPitch - entityatv.prevRotationPitch) * f1;
         GL11.glTranslatef((float)d, (float)d1, (float)d2);
         GL11.glRotatef(180F - f, 0.0F, 1.0F, 0.0F);

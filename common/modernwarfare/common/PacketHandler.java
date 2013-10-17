@@ -48,7 +48,7 @@ public class PacketHandler implements IPacketHandler
                     }
                     else if (entityplayer.inventory.hasItem(ModernWarfare.itemCraftingPack.itemID))
                     {
-                        entityplayer.openGui(this, 0, entityplayer.worldObj, 0, 0, 0);
+                        entityplayer.openGui(ModernWarfare.instance, 0, entityplayer.worldObj, 0, 0, 0);
                     }
                 }
                 else if(packetType == 4)
@@ -57,7 +57,7 @@ public class PacketHandler implements IPacketHandler
 
                     if(entityplayer.ridingEntity instanceof EntityAtv)
                     {
-                        entityplayer.openGui(this, 1, entityplayer.worldObj, 0, 0, 0);
+                        entityplayer.openGui(ModernWarfare.instance, 1, entityplayer.worldObj, 0, 0, 0);
                     }
                     else if(entityplayer.openContainer instanceof ContainerAtv)
                     {
