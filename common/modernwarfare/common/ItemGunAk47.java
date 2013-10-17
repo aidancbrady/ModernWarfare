@@ -18,11 +18,13 @@ public class ItemGunAk47 extends ItemGun
         recoil = 2.0F;
     }
 
+    @Override
     public EntityBullet getBulletEntity(World world, Entity entity, float f, float f1, float f2, float f3, float f4)
     {
         return new EntityBulletAk47(world, entity, this, f, f1, f2, f3, f4);
     }
 
+    @Override
     public EntityBulletCasing getBulletCasingEntity(World world, Entity entity, float f)
     {
         return new EntityBulletCasing(world, entity, f);

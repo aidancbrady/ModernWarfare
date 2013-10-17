@@ -1,7 +1,6 @@
 package modernwarfare.client;
 
 import java.util.List;
-import java.util.Map;
 
 import modernwarfare.common.CommonProxy;
 import modernwarfare.common.EntityAtv;
@@ -23,7 +22,6 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.common.registry.TickRegistry;
