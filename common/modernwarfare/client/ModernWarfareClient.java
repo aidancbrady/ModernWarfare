@@ -4,7 +4,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Iterator;
 
@@ -33,6 +32,7 @@ import org.lwjgl.input.Mouse;
 
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class ModernWarfareClient extends ModernWarfare
 {
@@ -46,6 +46,9 @@ public class ModernWarfareClient extends ModernWarfare
     
     public static int lastUtilityZoomSlot = 0;
     public static int lastGunZoomSlot = 0;
+    
+    public static int currentZoomDelay = 0;
+    public static int ZOOM_DELAY = 10;
     
     public static boolean zoomEnabled = false;
     public static boolean sniperZoomedIn = false;
@@ -109,10 +112,10 @@ public class ModernWarfareClient extends ModernWarfare
                 }
 
                 Packet250CustomPayload packet250custompayload = new Packet250CustomPayload();
-                packet250custompayload.channel = "ModernWarfare";
+                packet250custompayload.channel = "MDWF";
                 packet250custompayload.data = bytearrayoutputstream.toByteArray();
                 packet250custompayload.length = packet250custompayload.data.length;
-                ModLoader.sendPacket(packet250custompayload);
+                PacketDispatcher.sendPacketToServer(packet250custompayload);
                 System.out.println("[ModernWarfare] Sent '7' packet to server");
             }
             else
@@ -131,10 +134,10 @@ public class ModernWarfareClient extends ModernWarfare
                 }
 
                 Packet250CustomPayload packet250custompayload1 = new Packet250CustomPayload();
-                packet250custompayload1.channel = "ModernWarfare";
+                packet250custompayload1.channel = "MDWF";
                 packet250custompayload1.data = bytearrayoutputstream1.toByteArray();
                 packet250custompayload1.length = packet250custompayload1.data.length;
-                ModLoader.sendPacket(packet250custompayload1);
+                PacketDispatcher.sendPacketToServer(packet250custompayload1);
                 System.out.println("[ModernWarfare] Sent '8' packet to server");
             }
         }
@@ -204,33 +207,33 @@ public class ModernWarfareClient extends ModernWarfare
 	{
 		ItemStack itemstack = minecraft.thePlayer.inventory.armorItemInSlot(2);
 
-		if (minecraft.currentScreen == null && itemstack != null && itemstack.itemID == ModernWarfare.itemJetPack.itemID) 
+		if(minecraft.currentScreen == null && itemstack != null && itemstack.itemID == ModernWarfare.itemJetPack.itemID) 
 		{
-			if (WarTools.onGroundOrInWater(minecraft.theWorld, minecraft.thePlayer) || minecraft.thePlayer.ridingEntity != null)
+			if(WarTools.onGroundOrInWater(minecraft.theWorld, minecraft.thePlayer) || minecraft.thePlayer.ridingEntity != null)
 			{
 				ModernWarfareClient.jetPackReady = false;
 			} 
-			else if (!Keyboard.isKeyDown(minecraft.gameSettings.keyBindJump.keyCode))
+			else if(!Keyboard.isKeyDown(minecraft.gameSettings.keyBindJump.keyCode))
 			{
 				ModernWarfareClient.jetPackReady = true;
 			} 
-			else if (ModernWarfareClient.jetPackReady && useJetPackFuel(minecraft))
+			else if(ModernWarfareClient.jetPackReady && useJetPackFuel(minecraft))
 			{
 				minecraft.thePlayer.motionY = Math.min(minecraft.thePlayer.motionY + 0.06D + 0.06D, 0.3D);
 				minecraft.thePlayer.fallDistance = 0.0F;
 
-				for (int i = 0; i < 16; i++) 
+				for(int i = 0; i < 16; i++) 
 				{
 					ModernWarfareClient.spawnJetPackParticle(minecraft, "flame");
 					ModernWarfareClient.spawnJetPackParticle(minecraft, "smoke");
 				}
 
-				if (minecraft.theWorld.getWorldTime() - ModernWarfareClient.jetPackLastSound < 0L) 
+				if(minecraft.theWorld.getWorldTime() - ModernWarfareClient.jetPackLastSound < 0L) 
 				{
 					ModernWarfareClient.jetPackLastSound = minecraft.theWorld.getWorldTime() - 15L;
 				}
 
-				if (ModernWarfareClient.jetPackLastSound == 0L || minecraft.theWorld.getWorldTime() - ModernWarfareClient.jetPackLastSound > 15L) 
+				if(ModernWarfareClient.jetPackLastSound == 0L || minecraft.theWorld.getWorldTime() - ModernWarfareClient.jetPackLastSound > 15L) 
 				{
 					minecraft.theWorld.playSoundAtEntity(minecraft.thePlayer, "war.jetpack", 0.25F, 1.0F / (WarTools.random.nextFloat() * 0.1F + 0.95F));
 					ModernWarfareClient.jetPackLastSound = minecraft.theWorld.getWorldTime();
@@ -255,16 +258,16 @@ public class ModernWarfareClient extends ModernWarfare
         lastUtilityZoomSlot = minecraft.thePlayer.inventory.currentItem;
         float f = MAX_ZOOMS[currentUtilityZoomIndex];
 
-        if (currentUtilityZoom > f)
+        if(currentUtilityZoom > f)
         {
             currentUtilityZoom = Math.max(f, currentUtilityZoom - 0.0625F);
         }
-        else if (currentUtilityZoom < f)
+        else if(currentUtilityZoom < f)
         {
             currentUtilityZoom = Math.min(f, currentUtilityZoom + 0.0625F);
         }
 
-        if (currentUtilityZoom != lastUtilityZoom)
+        if(currentUtilityZoom != lastUtilityZoom)
         {
             try {
             	WarTools.setPrivateValue(minecraft.entityRenderer, Float.valueOf(1.0F / currentUtilityZoom), EntityRenderer.class, ObfuscatedNames.EntityRenderer_cameraZoom);
@@ -287,43 +290,42 @@ public class ModernWarfareClient extends ModernWarfare
         float f = 1.0F;
         ItemStack itemstack = minecraft.thePlayer.inventory.getCurrentItem();
 
-        if (minecraft.gameSettings != null && minecraft.thePlayer != null && minecraft.thePlayer.inventory != null)
+        if(minecraft.gameSettings != null && minecraft.thePlayer != null && minecraft.thePlayer.inventory != null)
         {
-            if (itemstack == null || itemstack.getItem() != itemGunSniper && itemstack.getItem() != itemGunSg552 || minecraft.thePlayer.inventory.currentItem != lastGunZoomSlot || minecraft.gameSettings.thirdPersonView > 0 || minecraft.currentScreen != null)
+            if(itemstack == null || itemstack.getItem() != itemGunSniper && itemstack.getItem() != itemGunSg552 || minecraft.thePlayer.inventory.currentItem != lastGunZoomSlot || minecraft.gameSettings.thirdPersonView > 0 || minecraft.currentScreen != null)
             {
                 zoomEnabled = false;
             }
 
             lastGunZoomSlot = minecraft.thePlayer.inventory.currentItem;
 
-            if (zoomEnabled && minecraft.gameSettings.thirdPersonView == 0)
+            if(zoomEnabled && minecraft.gameSettings.thirdPersonView == 0)
             {
-                if (itemstack.getItem() == itemGunSniper)
+                if(itemstack.getItem() == itemGunSniper)
                 {
                     f = 0.125F;
                 }
-                else
-                {
+                else {
                     f = 0.25F;
                 }
 
-                if (currentGunZoom > f)
+                if(currentGunZoom > f)
                 {
                     flag = true;
                 }
             }
         }
 
-        if (zoomEnabled && flag)
+        if(zoomEnabled && flag)
         {
             currentGunZoom = Math.max(f, currentGunZoom - 0.075F);
         }
-        else if (!zoomEnabled && currentGunZoom < 1.0F)
+        else if(!zoomEnabled && currentGunZoom < 1.0F)
         {
             currentGunZoom = Math.min(1.0F, currentGunZoom + 0.075F);
         }
 
-        if (currentGunZoom == 0.125F && !sniperZoomedIn && itemstack != null && itemstack.getItem() == itemGunSniper)
+        if(currentGunZoom == 0.125F && !sniperZoomedIn && itemstack != null && itemstack.getItem() == itemGunSniper)
         {
             sniperZoomedIn = true;
             ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
@@ -332,21 +334,19 @@ public class ModernWarfareClient extends ModernWarfare
             try
             {
                 dataoutputstream.writeInt(1);
-            }
-            catch (IOException ioexception)
-            {
+            } catch (IOException ioexception) {
                 System.out.println("[ModernWarfare] An error occured while writing packet data.");
                 ioexception.printStackTrace();
             }
 
             Packet250CustomPayload packet250custompayload = new Packet250CustomPayload();
-            packet250custompayload.channel = "ModernWarfare";
+            packet250custompayload.channel = "MDWF";
             packet250custompayload.data = bytearrayoutputstream.toByteArray();
             packet250custompayload.length = packet250custompayload.data.length;
-            ModLoader.sendPacket(packet250custompayload);
+            PacketDispatcher.sendPacketToServer(packet250custompayload);
             System.out.println("[ModernWarfare] Sent '1' packet to server");
         }
-        else if (currentGunZoom != 0.125F && sniperZoomedIn)
+        else if(currentGunZoom != 0.125F && sniperZoomedIn)
         {
             sniperZoomedIn = false;
             ByteArrayOutputStream bytearrayoutputstream1 = new ByteArrayOutputStream();
@@ -355,18 +355,16 @@ public class ModernWarfareClient extends ModernWarfare
             try
             {
                 dataoutputstream1.writeInt(0);
-            }
-            catch (IOException ioexception1)
-            {
+            } catch (IOException ioexception1) {
                 System.out.println("[ModernWarfare] An error occured while writing packet data.");
                 ioexception1.printStackTrace();
             }
 
             Packet250CustomPayload packet250custompayload1 = new Packet250CustomPayload();
-            packet250custompayload1.channel = "ModernWarfare";
+            packet250custompayload1.channel = "MDWF";
             packet250custompayload1.data = bytearrayoutputstream1.toByteArray();
             packet250custompayload1.length = packet250custompayload1.data.length;
-            ModLoader.sendPacket(packet250custompayload1);
+            PacketDispatcher.sendPacketToServer(packet250custompayload1);
             System.out.println("[ModernWarfare] Sent '0' packet to server");
         }
 
@@ -390,12 +388,18 @@ public class ModernWarfareClient extends ModernWarfare
     
     public static void useZoom()
     {
-        currentUtilityZoomIndex = (currentUtilityZoomIndex + 1) % MAX_ZOOMS.length;
+    	if(currentZoomDelay == 0)
+    	{
+    		currentUtilityZoomIndex = (currentUtilityZoomIndex + 1) % MAX_ZOOMS.length;
+    	}
     }
 
     public static void toggleZoomEnabled()
     {
-        zoomEnabled = !zoomEnabled;
+    	if(currentZoomDelay == 0)
+    	{
+    		zoomEnabled = !zoomEnabled;
+    	}
     }
     
     public static boolean getSniperZoomedIn()
@@ -412,11 +416,11 @@ public class ModernWarfareClient extends ModernWarfare
     {
         if (FMLCommonHandler.instance().getEffectiveSide().isClient())
         {
-            if (minecraft.currentScreen instanceof GuiCraftingPack)
+            if(minecraft.currentScreen instanceof GuiCraftingPack)
             {
                 minecraft.displayGuiScreen(null);
             }
-            else if (entityplayer.inventory.hasItem(itemCraftingPack.itemID))
+            else if(entityplayer.inventory.hasItem(itemCraftingPack.itemID))
             {
                 FMLClientHandler.instance().displayGuiScreen(entityplayer, new GuiCraftingPack(entityplayer.inventory, minecraft.theWorld));
             }
@@ -429,88 +433,80 @@ public class ModernWarfareClient extends ModernWarfare
             try
             {
                 dataoutputstream.writeInt(3);
-            }
-            catch (IOException ioexception)
-            {
+            } catch (IOException ioexception) {
                 System.out.println("[ModernWarfare] An error occured while writing packet data.");
                 ioexception.printStackTrace();
             }
 
             Packet250CustomPayload packet250custompayload = new Packet250CustomPayload();
-            packet250custompayload.channel = "ModernWarfare";
+            packet250custompayload.channel = "MDWF";
             packet250custompayload.data = bytearrayoutputstream.toByteArray();
             packet250custompayload.length = packet250custompayload.data.length;
-            ModLoader.sendPacket(packet250custompayload);
+            PacketDispatcher.sendPacketToServer(packet250custompayload);
             System.out.println("[ModernWarfare] Sent '3' packet to server");
         }
     }
 
     public static void handleInventoryAtvKey(Minecraft minecraft, EntityPlayer entityplayer)
     {
-        if (FMLCommonHandler.instance().getEffectiveSide().isClient())
+        if(FMLCommonHandler.instance().getEffectiveSide().isClient())
         {
-            if (minecraft.currentScreen instanceof GuiAtv)
+            if(minecraft.currentScreen instanceof GuiAtv)
             {
                 minecraft.displayGuiScreen(null);
             }
-            else if (entityplayer.ridingEntity instanceof EntityAtv)
+            else if(entityplayer.ridingEntity instanceof EntityAtv)
             {
-                ModLoader.openGUI(entityplayer, new GuiAtv(entityplayer.inventory, (EntityAtv)entityplayer.ridingEntity));
+                entityplayer.openGui(ModernWarfare.instance, 1, minecraft.theWorld, 0, 0, 0);
             }
         }
-        else
-        {
+        else {
             ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
             DataOutputStream dataoutputstream = new DataOutputStream(bytearrayoutputstream);
 
             try
             {
                 dataoutputstream.writeInt(4);
-            }
-            catch (IOException ioexception)
-            {
+            } catch (IOException ioexception) {
                 System.out.println("[ModernWarfare] An error occured while writing packet data.");
                 ioexception.printStackTrace();
             }
 
             Packet250CustomPayload packet250custompayload = new Packet250CustomPayload();
-            packet250custompayload.channel = "ModernWarfare";
+            packet250custompayload.channel = "MDWF";
             packet250custompayload.data = bytearrayoutputstream.toByteArray();
             packet250custompayload.length = packet250custompayload.data.length;
-            ModLoader.sendPacket(packet250custompayload);
+            PacketDispatcher.sendPacketToServer(packet250custompayload);
             System.out.println("[ModernWarfare] Sent '4' packet to server");
         }
     }
 
     public static void handleAtvFireKey(Minecraft minecraft, EntityPlayer entityplayer)
     {
-        if (FMLCommonHandler.instance().getEffectiveSide().isClient())
+        if(FMLCommonHandler.instance().getEffectiveSide().isClient())
         {
-            if (entityplayer.ridingEntity instanceof EntityAtv)
+            if(entityplayer.ridingEntity instanceof EntityAtv)
             {
                 ((EntityAtv)entityplayer.ridingEntity).fireGuns();
             }
         }
-        else if (entityplayer.ridingEntity instanceof EntityAtv)
+        else if(entityplayer.ridingEntity instanceof EntityAtv)
         {
             ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
             DataOutputStream dataoutputstream = new DataOutputStream(bytearrayoutputstream);
 
-            try
-            {
+            try {
                 dataoutputstream.writeInt(5);
-            }
-            catch (IOException ioexception)
-            {
+            } catch (IOException ioexception) {
                 System.out.println("[ModernWarfare] An error occured while writing packet data.");
                 ioexception.printStackTrace();
             }
 
             Packet250CustomPayload packet250custompayload = new Packet250CustomPayload();
-            packet250custompayload.channel = "ModernWarfare";
+            packet250custompayload.channel = "MDWF";
             packet250custompayload.data = bytearrayoutputstream.toByteArray();
             packet250custompayload.length = packet250custompayload.data.length;
-            ModLoader.sendPacket(packet250custompayload);
+            PacketDispatcher.sendPacketToServer(packet250custompayload);
         }
     }
     
@@ -518,15 +514,14 @@ public class ModernWarfareClient extends ModernWarfare
     {
         ItemStack itemstack = minecraft.thePlayer.inventory.armorInventory[2];
 
-        if (itemstack != null && itemstack.itemID == itemParachute.itemID)
+        if(itemstack != null && itemstack.itemID == itemParachute.itemID)
         {
             useParachute(itemstack, minecraft.theWorld, minecraft.thePlayer);
             
             ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
             DataOutputStream dataoutputstream = new DataOutputStream(bytearrayoutputstream);
 
-            try
-            {
+            try {
                 dataoutputstream.writeInt(2);
             } catch (IOException ioexception) {
                 System.out.println("[ModernWarfare] An error occured while writing packet data.");
@@ -534,10 +529,10 @@ public class ModernWarfareClient extends ModernWarfare
             }
 
             Packet250CustomPayload packet250custompayload = new Packet250CustomPayload();
-            packet250custompayload.channel = "ModernWarfare";
+            packet250custompayload.channel = "MDWF";
             packet250custompayload.data = bytearrayoutputstream.toByteArray();
             packet250custompayload.length = packet250custompayload.data.length;
-            ModLoader.sendPacket(packet250custompayload);
+            PacketDispatcher.sendPacketToServer(packet250custompayload);
             System.out.println("[ModernWarfare] Sent '2' packet to server");
         }
     }
@@ -612,17 +607,16 @@ public class ModernWarfareClient extends ModernWarfare
 
             boolean flag = false;
 
-            if (item != null && ((ItemGun)item).burstShots > 0)
+            if(item != null && ((ItemGun)item).burstShots > 0)
             {
                 flag = ((ItemGun)item).fireBullet(world, entity, burstshotentry.itemStack, true, burstshotentry.xOffset, burstshotentry.yOffset, burstshotentry.zOffset, burstshotentry.rotationYawOffset, burstshotentry.rotationPitchOffset);
             }
 
-            if (burstshotentry.burstShots <= 0 || !flag)
+            if(burstshotentry.burstShots <= 0 || !flag)
             {
                 iterator.remove();
             }
-            else
-            {
+            else {
                 entry.setValue(burstshotentry);
             }
         }

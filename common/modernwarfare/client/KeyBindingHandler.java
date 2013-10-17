@@ -9,12 +9,12 @@ import modernwarfare.common.ModernWarfare;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.network.packet.Packet250CustomPayload;
-import net.minecraft.src.ModLoader;
 
 import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.client.registry.KeyBindingRegistry.KeyHandler;
 import cpw.mods.fml.common.TickType;
+import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class KeyBindingHandler extends KeyHandler
 {
@@ -37,7 +37,7 @@ public class KeyBindingHandler extends KeyHandler
 	@Override
 	public String getLabel() 
 	{
-		return null;
+		return "ModernWarfareKeys";
 	}
 
 	@Override
@@ -54,21 +54,18 @@ public class KeyBindingHandler extends KeyHandler
                 ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
                 DataOutputStream dataoutputstream = new DataOutputStream(bytearrayoutputstream);
 
-                try
-                {
+                try {
                     dataoutputstream.writeInt(6);
-                }
-                catch (IOException ioexception)
-                {
+                } catch (IOException ioexception) {
                     System.out.println("[ModernWarfare] An error occured while writing packet data.");
                     ioexception.printStackTrace();
                 }
 
                 Packet250CustomPayload packet250custompayload = new Packet250CustomPayload();
-                packet250custompayload.channel = "ModernWarfare";
+                packet250custompayload.channel = "MDWF";
                 packet250custompayload.data = bytearrayoutputstream.toByteArray();
                 packet250custompayload.length = packet250custompayload.data.length;
-                ModLoader.sendPacket(packet250custompayload);
+                PacketDispatcher.sendPacketToServer(packet250custompayload);
                 ModernWarfare.handleReload(mc.theWorld, mc.thePlayer, false);
                 System.out.println("[ModernWarfare] Sent '6' packet to server");
         	}

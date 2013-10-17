@@ -11,9 +11,7 @@ public class ItemTelescope extends ItemWar
         super(i);
     }
 
-    /**
-     * Called whenever this item is equipped and the right mouse button is pressed. Args: itemStack, world, entityPlayer
-     */
+    @Override
     public ItemStack onItemRightClick(ItemStack itemstack, World world, EntityPlayer entityplayer)
     {
         ModernWarfare.proxy.useZoom();

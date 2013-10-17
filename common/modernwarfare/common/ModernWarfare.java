@@ -561,15 +561,15 @@ public class ModernWarfare
         itemScope = (new ItemWar(13277)).setUnlocalizedName("itemScope");
         itemWrench = (new ItemWar(13278)).setMaxStackSize(1).setMaxDamage(15).setUnlocalizedName("itemWrench");
         itemSentry = (new ItemSentry(13279)).setMaxStackSize(1).setMaxDamage(0).setUnlocalizedName("itemSentry");
-        itemNightvisionGoggles = (new ItemArmorWar(13281, EnumArmorMaterial.CLOTH, proxy.getArmorIndex("nightvision"), 0)).setUnlocalizedName("itemNightvisionGoggles");
-        itemScubaTank = (new ItemArmorWar(13282, EnumArmorMaterial.CLOTH, proxy.getArmorIndex("scubaTank"), 1)).setUnlocalizedName("itemScubaTank");
-        itemGhillieHelmet = (new ItemArmorWar(13283, EnumArmorMaterial.CLOTH, proxy.getArmorIndex("ghillie"), 0)).setUnlocalizedName("itemGhillieHelmet");
-        itemGhillieChest = (new ItemArmorWar(13284, EnumArmorMaterial.CLOTH, proxy.getArmorIndex("ghillie"), 1)).setUnlocalizedName("itemGhillieChest");
-        itemGhilliePants = (new ItemArmorWar(13285, EnumArmorMaterial.CLOTH, proxy.getArmorIndex("ghillie"), 2)).setUnlocalizedName("itemGhilliePants");
-        itemGhillieBoots = (new ItemArmorWar(13286, EnumArmorMaterial.CLOTH, proxy.getArmorIndex("ghillie"), 3)).setUnlocalizedName("itemGhillieBoots");
+        itemNightvisionGoggles = (new ItemArmorWar(13281, EnumArmorMaterial.CLOTH, "nightvision", proxy.getArmorIndex("nightvision"), 0)).setUnlocalizedName("itemNightvisionGoggles");
+        itemScubaTank = (new ItemArmorWar(13282, EnumArmorMaterial.CLOTH, "scubaTank", proxy.getArmorIndex("scubaTank"), 1)).setUnlocalizedName("itemScubaTank");
+        itemGhillieHelmet = (new ItemArmorWar(13283, EnumArmorMaterial.CLOTH, "ghillie", proxy.getArmorIndex("ghillie"), 0)).setUnlocalizedName("itemGhillieHelmet");
+        itemGhillieChest = (new ItemArmorWar(13284, EnumArmorMaterial.CLOTH, "ghillie", proxy.getArmorIndex("ghillie"), 1)).setUnlocalizedName("itemGhillieChest");
+        itemGhilliePants = (new ItemArmorWar(13285, EnumArmorMaterial.CLOTH, "ghillie", proxy.getArmorIndex("ghillie"), 2)).setUnlocalizedName("itemGhilliePants");
+        itemGhillieBoots = (new ItemArmorWar(13286, EnumArmorMaterial.CLOTH, "ghillie", proxy.getArmorIndex("ghillie"), 3)).setUnlocalizedName("itemGhillieBoots");
         itemRope = (new ItemWar(13287)).setUnlocalizedName("itemRope");
         itemGrapplingHook = (new ItemGrapplingHook(13288)).setUnlocalizedName("itemGrapplingHook");
-        itemJetPack = (new ItemArmorWar(13289, EnumArmorMaterial.CLOTH, proxy.getArmorIndex("itemJetPack"), 1)).setUnlocalizedName("itemJetPack");
+        itemJetPack = (new ItemArmorWar(13289, EnumArmorMaterial.CLOTH, "jetPack", proxy.getArmorIndex("itemJetPack"), 1)).setUnlocalizedName("itemJetPack");
         itemCraftingPack = (new ItemCraftingPack(13290)).setUnlocalizedName("itemCraftingPack");
         itemWoodGrip = (new ItemWar(13291)).setUnlocalizedName("itemWoodGrip");
         itemMetalGrip = (new ItemWar(13292)).setUnlocalizedName("itemMetalGrip");
@@ -585,23 +585,23 @@ public class ModernWarfare
 
     public static void useParachute(ItemStack itemstack, World world, EntityPlayer entityplayer)
     {
-        if (!WarTools.onGroundOrInWater(world, entityplayer))
+        if(!WarTools.onGroundOrInWater(world, entityplayer))
         {
             itemstack.damageItem(1, entityplayer);
 
-            if (itemstack.stackSize == 0)
+            if(itemstack.stackSize == 0)
             {
                 boolean flag = false;
                 int i = 0;
 
                 do
                 {
-                    if (i >= entityplayer.inventory.armorInventory.length)
+                    if(i >= entityplayer.inventory.armorInventory.length)
                     {
                         break;
                     }
 
-                    if (entityplayer.inventory.armorInventory[i] == itemstack)
+                    if(entityplayer.inventory.armorInventory[i] == itemstack)
                     {
                         entityplayer.inventory.armorInventory[i] = null;
                         flag = true;
@@ -612,18 +612,18 @@ public class ModernWarfare
                 }
                 while (true);
 
-                if (!flag)
+                if(!flag)
                 {
                     int j = 0;
 
                     do
                     {
-                        if (j >= entityplayer.inventory.mainInventory.length)
+                        if(j >= entityplayer.inventory.mainInventory.length)
                         {
                             break;
                         }
 
-                        if (entityplayer.inventory.mainInventory[j] == itemstack)
+                        if(entityplayer.inventory.mainInventory[j] == itemstack)
                         {
                             entityplayer.inventory.mainInventory[j] = null;
                             boolean flag1 = true;
@@ -636,9 +636,9 @@ public class ModernWarfare
                 }
             }
 
-            world.playSoundAtEntity(entityplayer, "war.parachute", 0.5F, 1.0F / (WarTools.random.nextFloat() * 0.1F + 0.95F));
+            world.playSoundAtEntity(entityplayer, "modernwarfare:parachute", 0.5F, 1.0F / (WarTools.random.nextFloat() * 0.1F + 0.95F));
 
-            if (!world.isRemote)
+            if(!world.isRemote)
             {
                 world.spawnEntityInWorld(new EntityParachute(world, entityplayer));
             }
@@ -647,17 +647,16 @@ public class ModernWarfare
     
     public static void handleReload()
     {
-        for (Iterator iterator = reloadTimes.entrySet().iterator(); iterator.hasNext();)
+        for(Iterator iterator = reloadTimes.entrySet().iterator(); iterator.hasNext();)
         {
-            java.util.Map.Entry entry = (java.util.Map.Entry)iterator.next();
+            Map.Entry entry = (Map.Entry)iterator.next();
             int i = ((Integer)entry.getValue()).intValue() - 1;
 
-            if (i <= 0)
+            if(i <= 0)
             {
                 iterator.remove();
             }
-            else
-            {
+            else {
                 entry.setValue(Integer.valueOf(i));
             }
         }
@@ -665,11 +664,11 @@ public class ModernWarfare
 
     public static void handleReload(World world, EntityPlayer entityplayer, boolean flag)
     {
-        if (!reloadTimes.containsKey(entityplayer))
+        if(!reloadTimes.containsKey(entityplayer))
         {
             ItemStack itemstack = entityplayer.getCurrentEquippedItem();
 
-            if (itemstack != null && (itemstack.getItem() instanceof ItemGun))
+            if(itemstack != null && (itemstack.getItem() instanceof ItemGun))
             {
                 Item item = ((ItemGun)itemstack.getItem()).requiredBullet;
                 int i = -1;
