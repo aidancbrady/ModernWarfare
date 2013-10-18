@@ -132,7 +132,7 @@ public class ModernWarfare
     public static Map grapplingHooks = new HashMap();
     public static Map reloadTimes = new HashMap();
     public static Map isSniperZoomedIn = new HashMap();
-    public static Map jetpackOn = new HashMap();
+    public static Map isJetpackOn = new HashMap();
     
     public static Set<EntityPlayer> shooting = new HashSet<EntityPlayer>();
     
@@ -849,7 +849,7 @@ public class ModernWarfare
     {
         ItemStack itemstack = entityplayermp.inventory.armorInventory[2];
 
-        if(itemstack != null && itemstack.itemID == itemJetPack.itemID && !WarTools.onGroundOrInWater(world, entityplayermp) && entityplayermp.ridingEntity == null && jetpackOn.get(entityplayermp) != null && ((Boolean)jetpackOn.get(entityplayermp)).booleanValue() && useJetPackFuel(entityplayermp))
+        if(itemstack != null && itemstack.itemID == itemJetPack.itemID && !WarTools.onGroundOrInWater(world, entityplayermp) && entityplayermp.ridingEntity == null && isJetpackOn.get(entityplayermp) != null && (Boolean)isJetpackOn.get(entityplayermp) && useJetPackFuel(entityplayermp))
         {
             entityplayermp.motionY = Math.min(entityplayermp.motionY + 0.06D + 0.06D, 0.3D);
             entityplayermp.fallDistance = 0.0F;

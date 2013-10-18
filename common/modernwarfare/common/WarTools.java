@@ -177,8 +177,7 @@ public final class WarTools
                     return 2;
                 }
             }
-            else
-            {
+            else {
                 entityplayer.inventory.mainInventory[j].damageItem(1, entityplayer);
             }
         }

@@ -101,6 +101,8 @@ public class ModernWarfareClient extends ModernWarfare
             packet250custompayload.length = packet250custompayload.data.length;
             PacketDispatcher.sendPacketToServer(packet250custompayload);
             System.out.println("[ModernWarfare] Sent '" + (flag ? 7 : 8) + "' packet to server");
+            
+            jetPackOn = flag;
         }
     }
     
@@ -130,11 +132,13 @@ public class ModernWarfareClient extends ModernWarfare
 			{
 				jetPackReady = true;
 			} 
-			else if(jetPackReady && useJetPackFuel(minecraft))
+			else if(jetPackReady)
 			{
-				minecraft.thePlayer.motionY = Math.min(minecraft.thePlayer.motionY + 0.06D + 0.06D, 0.3D);
-				minecraft.thePlayer.fallDistance = 0.0F;
-
+				setJetPack(true);
+				
+	            minecraft.thePlayer.motionY = Math.min(minecraft.thePlayer.motionY + 0.06D + 0.06D, 0.3D);
+	            minecraft.thePlayer.fallDistance = 0.0F;
+				
 				for(int i = 0; i < 16; i++) 
 				{
 					spawnJetPackParticle(minecraft, "flame");
@@ -148,7 +152,7 @@ public class ModernWarfareClient extends ModernWarfare
 
 				if(jetPackLastSound == 0L || minecraft.theWorld.getWorldTime() - jetPackLastSound > 15L) 
 				{
-					minecraft.theWorld.playSoundAtEntity(minecraft.thePlayer, "war.jetpack", 0.25F, 1.0F / (WarTools.random.nextFloat() * 0.1F + 0.95F));
+					minecraft.theWorld.playSoundAtEntity(minecraft.thePlayer, "modernwarfare:jetpack", 0.25F, 1.0F / (WarTools.random.nextFloat() * 0.1F + 0.95F));
 					jetPackLastSound = minecraft.theWorld.getWorldTime();
 				}
 

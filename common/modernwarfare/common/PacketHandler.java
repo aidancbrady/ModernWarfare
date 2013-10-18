@@ -87,23 +87,23 @@ public class PacketHandler implements IPacketHandler
                 {
                     System.out.println((new StringBuilder()).append("[ModernWarfare] Received '7' packet from ").append(entityplayer.username).append(".").toString());
 
-                    if(ModernWarfare.jetpackOn.containsKey(entityplayer))
+                    if(ModernWarfare.isJetpackOn.containsKey(entityplayer))
                     {
-                    	ModernWarfare.jetpackOn.remove(entityplayer);
+                    	ModernWarfare.isJetpackOn.remove(entityplayer);
                     }
 
-                    ModernWarfare.jetpackOn.put(entityplayer, Boolean.valueOf(true));
+                    ModernWarfare.isJetpackOn.put(entityplayer, Boolean.valueOf(true));
                 }
                 else if(packetType == 8)
                 {
                     System.out.println((new StringBuilder()).append("[ModernWarfare] Received '8' packet from ").append(entityplayer.username).append(".").toString());
 
-                    if(ModernWarfare.jetpackOn.containsKey(entityplayer))
+                    if(ModernWarfare.isJetpackOn.containsKey(entityplayer))
                     {
-                        ModernWarfare.jetpackOn.remove(entityplayer);
+                        ModernWarfare.isJetpackOn.remove(entityplayer);
                     }
 
-                    ModernWarfare.jetpackOn.put(entityplayer, Boolean.valueOf(false));
+                    ModernWarfare.isJetpackOn.put(entityplayer, Boolean.valueOf(false));
                 }
                 else if(packetType == 9)
                 {

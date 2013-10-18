@@ -14,9 +14,9 @@ public class CommonConnectionHandler implements IConnectionHandler
 	@Override
 	public void playerLoggedIn(Player player, NetHandler netHandler, INetworkManager manager) 
 	{
-		if(ModernWarfare.jetpackOn.containsKey((EntityPlayerMP)player))
+		if(ModernWarfare.isJetpackOn.containsKey((EntityPlayerMP)player))
 		{
-			ModernWarfare.jetpackOn.remove((EntityPlayerMP)player);
+			ModernWarfare.isJetpackOn.remove((EntityPlayerMP)player);
 		}
 	}
 
