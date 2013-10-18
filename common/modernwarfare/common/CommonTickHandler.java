@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -54,26 +53,6 @@ public class CommonTickHandler implements ITickHandler
 		}
 		
 		Set<ItemStack> toRemove = new HashSet<ItemStack>();
-		
-		for(Map.Entry<ItemStack, Integer> entry : ItemGun.fireDelays.entrySet())
-		{
-			if(entry.getKey() == null || entry.getValue() <= 0)
-			{
-				toRemove.add(entry.getKey());
-			}
-			
-			ItemGun.fireDelays.put(entry.getKey(), entry.getValue()-1);
-		}
-		
-		for(ItemStack stack : toRemove)
-		{
-			ItemGun.fireDelays.remove(stack);
-		}
-		
-		for(Map.Entry<ItemStack, Integer> entry : ItemGun.fireDelays.entrySet())
-		{
-			System.out.println(entry.getKey().getItem().getUnlocalizedName() + " " + entry.getValue());
-		}
 		
         Iterator iterator = (new ArrayList(server.getConfigurationManager().playerEntityList)).iterator();
 
