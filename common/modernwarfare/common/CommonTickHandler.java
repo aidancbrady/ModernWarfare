@@ -70,6 +70,11 @@ public class CommonTickHandler implements ITickHandler
 			ItemGun.fireDelays.remove(stack);
 		}
 		
+		for(Map.Entry<ItemStack, Integer> entry : ItemGun.fireDelays.entrySet())
+		{
+			System.out.println(entry.getKey().getItem().getUnlocalizedName() + " " + entry.getValue());
+		}
+		
         Iterator iterator = (new ArrayList(server.getConfigurationManager().playerEntityList)).iterator();
 
         do {

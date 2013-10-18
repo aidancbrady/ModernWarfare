@@ -106,18 +106,6 @@ public class ModernWarfareClient extends ModernWarfare
         }
     }
     
-    public static boolean useJetPackFuel(Minecraft minecraft)
-    {
-        if(WarTools.useItemInInventory(minecraft.thePlayer, itemOil.itemID) > 0)
-        {
-            setJetPack(true);
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    
 	public static boolean handleJetPack(Minecraft minecraft) 
 	{
 		ItemStack itemstack = minecraft.thePlayer.inventory.armorItemInSlot(2);
@@ -132,7 +120,7 @@ public class ModernWarfareClient extends ModernWarfare
 			{
 				jetPackReady = true;
 			} 
-			else if(jetPackReady)
+			else if(jetPackReady && WarTools.useItemInInventory(minecraft.thePlayer, itemOil.itemID, false) > 0)
 			{
 				setJetPack(true);
 				
@@ -167,7 +155,7 @@ public class ModernWarfareClient extends ModernWarfare
     {
         ItemStack itemstack = minecraft.thePlayer.inventory.getCurrentItem();
 
-        if (itemstack == null || itemstack.getItem() != itemTelescope || minecraft.thePlayer.inventory.currentItem != lastUtilityZoomSlot || minecraft.gameSettings.thirdPersonView > 0 || minecraft.currentScreen != null)
+        if(itemstack == null || itemstack.getItem() != itemTelescope || minecraft.thePlayer.inventory.currentItem != lastUtilityZoomSlot || minecraft.gameSettings.thirdPersonView > 0 || minecraft.currentScreen != null)
         {
             currentUtilityZoomIndex = 0;
         }
@@ -248,8 +236,7 @@ public class ModernWarfareClient extends ModernWarfare
             ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
             DataOutputStream dataoutputstream = new DataOutputStream(bytearrayoutputstream);
 
-            try
-            {
+            try {
                 dataoutputstream.writeInt(1);
             } catch (IOException ioexception) {
                 System.out.println("[ModernWarfare] An error occured while writing packet data.");
@@ -269,8 +256,7 @@ public class ModernWarfareClient extends ModernWarfare
             ByteArrayOutputStream bytearrayoutputstream1 = new ByteArrayOutputStream();
             DataOutputStream dataoutputstream1 = new DataOutputStream(bytearrayoutputstream1);
 
-            try
-            {
+            try {
                 dataoutputstream1.writeInt(0);
             } catch (IOException ioexception1) {
                 System.out.println("[ModernWarfare] An error occured while writing packet data.");
@@ -334,8 +320,7 @@ public class ModernWarfareClient extends ModernWarfare
         ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
         DataOutputStream dataoutputstream = new DataOutputStream(bytearrayoutputstream);
 
-        try
-        {
+        try {
             dataoutputstream.writeInt(3);
         } catch (IOException ioexception) {
             System.out.println("[ModernWarfare] An error occured while writing packet data.");
@@ -355,8 +340,7 @@ public class ModernWarfareClient extends ModernWarfare
         ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
         DataOutputStream dataoutputstream = new DataOutputStream(bytearrayoutputstream);
 
-        try
-        {
+        try {
             dataoutputstream.writeInt(4);
         } catch (IOException ioexception) {
             System.out.println("[ModernWarfare] An error occured while writing packet data.");
@@ -450,36 +434,34 @@ public class ModernWarfareClient extends ModernWarfare
         double d = 0.0D;
         double d1 = currentRecoilV;
 
-        if (minecraft.thePlayer != null && currentRecoilV > 0.0D)
+        if(minecraft.thePlayer != null && currentRecoilV > 0.0D)
         {
-            d = Math.min(Math.max(currentRecoilV * 0.10000000000000001D, 0.5D), currentRecoilV);
+            d = Math.min(Math.max(currentRecoilV * 0.1D, 0.5D), currentRecoilV);
             currentRecoilV -= d;
             minecraft.thePlayer.rotationPitch += d;
         }
 
-        if (minecraft.thePlayer != null && Math.abs(currentRecoilH) > 0.0D)
+        if(minecraft.thePlayer != null && Math.abs(currentRecoilH) > 0.0D)
         {
             double d2;
 
-            if (currentRecoilH > 0.0D)
+            if(currentRecoilH > 0.0D)
             {
-                d2 = Math.min(Math.max((currentRecoilH * 0.10000000000000001D) / 2D, 0.25D), currentRecoilH);
+                d2 = Math.min(Math.max((currentRecoilH * 0.1D) / 2D, 0.25D), currentRecoilH);
             }
-            else
-            {
-                d2 = Math.max(Math.min((currentRecoilH * 0.10000000000000001D) / 2D, -0.25D), currentRecoilH);
+            else {
+                d2 = Math.max(Math.min((currentRecoilH * 0.1D) / 2D, -0.25D), currentRecoilH);
             }
 
-            if (d != 0.0D)
+            if(d != 0.0D)
             {
                 double d3 = (d / d1) * currentRecoilH;
 
-                if (currentRecoilH > 0.0D)
+                if(currentRecoilH > 0.0D)
                 {
                     d2 = Math.min(d3, d2);
                 }
-                else
-                {
+                else {
                     d2 = Math.max(d3, d2);
                 }
             }

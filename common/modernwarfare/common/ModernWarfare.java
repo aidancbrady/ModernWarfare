@@ -862,7 +862,7 @@ public class ModernWarfare
     
     public static boolean useJetPackFuel(EntityPlayerMP entityplayermp)
     {
-        return WarTools.useItemInInventory(entityplayermp, itemOil.itemID) > 0;
+        return WarTools.useItemInInventory(entityplayermp, itemOil.itemID, true) > 0;
     }
 
     public static void reload(World world, EntityPlayer entityplayer)

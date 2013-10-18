@@ -60,9 +60,9 @@ public final class WarTools
     {
         int j = 0;
 
-        for (int k = 0; k < inventoryplayer.mainInventory.length; k++)
+        for(int k = 0; k < inventoryplayer.mainInventory.length; k++)
         {
-            if (inventoryplayer.mainInventory[k] != null && inventoryplayer.mainInventory[k].itemID == i)
+            if(inventoryplayer.mainInventory[k] != null && inventoryplayer.mainInventory[k].itemID == i)
             {
                 j++;
             }
@@ -73,9 +73,9 @@ public final class WarTools
 
     public static int getNumberInFirstStackInHotbar(InventoryPlayer inventoryplayer, int i)
     {
-        for (int j = 0; j < 9; j++)
+        for(int j = 0; j < 9; j++)
         {
-            if (inventoryplayer.mainInventory[j] != null && inventoryplayer.mainInventory[j].itemID == i)
+            if(inventoryplayer.mainInventory[j] != null && inventoryplayer.mainInventory[j].itemID == i)
             {
                 return inventoryplayer.mainInventory[j].stackSize;
             }
@@ -84,17 +84,17 @@ public final class WarTools
         return -1;
     }
 
-    public static boolean playerInventoryEmpty(InventoryPlayer inventoryplayer)
+    public static boolean isInventoryEmpty(InventoryPlayer inventoryplayer)
     {
-        for (int i = 0; i < inventoryplayer.mainInventory.length; i++)
+        for(int i = 0; i < inventoryplayer.mainInventory.length; i++)
         {
-            if (inventoryplayer.mainInventory[i] != null)
+            if(inventoryplayer.mainInventory[i] != null)
             {
                 return false;
             }
         }
 
-        for (int j = 0; j < inventoryplayer.armorInventory.length; j++)
+        for(int j = 0; j < inventoryplayer.armorInventory.length; j++)
         {
             if (inventoryplayer.armorInventory[j] != null)
             {
@@ -132,8 +132,7 @@ public final class WarTools
 
     public static void setBurnRate(int i, int j, int k)
     {
-        try
-        {
+        try {
         	Method m = getPrivateMethod(BlockFire.class, ObfuscatedNames.BlockFire_setBurnRate, new Class[] {Integer.TYPE, Integer.TYPE, Integer.TYPE});
             m.invoke(Block.fire, Integer.valueOf(i), Integer.valueOf(j), Integer.valueOf(k));
         } catch (Exception e) {
@@ -148,8 +147,7 @@ public final class WarTools
 
     public static boolean isFlammable(int i)
     {
-        try
-        {
+        try {
             int[] ai = (int[])getPrivateValue(Block.fire, BlockFire.class, ObfuscatedNames.BlockFire_abilityToCatchFire);
             return ai[i] != 0 || i == Block.netherrack.blockID;
         } catch (Exception exception) {
@@ -157,50 +155,85 @@ public final class WarTools
         }
     }
 
-    public static int useItemInInventory(EntityPlayer entityplayer, int i)
+    /**
+     * Returns 2 if uses item or uses final item damage and another still exists, returns 1 if item or final item damage is used and another
+     * doesn't exist, returns 0 if nothing is or can be done.
+     * @param entityplayer
+     * @param itemID
+     * @param doRemove
+     * @return
+     */
+    public static int useItemInInventory(EntityPlayer entityplayer, int itemID, boolean doRemove)
     {
-        int j = getInventorySlotContainItem(entityplayer.inventory, i);
+        int slotID = getInventorySlotContainItem(entityplayer.inventory, itemID, -1);
 
-        if (j < 0)
+        if(slotID < 0)
         {
             return 0;
         }
 
-        if (Item.itemsList[i].getMaxDamage() > 0)
+        if(Item.itemsList[itemID].getMaxDamage() > 0)
         {
-            if (entityplayer.inventory.mainInventory[j].getItemDamage() + 1 > entityplayer.inventory.mainInventory[j].getMaxDamage())
+            if(entityplayer.inventory.mainInventory[slotID].getItemDamage()+1 > entityplayer.inventory.mainInventory[slotID].getMaxDamage())
             {
-                entityplayer.inventory.mainInventory[j] = new ItemStack(Item.bucketEmpty);
+            	if(doRemove)
+            	{
+            		entityplayer.inventory.mainInventory[slotID] = new ItemStack(Item.bucketEmpty);
+            	}
 
-                if (getInventorySlotContainItem(entityplayer.inventory, i) >= 0)
+                if(getInventorySlotContainItem(entityplayer.inventory, itemID, slotID) >= 0)
                 {
                     return 2;
                 }
             }
             else {
-                entityplayer.inventory.mainInventory[j].damageItem(1, entityplayer);
+            	if(doRemove)
+            	{
+            		entityplayer.inventory.mainInventory[slotID].damageItem(1, entityplayer);
+            	}
             }
         }
-        else if (--entityplayer.inventory.mainInventory[j].stackSize <= 0)
-        {
-            entityplayer.inventory.mainInventory[j] = null;
-
-            if (getInventorySlotContainItem(entityplayer.inventory, i) >= 0)
-            {
-                return 2;
-            }
+        else {
+        	if(doRemove)
+        	{
+        		entityplayer.inventory.mainInventory[slotID].stackSize--;
+        	}
+        	
+        	if(entityplayer.inventory.mainInventory[slotID].stackSize <= 0)
+        	{
+        		if(doRemove)
+        		{
+        			entityplayer.inventory.mainInventory[slotID] = null;
+        		}
+	
+	            if(getInventorySlotContainItem(entityplayer.inventory, itemID, slotID) >= 0)
+	            {
+	                return 2;
+	            }
+        	}
         }
 
         return 1;
     }
 
-    private static int getInventorySlotContainItem(InventoryPlayer inventoryplayer, int i)
+    /**
+     * Returns -1 if doesn't contain item, otherwise slot ID it is in
+     * @param inventoryplayer
+     * @param itemID
+     * @return
+     */
+    private static int getInventorySlotContainItem(InventoryPlayer inventoryplayer, int itemID, int ignoreSlot)
     {
-        for (int j = 0; j < inventoryplayer.mainInventory.length; j++)
+        for(int slotID = 0; slotID < inventoryplayer.mainInventory.length; slotID++)
         {
-            if (inventoryplayer.mainInventory[j] != null && inventoryplayer.mainInventory[j].itemID == i)
+        	if(slotID == ignoreSlot)
+        	{
+        		continue;
+        	}
+        	
+            if(inventoryplayer.mainInventory[slotID] != null && inventoryplayer.mainInventory[slotID].itemID == itemID)
             {
-                return j;
+                return slotID;
             }
         }
 
@@ -211,30 +244,30 @@ public final class WarTools
     {
         int j = getHotbarSlotContainItem(entityplayer.inventory, i);
 
-        if (j < 0)
+        if(j < 0)
         {
             return 0;
         }
 
-        if (Item.itemsList[i].getMaxDamage() > 0)
+        if(Item.itemsList[i].getMaxDamage() > 0)
         {
             entityplayer.inventory.mainInventory[j].damageItem(1, entityplayer);
 
-            if (entityplayer.inventory.mainInventory[j].stackSize == 0)
+            if(entityplayer.inventory.mainInventory[j].stackSize == 0)
             {
                 entityplayer.inventory.mainInventory[j] = new ItemStack(Item.bucketEmpty);
 
-                if (getHotbarSlotContainItem(entityplayer.inventory, i) >= 0)
+                if(getHotbarSlotContainItem(entityplayer.inventory, i) >= 0)
                 {
                     return 2;
                 }
             }
         }
-        else if (--entityplayer.inventory.mainInventory[j].stackSize <= 0)
+        else if(--entityplayer.inventory.mainInventory[j].stackSize <= 0)
         {
             entityplayer.inventory.mainInventory[j] = null;
 
-            if (getHotbarSlotContainItem(entityplayer.inventory, i) >= 0)
+            if(getHotbarSlotContainItem(entityplayer.inventory, i) >= 0)
             {
                 return 2;
             }
@@ -245,9 +278,9 @@ public final class WarTools
 
     private static int getHotbarSlotContainItem(InventoryPlayer inventoryplayer, int i)
     {
-        for (int j = 0; j < 9; j++)
+        for(int j = 0; j < 9; j++)
         {
-            if (inventoryplayer.mainInventory[j] != null && inventoryplayer.mainInventory[j].itemID == i)
+            if(inventoryplayer.mainInventory[j] != null && inventoryplayer.mainInventory[j].itemID == i)
             {
                 return j;
             }

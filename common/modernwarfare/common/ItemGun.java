@@ -7,6 +7,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 public abstract class ItemGun extends ItemWar
@@ -24,8 +25,6 @@ public abstract class ItemGun extends ItemWar
     public float soundRangeFactor;
     protected long lastSound;
     protected long lastEmptySound;
-    
-	public static Map<ItemStack, Integer> fireDelays = new HashMap<ItemStack, Integer>();
 
     public ItemGun(int i)
     {
@@ -48,6 +47,23 @@ public abstract class ItemGun extends ItemWar
     {
         return 4;
     }
+    
+    @Override
+    public void onUpdate(ItemStack stack, World world, Entity entity, int par4, boolean par5)
+    {
+    	if(!world.isRemote)
+    	{
+    		if(stack.stackTagCompound == null) 
+    		{ 
+    			return;
+    		}
+    		
+    		if(stack.stackTagCompound.getInteger("delay") > 0)
+    		{
+    			stack.stackTagCompound.setInteger("delay", stack.stackTagCompound.getInteger("delay")-1);
+    		}
+    	}
+    }
 
     public boolean fireBullet(World world, Entity entity, ItemStack itemstack)
     {
@@ -57,11 +73,11 @@ public abstract class ItemGun extends ItemWar
 
             if(entity instanceof EntityPlayer)
             {
-                ammoUsed = WarTools.useItemInInventory((EntityPlayer)entity, requiredBullet.itemID);
+                ammoUsed = WarTools.useItemInInventory((EntityPlayer)entity, requiredBullet.itemID, true);
             }
             else if (entity.riddenByEntity != null && (entity.riddenByEntity instanceof EntityPlayer))
             {
-                ammoUsed = WarTools.useItemInInventory((EntityPlayer)entity.riddenByEntity, requiredBullet.itemID);
+                ammoUsed = WarTools.useItemInInventory((EntityPlayer)entity.riddenByEntity, requiredBullet.itemID, true);
             }
             else {
                 ammoUsed = 1;
@@ -162,11 +178,21 @@ public abstract class ItemGun extends ItemWar
     
     public static boolean canFire(ItemStack itemStack)
     {
-    	return fireDelays.get(itemStack) == null || fireDelays.get(itemStack) == 0;
+		if(itemStack.stackTagCompound == null) 
+		{ 
+			return true;
+		}
+		
+		return itemStack.stackTagCompound.getInteger("delay") == 0;
     }
     
     public static void addDelay(ItemStack itemStack)
     {
-    	fireDelays.put(itemStack, ((ItemGun)itemStack.getItem()).useDelay);
+		if(itemStack.stackTagCompound == null)
+		{
+			itemStack.setTagCompound(new NBTTagCompound());
+		}
+
+		itemStack.stackTagCompound.setInteger("delay", ((ItemGun)itemStack.getItem()).useDelay);
     }
 }
