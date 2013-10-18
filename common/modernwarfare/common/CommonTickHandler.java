@@ -7,10 +7,10 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.World;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
@@ -24,6 +24,34 @@ public class CommonTickHandler implements ITickHandler
 	public void tickEnd(EnumSet<TickType> type, Object... tickData) 
 	{
 		MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
+		
+		if(FMLCommonHandler.instance().getEffectiveSide().isServer())
+		{
+			for(Object obj : server.getConfigurationManager().playerEntityList)
+			{
+				if(obj instanceof EntityPlayer)
+				{
+					EntityPlayer player = (EntityPlayer)obj;
+					
+					if(!player.worldObj.isRemote && ModernWarfare.shooting.contains(player))
+					{
+						if(player.getCurrentEquippedItem() != null && player.getCurrentEquippedItem().getItem() instanceof ItemGun)
+						{
+							ItemGun gun = (ItemGun)player.getCurrentEquippedItem().getItem();
+							
+							if(ItemGun.canFire(player.getCurrentEquippedItem()))
+							{
+								ItemGun.addDelay(player.getCurrentEquippedItem());
+								gun.fireBullet(player.worldObj, player, player.getCurrentEquippedItem());
+							}
+						}
+						else {
+							ModernWarfare.shooting.remove(player);
+						}
+					}
+				}
+			}
+		}
 		
 		Set<ItemStack> toRemove = new HashSet<ItemStack>();
 		
@@ -40,11 +68,6 @@ public class CommonTickHandler implements ITickHandler
 		for(ItemStack stack : toRemove)
 		{
 			ItemGun.fireDelays.remove(stack);
-		}
-		
-		for(Map.Entry<ItemStack, Integer> entry : ItemGun.fireDelays.entrySet())
-		{
-			System.out.println(entry.getKey().getItem().getUnlocalizedName() + " - " + entry.getValue());
 		}
 		
         Iterator iterator = (new ArrayList(server.getConfigurationManager().playerEntityList)).iterator();
@@ -80,7 +103,7 @@ public class CommonTickHandler implements ITickHandler
 	@Override
 	public EnumSet<TickType> ticks() 
 	{
-		return EnumSet.of(TickType.WORLD);
+		return EnumSet.of(TickType.SERVER);
 	}
 
 	@Override

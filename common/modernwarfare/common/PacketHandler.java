@@ -1,5 +1,9 @@
 package modernwarfare.common;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
@@ -8,6 +12,7 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 
 import cpw.mods.fml.common.network.IPacketHandler;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.common.network.Player;
 
 public class PacketHandler implements IPacketHandler
@@ -99,6 +104,26 @@ public class PacketHandler implements IPacketHandler
                     }
 
                     ModernWarfare.jetpackOn.put(entityplayer, Boolean.valueOf(false));
+                }
+                else if(packetType == 9)
+                {
+                	boolean shooting = dataStream.readBoolean();
+                	
+                	if(shooting && entityplayer.getCurrentEquippedItem() != null && entityplayer.getCurrentEquippedItem().getItem() instanceof ItemGun)
+                	{
+                		ModernWarfare.shooting.add(entityplayer);
+                	}
+                	else {
+                		ModernWarfare.shooting.remove(entityplayer);
+                	}
+                }
+                else if(packetType == 10)
+                {
+                	ModernWarfare.proxy.doParticles(dataStream.readDouble(), dataStream.readDouble(), dataStream.readDouble(), dataStream.readDouble(), dataStream.readDouble());
+                }
+                else if(packetType == 11)
+                {
+                	ModernWarfare.proxy.doExplosionFX(dataStream.readDouble(), dataStream.readDouble(), dataStream.readDouble());
                 }
 			} catch(Exception e) {
 				System.err.println("Error while handling packet.");

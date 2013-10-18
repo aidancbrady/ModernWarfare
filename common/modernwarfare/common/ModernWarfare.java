@@ -1,8 +1,10 @@
 package modernwarfare.common;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import net.minecraft.block.Block;
@@ -132,6 +134,8 @@ public class ModernWarfare
     public static Map isSniperZoomedIn = new HashMap();
     public static Map jetpackOn = new HashMap();
     
+    public static Set<EntityPlayer> shooting = new HashSet<EntityPlayer>();
+    
     public static Class sentryEntityClasses[] = (new Class[] 
     {
         EntitySentryAk47.class, EntitySentryMp5.class, EntitySentryShotgun.class, EntitySentryDeagle.class, EntitySentryRocketLauncher.class, EntitySentryRocketLauncherLaser.class, EntitySentrySniper.class, EntitySentryFlamethrower.class, EntitySentrySg552.class, EntitySentryMinigun.class,
@@ -257,7 +261,7 @@ public class ModernWarfare
         EntityRegistry.registerModEntity(EntitySentryDeagle.class, "SentryDeagle", 23, this, 40, 5, true);
         EntityRegistry.registerModEntity(EntitySentryMp5.class, "SentryMp5", 24, this, 40, 5, true);
         EntityRegistry.registerModEntity(EntitySentryRocketLauncher.class, "SentryRocketLauncher", 25, this, 40, 5, true);
-        EntityRegistry.registerModEntity(EntitySentryRocketLauncherLaser.class, "SentryRocketLauncherLaser", 26, this, 40, 5, true);
+        EntityRegistry.registerModEntity(EntitySentryRocketLauncherLaser.class, "SentryRocketLauncherLaser", 26, this, 40, 20, true);
         EntityRegistry.registerModEntity(EntitySentryShotgun.class, "SentryShotgun", 27, this, 40, 5, true);
         EntityRegistry.registerModEntity(EntitySentrySniper.class, "SentrySniper", 28, this, 40, 5, true);
         EntityRegistry.registerModEntity(EntitySentryFlamethrower.class, "SentryFlamethrower", 29, this, 40, 5, true);
@@ -642,8 +646,7 @@ public class ModernWarfare
                 boolean flag = false;
                 int i = 0;
 
-                do
-                {
+                do {
                     if(i >= entityplayer.inventory.armorInventory.length)
                     {
                         break;
@@ -664,8 +667,7 @@ public class ModernWarfare
                 {
                     int j = 0;
 
-                    do
-                    {
+                    do {
                         if(j >= entityplayer.inventory.mainInventory.length)
                         {
                             break;

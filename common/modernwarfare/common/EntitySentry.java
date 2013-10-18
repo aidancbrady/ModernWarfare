@@ -103,7 +103,7 @@ public abstract class EntitySentry extends EntityGuardians implements IMob
                 if(ItemGun.canFire(itemStack))
                 {
                 	ItemGun.addDelay(itemStack);
-                	gun.fireBullet(worldObj, this, itemStack, 0.0F, 0.0F, 0.0F, 0.0F, 0.0F);
+                	gun.fireBullet(worldObj, this, itemStack);
                 	attackTime = ATTACK_DELAY;
                 }
             }

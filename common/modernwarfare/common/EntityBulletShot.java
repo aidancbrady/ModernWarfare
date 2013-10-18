@@ -17,12 +17,13 @@ public class EntityBulletShot extends EntityBullet
         setSize(0.03125F, 0.03125F);
     }
 
-    public EntityBulletShot(World world, Entity entity, ItemGun itemgun, float f, float f1, float f2, float f3, float f4)
+    public EntityBulletShot(World world, Entity entity, ItemGun itemgun)
     {
-        super(world, entity, itemgun, f, f1, f2, f3, f4);
+        super(world, entity, itemgun);
         setSize(0.03125F, 0.03125F);
     }
 
+    @Override
     public void playServerSound(World world)
     {
         world.playSoundAtEntity(this, ((ItemGun)ModernWarfare.itemGunShotgun).firingSound, ((ItemGun)ModernWarfare.itemGunShotgun).soundRangeFactor, 1.0F / (rand.nextFloat() * 0.1F + 0.95F));

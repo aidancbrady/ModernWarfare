@@ -54,7 +54,7 @@ public class EntityBulletCasing extends Entity
         yOffset = 0.0F;
     }
 
-    public EntityBulletCasing(World world, Entity entity, float f)
+    public EntityBulletCasing(World world, Entity entity)
     {
         super(world);
         droppedItem = ModernWarfare.itemBulletCasing;
@@ -67,7 +67,7 @@ public class EntityBulletCasing extends Entity
         owner = entity;
         createdByPlayer = owner instanceof EntityPlayer;
         setSize(0.0625F, 0.03125F);
-        setLocationAndAngles(entity.posX, entity.posY + (double)entity.getEyeHeight() + (double)f, entity.posZ, entity.rotationYaw, entity.rotationPitch);
+        setLocationAndAngles(entity.posX, entity.posY + (double)entity.getEyeHeight(), entity.posZ, entity.rotationYaw, entity.rotationPitch);
 
         if (entity instanceof EntityPlayer)
         {

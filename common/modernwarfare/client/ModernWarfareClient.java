@@ -84,45 +84,23 @@ public class ModernWarfareClient extends ModernWarfare
     {
         if(flag != jetPackOn)
         {
-            if(flag)
+            ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
+            DataOutputStream dataoutputstream = new DataOutputStream(bytearrayoutputstream);
+
+            try
             {
-                ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
-                DataOutputStream dataoutputstream = new DataOutputStream(bytearrayoutputstream);
-
-                try
-                {
-                    dataoutputstream.writeInt(7);
-                } catch (IOException ioexception) {
-                    System.out.println("[ModernWarfare] An error occured while writing packet data.");
-                    ioexception.printStackTrace();
-                }
-
-                Packet250CustomPayload packet250custompayload = new Packet250CustomPayload();
-                packet250custompayload.channel = "MDWF";
-                packet250custompayload.data = bytearrayoutputstream.toByteArray();
-                packet250custompayload.length = packet250custompayload.data.length;
-                PacketDispatcher.sendPacketToServer(packet250custompayload);
-                System.out.println("[ModernWarfare] Sent '7' packet to server");
+                dataoutputstream.writeInt(flag ? 7 : 8);
+            } catch (IOException ioexception) {
+                System.out.println("[ModernWarfare] An error occured while writing packet data.");
+                ioexception.printStackTrace();
             }
-            else {
-                ByteArrayOutputStream bytearrayoutputstream1 = new ByteArrayOutputStream();
-                DataOutputStream dataoutputstream1 = new DataOutputStream(bytearrayoutputstream1);
 
-                try
-                {
-                    dataoutputstream1.writeInt(8);
-                } catch (IOException ioexception1) {
-                    System.out.println("[ModernWarfare] An error occured while writing packet data.");
-                    ioexception1.printStackTrace();
-                }
-
-                Packet250CustomPayload packet250custompayload1 = new Packet250CustomPayload();
-                packet250custompayload1.channel = "MDWF";
-                packet250custompayload1.data = bytearrayoutputstream1.toByteArray();
-                packet250custompayload1.length = packet250custompayload1.data.length;
-                PacketDispatcher.sendPacketToServer(packet250custompayload1);
-                System.out.println("[ModernWarfare] Sent '8' packet to server");
-            }
+            Packet250CustomPayload packet250custompayload = new Packet250CustomPayload();
+            packet250custompayload.channel = "MDWF";
+            packet250custompayload.data = bytearrayoutputstream.toByteArray();
+            packet250custompayload.length = packet250custompayload.data.length;
+            PacketDispatcher.sendPacketToServer(packet250custompayload);
+            System.out.println("[ModernWarfare] Sent '" + (flag ? 7 : 8) + "' packet to server");
         }
     }
     
@@ -146,32 +124,32 @@ public class ModernWarfareClient extends ModernWarfare
 		{
 			if(WarTools.onGroundOrInWater(minecraft.theWorld, minecraft.thePlayer) || minecraft.thePlayer.ridingEntity != null)
 			{
-				ModernWarfareClient.jetPackReady = false;
+				jetPackReady = false;
 			} 
 			else if(!Keyboard.isKeyDown(minecraft.gameSettings.keyBindJump.keyCode))
 			{
-				ModernWarfareClient.jetPackReady = true;
+				jetPackReady = true;
 			} 
-			else if(ModernWarfareClient.jetPackReady && useJetPackFuel(minecraft))
+			else if(jetPackReady && useJetPackFuel(minecraft))
 			{
 				minecraft.thePlayer.motionY = Math.min(minecraft.thePlayer.motionY + 0.06D + 0.06D, 0.3D);
 				minecraft.thePlayer.fallDistance = 0.0F;
 
 				for(int i = 0; i < 16; i++) 
 				{
-					ModernWarfareClient.spawnJetPackParticle(minecraft, "flame");
-					ModernWarfareClient.spawnJetPackParticle(minecraft, "smoke");
+					spawnJetPackParticle(minecraft, "flame");
+					spawnJetPackParticle(minecraft, "smoke");
 				}
 
-				if(minecraft.theWorld.getWorldTime() - ModernWarfareClient.jetPackLastSound < 0L) 
+				if(minecraft.theWorld.getWorldTime() - jetPackLastSound < 0L) 
 				{
-					ModernWarfareClient.jetPackLastSound = minecraft.theWorld.getWorldTime() - 15L;
+					jetPackLastSound = minecraft.theWorld.getWorldTime() - 15L;
 				}
 
-				if(ModernWarfareClient.jetPackLastSound == 0L || minecraft.theWorld.getWorldTime() - ModernWarfareClient.jetPackLastSound > 15L) 
+				if(jetPackLastSound == 0L || minecraft.theWorld.getWorldTime() - jetPackLastSound > 15L) 
 				{
 					minecraft.theWorld.playSoundAtEntity(minecraft.thePlayer, "war.jetpack", 0.25F, 1.0F / (WarTools.random.nextFloat() * 0.1F + 0.95F));
-					ModernWarfareClient.jetPackLastSound = minecraft.theWorld.getWorldTime();
+					jetPackLastSound = minecraft.theWorld.getWorldTime();
 				}
 
 				return true;
@@ -414,6 +392,26 @@ public class ModernWarfareClient extends ModernWarfare
 	            PacketDispatcher.sendPacketToServer(packet250custompayload);
         	}
         }
+    }
+    
+    public static void sendShootPacket(boolean shooting)
+    {
+        ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
+        DataOutputStream dataoutputstream = new DataOutputStream(bytearrayoutputstream);
+
+        try {
+            dataoutputstream.writeInt(9);
+            dataoutputstream.writeBoolean(shooting);
+        } catch (IOException ioexception) {
+            System.out.println("[ModernWarfare] An error occured while writing packet data.");
+            ioexception.printStackTrace();
+        }
+
+        Packet250CustomPayload packet250custompayload = new Packet250CustomPayload();
+        packet250custompayload.channel = "MDWF";
+        packet250custompayload.data = bytearrayoutputstream.toByteArray();
+        packet250custompayload.length = packet250custompayload.data.length;
+        PacketDispatcher.sendPacketToServer(packet250custompayload);
     }
     
     public static void handleParachuteKey(Minecraft minecraft)

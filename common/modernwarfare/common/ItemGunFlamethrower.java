@@ -21,13 +21,13 @@ public class ItemGunFlamethrower extends ItemGun
     }
 
     @Override
-    public EntityBullet getBulletEntity(World world, Entity entity, float f, float f1, float f2, float f3, float f4)
+    public EntityBullet getBulletEntity(World world, Entity entity)
     {
-        return new EntityBulletFlame(world, entity, this, f, f1, f2, f3, f4);
+        return new EntityBulletFlame(world, entity, this);
     }
 
     @Override
-    public EntityBulletCasing getBulletCasingEntity(World world, Entity entity, float f)
+    public EntityBulletCasing getBulletCasingEntity(World world, Entity entity)
     {
         return null;
     }

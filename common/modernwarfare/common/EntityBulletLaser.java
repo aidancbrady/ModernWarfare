@@ -1,5 +1,8 @@
 package modernwarfare.common;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -12,13 +15,14 @@ import net.minecraft.entity.passive.EntityCow;
 import net.minecraft.entity.passive.EntityPig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
-import net.minecraft.src.ModLoader;
+import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class EntityBulletLaser extends EntityBullet
 {
@@ -34,20 +38,19 @@ public class EntityBulletLaser extends EntityBullet
         setSize(0.5F, 0.5F);
     }
 
-    public EntityBulletLaser(World world, Entity entity, ItemGun itemgun, float f, float f1, float f2, float f3, float f4)
+    public EntityBulletLaser(World world, Entity entity, ItemGun itemgun)
     {
-        super(world, entity, itemgun, f, f1, f2, f3, f4);
+        super(world, entity, itemgun);
         setSize(0.5F, 0.5F);
     }
 
+    @Override
     public void playServerSound(World world)
     {
         world.playSoundAtEntity(this, ((ItemGun)ModernWarfare.itemGunLaser).firingSound, ((ItemGun)ModernWarfare.itemGunLaser).soundRangeFactor, 1.0F / (rand.nextFloat() * 0.1F + 0.95F));
     }
 
-    /**
-     * Called to update the entity's position/logic.
-     */
+    @Override
     public void onUpdate()
     {
         onEntityUpdate();
@@ -125,60 +128,54 @@ public class EntityBulletLaser extends EntityBullet
             movingobjectposition = new MovingObjectPosition(entity);
         }
 
-        if (movingobjectposition != null)
+        if (movingobjectposition != null && !worldObj.isRemote)
         {
             if (movingobjectposition.entityHit != null)
             {
-                boolean flag = false;
-
-                if (!flag)
+                if (movingobjectposition.entityHit instanceof EntityCreature)
                 {
-                    if (movingobjectposition.entityHit instanceof EntityCreature)
+                    if (entity instanceof EntityPig)
                     {
-                        if (entity instanceof EntityPig)
-                        {
-                            int l = rand.nextInt(3);
+                        int l = rand.nextInt(3);
 
-                            for (int i2 = 0; i2 < l; i2++)
-                            {
-                                entity.dropItem(Item.porkCooked.itemID, 1);
-                            }
-                        }
-                        else if (entity instanceof EntityCow)
+                        for (int i2 = 0; i2 < l; i2++)
                         {
-                            int i1 = rand.nextInt(3) + 1;
-
-                            for (int j2 = 0; j2 < i1; j2++)
-                            {
-                                dropItem(Item.beefCooked.itemID, 1);
-                            }
-                        }
-                        else if (entity instanceof EntityChicken)
-                        {
-                            dropItem(Item.chickenCooked.itemID, 1);
-                        }
-
-                        movingobjectposition.entityHit.setDead();
-
-                        if (movingobjectposition.entityHit.isDead)
-                        {
-                            for (int j1 = 0; j1 < 16; j1++)
-                            {
-                                doSmoke(movingobjectposition.entityHit.posX, movingobjectposition.entityHit.posY + (double)(movingobjectposition.entityHit.height / 2.0F), movingobjectposition.entityHit.posZ, movingobjectposition.entityHit.width / 2.0F, movingobjectposition.entityHit.height / 2.0F);
-                            }
+                            entity.dropItem(Item.porkCooked.itemID, 1);
                         }
                     }
-
-                    if (!movingobjectposition.entityHit.isDead)
+                    else if (entity instanceof EntityCow)
                     {
-                        damageEntity(movingobjectposition, vec3d2);
+                        int i1 = rand.nextInt(3) + 1;
+
+                        for (int j2 = 0; j2 < i1; j2++)
+                        {
+                            dropItem(Item.beefCooked.itemID, 1);
+                        }
+                    }
+                    else if (entity instanceof EntityChicken)
+                    {
+                        dropItem(Item.chickenCooked.itemID, 1);
                     }
 
-                    setEntityDead();
+                    movingobjectposition.entityHit.setDead();
+
+                    if (movingobjectposition.entityHit.isDead)
+                    {
+                        for (int j1 = 0; j1 < 16; j1++)
+                        {
+                            doSmoke(movingobjectposition.entityHit.posX, movingobjectposition.entityHit.posY + (movingobjectposition.entityHit.height / 2.0F), movingobjectposition.entityHit.posZ, movingobjectposition.entityHit.width / 2.0F, movingobjectposition.entityHit.height / 2.0F);
+                        }
+                    }
                 }
+
+                if (!movingobjectposition.entityHit.isDead)
+                {
+                    damageEntity(movingobjectposition, vec3d2);
+                }
+
+                setEntityDead();
             }
-            else
-            {
+            else {
                 int k = worldObj.getBlockId(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ);
 
                 if (k != Block.glass.blockID && k != Block.thinGlass.blockID)
@@ -200,8 +197,7 @@ public class EntityBulletLaser extends EntityBullet
                             motionX *= -1D;
                         }
                     }
-                    else
-                    {
+                    else {
                         if (k != Block.bedrock.blockID && k != Block.obsidian.blockID && Block.blocksList[k].getBlockHardness(worldObj, movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ) < 1000000F)
                         {
                             if (k == Block.sand.blockID)
@@ -216,14 +212,13 @@ public class EntityBulletLaser extends EntityBullet
                             {
                                 worldObj.setBlock(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ, Block.fire.blockID);
                             }
-                            else
-                            {
+                            else {
                                 worldObj.setBlockToAir(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ);
                             }
 
                             for (int l1 = 0; l1 < 16; l1++)
                             {
-                                doSmoke((double)movingobjectposition.blockX + 0.5D, (double)movingobjectposition.blockY + 0.5D, (double)movingobjectposition.blockZ + 0.5D, 0.5D, 0.5D);
+                                doSmoke(movingobjectposition.blockX + 0.5D, movingobjectposition.blockY + 0.5D, movingobjectposition.blockZ + 0.5D, 0.5D, 0.5D);
                             }
                         }
 
@@ -280,18 +275,34 @@ public class EntityBulletLaser extends EntityBullet
         {
             WarTools.attackEntityIgnoreDelay((EntityLiving)movingobjectposition.entityHit, DamageSource.causeThrownDamage(this, owner), i);
         }
-        else
-        {
+        else {
             movingobjectposition.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, owner), i);
         }
     }
 
-    public void doSmoke(double d, double d1, double d2, double d3, double d4)
+    public void doSmoke(double x, double y, double z, double width, double height)
     {
-        double d5 = (d + rand.nextDouble() * d3 * 2D) - d3;
-        double d6 = (d1 + rand.nextDouble() * d4 * 2D) - d4;
-        double d7 = (d2 + rand.nextDouble() * d3 * 2D) - d3;
-        ModLoader.getMinecraftInstance().effectRenderer.addEffect(new EntityWarSmokeFX(worldObj, d5, d6, d7, 0.0D, 0.0D, 0.0D, 2.5F, 1.0F, 1.0F, 1.0F));
+        ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
+        DataOutputStream dataoutputstream = new DataOutputStream(bytearrayoutputstream);
+
+        try {
+            dataoutputstream.writeInt(10);
+            dataoutputstream.writeDouble(x);
+            dataoutputstream.writeDouble(y);
+            dataoutputstream.writeDouble(z);
+            dataoutputstream.writeDouble(width);
+            dataoutputstream.writeDouble(height);
+        } catch (IOException ioexception) {
+            System.out.println("[ModernWarfare] An error occured while writing packet data.");
+            ioexception.printStackTrace();
+        }
+
+        Packet250CustomPayload packet250custompayload = new Packet250CustomPayload();
+        packet250custompayload.channel = "MDWF";
+        packet250custompayload.data = bytearrayoutputstream.toByteArray();
+        packet250custompayload.length = packet250custompayload.data.length;
+        PacketDispatcher.sendPacketToAllAround(x, y, z, 40, worldObj.provider.dimensionId, packet250custompayload);
+        System.out.println("[ModernWarfare] Sent '10' packet to server");
     }
 
     public float getEntityBrightness(float f)

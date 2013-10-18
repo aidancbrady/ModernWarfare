@@ -3,8 +3,6 @@ package modernwarfare.common;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.lwjgl.input.Mouse;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -17,7 +15,6 @@ public abstract class ItemGun extends ItemWar
     public Item requiredBullet;
     public int useDelay;
     public int numBullets;
-    public int burstShots;
     public int damage;
     public float headshotMultiplier;
     public float muzzleVelocity;
@@ -34,7 +31,6 @@ public abstract class ItemGun extends ItemWar
     {
         super(i);
         numBullets = 1;
-        burstShots = 0;
         damage = 0;
         headshotMultiplier = 2.0F;
         muzzleVelocity = 1.5F;
@@ -52,29 +48,8 @@ public abstract class ItemGun extends ItemWar
     {
         return 4;
     }
-    
-    @Override
-    public void onUpdate(ItemStack stack, World world, Entity entity, int i, boolean flag)
-    {
-    	if(world.isRemote && flag)
-    	{
-    		if(entity instanceof EntityPlayer)
-    		{
-    			EntityPlayer player = (EntityPlayer)entity;
-    			
-    			if(Mouse.isButtonDown(1))
-    			{
-    				if(canFire(stack))
-    				{
-    					addDelay(stack);
-    					//TODO fire
-    				}
-    			}
-    		}
-    	}
-    }
 
-    public boolean fireBullet(World world, Entity entity, ItemStack itemstack, float xOffset, float yOffset, float zOffset, float rotationYawOffset, float rotationPitchOffset)
+    public boolean fireBullet(World world, Entity entity, ItemStack itemstack)
     {
         if(!ModernWarfare.reloadTimes.containsKey(entity))
         {
@@ -109,7 +84,7 @@ public abstract class ItemGun extends ItemWar
                 {
                     for(int j = 0; j < numBullets; j++)
                     {
-                        EntityBullet bullet = getBulletEntity(world, entity, xOffset, yOffset, zOffset, rotationYawOffset, rotationPitchOffset);
+                        EntityBullet bullet = getBulletEntity(world, entity);
 
                         if(bullet != null)
                         {
@@ -117,7 +92,7 @@ public abstract class ItemGun extends ItemWar
                         }
                     }
 
-                    EntityBulletCasing bulletCasing = getBulletCasingEntity(world, entity, yOffset);
+                    EntityBulletCasing bulletCasing = getBulletCasingEntity(world, entity);
 
                     if((entity instanceof EntityPlayer) && ModernWarfare.ammoCasings && bulletCasing != null)
                     {
@@ -181,9 +156,9 @@ public abstract class ItemGun extends ItemWar
         return true;
     }
 
-    public abstract EntityBullet getBulletEntity(World world, Entity entity, float f, float f1, float f2, float f3, float f4);
+    public abstract EntityBullet getBulletEntity(World world, Entity entity);
 
-    public abstract EntityBulletCasing getBulletCasingEntity(World world, Entity entity, float f);
+    public abstract EntityBulletCasing getBulletCasingEntity(World world, Entity entity);
     
     public static boolean canFire(ItemStack itemStack)
     {

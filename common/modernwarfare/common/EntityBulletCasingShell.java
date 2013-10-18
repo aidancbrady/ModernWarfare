@@ -16,9 +16,9 @@ public class EntityBulletCasingShell extends EntityBulletCasing
         super(world, d, d1, d2);
     }
 
-    public EntityBulletCasingShell(World world, Entity entity, float f)
+    public EntityBulletCasingShell(World world, Entity entity)
     {
-        super(world, entity, f);
+        super(world, entity);
         droppedItem = ModernWarfare.itemBulletCasingShell;
     }
 }

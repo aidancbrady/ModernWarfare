@@ -29,20 +29,19 @@ public class EntityBulletFlame extends EntityBullet
         setSize(0.5F, 0.5F);
     }
 
-    public EntityBulletFlame(World world, Entity entity, ItemGun itemgun, float f, float f1, float f2, float f3, float f4)
+    public EntityBulletFlame(World world, Entity entity, ItemGun itemgun)
     {
-        super(world, entity, itemgun, f, f1, f2, f3, f4);
+        super(world, entity, itemgun);
         setSize(0.5F, 0.5F);
     }
 
+    @Override
     public void playServerSound(World world)
     {
         world.playSoundAtEntity(this, ((ItemGun)ModernWarfare.itemGunFlamethrower).firingSound, ((ItemGun)ModernWarfare.itemGunFlamethrower).soundRangeFactor, 1.0F / (rand.nextFloat() * 0.1F + 0.95F));
     }
 
-    /**
-     * Called to update the entity's position/logic.
-     */
+    @Override
     public void onUpdate()
     {
         onEntityUpdate();
@@ -68,8 +67,7 @@ public class EntityBulletFlame extends EntityBullet
                 timeInAir = 0;
             }
         }
-        else
-        {
+        else {
             timeInAir++;
         }
 
@@ -122,7 +120,7 @@ public class EntityBulletFlame extends EntityBullet
             movingobjectposition = new MovingObjectPosition(entity);
         }
 
-        if (movingobjectposition != null)
+        if (movingobjectposition != null && !worldObj.isRemote)
         {
             if (movingobjectposition.entityHit != null)
             {
@@ -148,12 +146,11 @@ public class EntityBulletFlame extends EntityBullet
 
                 k = checkHeadshot(movingobjectposition, vec3d2, k);
 
-                if (movingobjectposition.entityHit instanceof EntityLiving)
+                if(movingobjectposition.entityHit instanceof EntityLiving)
                 {
                     WarTools.attackEntityIgnoreDelay((EntityLiving)movingobjectposition.entityHit, DamageSource.causeThrownDamage(this, owner), k);
                 }
-                else
-                {
+                else {
                     movingobjectposition.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, owner), k);
                 }
 
@@ -225,15 +222,14 @@ public class EntityBulletFlame extends EntityBullet
         for (; rotationYaw - prevRotationYaw >= 180F; prevRotationYaw += 360F) { }
     }
 
-    /**
-     * Sets the velocity to the args. Args: x, y, z
-     */
+    @Override
     public void setVelocity(double d, double d1, double d2)
     {
         super.setVelocity(d, d1, d2);
         setRotationToVelocity();
     }
 
+    @Override
     public float getBrightness(float f)
     {
         return 2.0F;

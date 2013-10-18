@@ -13,6 +13,11 @@ public class RenderBulletFlame extends Render
 {
     public void renderArrow(EntityBullet entitybullet, double d, double d1, double d2, float f, float f1)
     {
+    	if(entitybullet.ticksExisted < 2)
+    	{
+    		return;
+    	}
+    	
         GL11.glPushMatrix();
         bindTexture(getEntityTexture(entitybullet));
         GL11.glTranslatef((float)d, (float)d1, (float)d2);

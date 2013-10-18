@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.lwjgl.input.Mouse;
+
 import modernwarfare.common.ItemGun;
 import modernwarfare.common.ModernWarfare;
 import net.minecraft.client.Minecraft;
@@ -16,6 +18,8 @@ public class ClientTickHandler implements ITickHandler
 {
 	public Minecraft mc = Minecraft.getMinecraft();
 	
+	public boolean prevShooting;
+	
 	@Override
 	public void tickStart(EnumSet<TickType> type, Object... tickData) {}
 
@@ -24,6 +28,15 @@ public class ClientTickHandler implements ITickHandler
 	{
 		if(mc.theWorld != null)
 		{
+			boolean shooting = Mouse.isButtonDown(1) && mc.thePlayer.getCurrentEquippedItem() != null && mc.thePlayer.getCurrentEquippedItem().getItem() instanceof ItemGun;
+			
+			if(prevShooting != shooting)
+			{
+				ModernWarfareClient.sendShootPacket(shooting);
+			}
+			
+			prevShooting = shooting;
+			
 			if(!mc.thePlayer.isEntityAlive()) 
 			{
 				ModernWarfareClient.currentGunZoom = 1.0F;

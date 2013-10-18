@@ -297,13 +297,13 @@ public class EntityAtv extends EntityLandVehicle implements IInventory
         if(gunA != null && ItemGun.canFire(gunA))
         {
         	ItemGun.addDelay(gunA);
-            ((ItemGun)gunA.getItem()).fireBullet(worldObj, this, gunA, -1.8F, 0.0F, 0.5625F, 90F, 0.0F);
+            ((ItemGun)gunA.getItem()).fireBullet(worldObj, this, gunA/*,-1.8F, 0.0F, 0.5625F, 90F, 0.0F*/);
         }
 
         if(gunB != null && ItemGun.canFire(gunB))
         {
         	ItemGun.addDelay(gunB);
-            ((ItemGun)gunB.getItem()).fireBullet(worldObj, this, gunB, -1.8F, 0.0F, -0.3125F, 90F, 0.0F);
+            ((ItemGun)gunB.getItem()).fireBullet(worldObj, this, gunB/*, -1.8F, 0.0F, -0.3125F, 90F, 0.0F*/);
         }
     }
 

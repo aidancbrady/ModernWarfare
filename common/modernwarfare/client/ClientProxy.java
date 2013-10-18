@@ -1,6 +1,7 @@
 package modernwarfare.client;
 
 import java.util.List;
+import java.util.Random;
 
 import modernwarfare.common.CommonProxy;
 import modernwarfare.common.EntityAtv;
@@ -21,6 +22,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.src.ModLoader;
 import net.minecraft.world.World;
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -31,6 +33,7 @@ public class ClientProxy extends CommonProxy
 {
 	public static int RENDER_ID = RenderingRegistry.getNextAvailableRenderId();
 	public static Minecraft mc = Minecraft.getMinecraft();
+	public static Random rand = new Random();
 	
 	@Override
 	public Object getClientGuiElement(int ID, EntityPlayer player, World world, int x, int y, int z)
@@ -136,7 +139,7 @@ public class ClientProxy extends CommonProxy
 	}
 	
 	@Override
-	public TextureLightometer reloadLightometerIcon()
+	public TextureLightometer getLightometerIcon()
 	{
 		getTextureMap(1).setTextureEntry("modernwarfare:itemLightometer", new TextureLightometer("modernwarfare:itemLightometer"));
 		return (TextureLightometer)getTextureMap(1).getTextureExtry("modernwarfare:itemLightometer");
@@ -159,6 +162,25 @@ public class ClientProxy extends CommonProxy
 	public EntityPlayer getClientPlayer()
 	{
 		return mc.thePlayer;
+	}
+	
+	@Override
+	public void doParticles(double x, double y, double z, double width, double height)
+	{
+        double xPos = (x + rand.nextDouble() * width * 2D) - width;
+        double yPos = (y + rand.nextDouble() * height * 2D) - height;
+        double zPos = (z + rand.nextDouble() * width * 2D) - width;
+        mc.effectRenderer.addEffect(new EntityWarSmokeFX(mc.theWorld, xPos, yPos, zPos, 2.5F, 1.0F, 1.0F, 1.0F));
+	}
+	
+	@Override
+	public void doExplosionFX(double x, double y, double z)
+	{
+		for(int i = 0; i < 32; i++) 
+		{
+			mc.theWorld.spawnParticle("explode", x, y, z, rand.nextDouble() - 0.5D, rand.nextDouble() - 0.5D, rand.nextDouble() - 0.5D);
+			mc.theWorld.spawnParticle("smoke", x, y, z, rand.nextDouble() - 0.5D, rand.nextDouble() - 0.5D, rand.nextDouble() - 0.5D);
+		}
 	}
 	
 	@Override

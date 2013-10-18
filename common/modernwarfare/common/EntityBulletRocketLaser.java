@@ -1,5 +1,8 @@
 package modernwarfare.common;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -7,6 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
@@ -14,43 +18,38 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+import cpw.mods.fml.common.network.PacketDispatcher;
 
 public class EntityBulletRocketLaser extends EntityBullet
 {
-    public float rotationYawOffset;
     protected static final float MAX_AIMING_ANGLE = 30F;
     protected static final float MAX_TURNING_ANGLE = 10F;
 
     public EntityBulletRocketLaser(World world)
     {
         super(world);
-        rotationYawOffset = 0.0F;
         setSize(0.25F, 0.25F);
     }
 
     public EntityBulletRocketLaser(World world, double d, double d1, double d2)
     {
         super(world, d, d1, d2);
-        rotationYawOffset = 0.0F;
         setSize(0.25F, 0.25F);
     }
 
-    public EntityBulletRocketLaser(World world, Entity entity, ItemGun itemgun, float f, float f1, float f2, float f3, float f4)
+    public EntityBulletRocketLaser(World world, Entity entity, ItemGun itemgun)
     {
-        super(world, entity, itemgun, f, f1, f2, f3, f4);
-        rotationYawOffset = 0.0F;
+        super(world, entity, itemgun);
         setSize(0.25F, 0.25F);
-        rotationYawOffset = f3;
     }
 
+    @Override
     public void playServerSound(World world)
     {
         world.playSoundAtEntity(this, ((ItemGun)ModernWarfare.itemGunRocketLauncherLaser).firingSound, ((ItemGun)ModernWarfare.itemGunRocketLauncherLaser).soundRangeFactor, 1.0F / (rand.nextFloat() * 0.1F + 0.95F));
     }
 
-    /**
-     * Called to update the entity's position/logic.
-     */
+    @Override
     public void onUpdate()
     {
         onEntityUpdate();
@@ -87,8 +86,7 @@ public class EntityBulletRocketLaser extends EntityBullet
                 timeInAir = 0;
             }
         }
-        else
-        {
+        else {
             timeInAir++;
         }
 
@@ -139,7 +137,7 @@ public class EntityBulletRocketLaser extends EntityBullet
             movingobjectposition = new MovingObjectPosition(entity);
         }
 
-        if (movingobjectposition != null)
+        if (movingobjectposition != null && !worldObj.isRemote)
         {
             int k = worldObj.getBlockId(movingobjectposition.blockX, movingobjectposition.blockY, movingobjectposition.blockZ);
 
@@ -218,6 +216,29 @@ public class EntityBulletRocketLaser extends EntityBullet
         motionY -= f3;
         setPosition(posX, posY, posZ);
     }
+    
+    private void doFX()
+    {
+        ByteArrayOutputStream bytearrayoutputstream = new ByteArrayOutputStream();
+        DataOutputStream dataoutputstream = new DataOutputStream(bytearrayoutputstream);
+
+        try {
+            dataoutputstream.writeInt(11);
+            dataoutputstream.writeDouble(posX);
+            dataoutputstream.writeDouble(posY);
+            dataoutputstream.writeDouble(posZ);
+        } catch (IOException ioexception) {
+            System.out.println("[ModernWarfare] An error occured while writing packet data.");
+            ioexception.printStackTrace();
+        }
+
+        Packet250CustomPayload packet250custompayload = new Packet250CustomPayload();
+        packet250custompayload.channel = "MDWF";
+        packet250custompayload.data = bytearrayoutputstream.toByteArray();
+        packet250custompayload.length = packet250custompayload.data.length;
+        PacketDispatcher.sendPacketToAllAround(posX, posY, posZ, 40, worldObj.provider.dimensionId, packet250custompayload);
+        System.out.println("[ModernWarfare] Sent '11' packet to server");
+    }
 
     private void explode()
     {
@@ -228,16 +249,11 @@ public class EntityBulletRocketLaser extends EntityBullet
         {
             explosion.doExplosionB(true);
         }
-        else
-        {
+        else {
             worldObj.playSoundEffect(posX, posY, posZ, "random.explode", 4F, (1.0F + (worldObj.rand.nextFloat() - worldObj.rand.nextFloat()) * 0.2F) * 0.7F);
         }
-
-        for (int i = 0; i < 32; i++)
-        {
-            worldObj.spawnParticle("explode", posX, posY, posZ, worldObj.rand.nextDouble() - 0.5D, worldObj.rand.nextDouble() - 0.5D, worldObj.rand.nextDouble() - 0.5D);
-            worldObj.spawnParticle("smoke", posX, posY, posZ, worldObj.rand.nextDouble() - 0.5D, worldObj.rand.nextDouble() - 0.5D, worldObj.rand.nextDouble() - 0.5D);
-        }
+        
+        doFX();
 
         setEntityDead();
     }
@@ -284,7 +300,7 @@ public class EntityBulletRocketLaser extends EntityBullet
                 f3 = 90F;
             }
 
-            float f4 = (owner.rotationYaw + rotationYawOffset) % 360F;
+            float f4 = (owner.rotationYaw) % 360F;
 
             if (f4 < -180F)
             {

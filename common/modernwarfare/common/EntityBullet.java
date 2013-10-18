@@ -61,17 +61,13 @@ public abstract class EntityBullet extends Entity
 
     public abstract void playServerSound(World world);
 
-    public EntityBullet(World world, Entity entity, ItemGun itemgun, float f, float f1, float f2, float f3, float f4)
+    public EntityBullet(World world, Entity entity, ItemGun itemgun)
     {
         this(world);
         owner = entity;
         damage = itemgun.damage;
         headshotMultiplier = itemgun.headshotMultiplier;
-        float f5 = entity.rotationYaw;
-        float f6 = f5 * 0.01745329F;
-        double d = f * MathHelper.cos(f6) - f2 * MathHelper.sin(f6);
-        double d1 = f * MathHelper.sin(f6) + f2 * MathHelper.cos(f6);
-        setLocationAndAngles(entity.posX + d, entity.posY + entity.getEyeHeight() + f1, entity.posZ + d1, entity.rotationYaw + f3, entity.rotationPitch + f4);
+        setLocationAndAngles(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ, entity.rotationYaw, entity.rotationPitch);
         posX -= MathHelper.cos((rotationYaw / 180F) * (float)Math.PI) * 0.16F;
         posY -= 0.1D;
         posZ -= MathHelper.sin((rotationYaw / 180F) * (float)Math.PI) * 0.16F;
@@ -81,7 +77,7 @@ public abstract class EntityBullet extends Entity
 
         if (entity instanceof EntityLiving)
         {
-            boolean flag = Math.abs(entity.motionX) > 0.1D || Math.abs(entity.motionY) > 0.1D || Math.abs(entity.motionZ) > 0.10000000000000001D;
+            boolean flag = Math.abs(entity.motionX) > 0.1D || Math.abs(entity.motionY) > 0.1D || Math.abs(entity.motionZ) > 0.1D;
 
             if (flag)
             {

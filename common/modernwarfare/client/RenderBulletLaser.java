@@ -13,6 +13,11 @@ public class RenderBulletLaser extends Render
 {
     public void renderArrow(EntityBullet entitybullet, double d, double d1, double d2, float f, float f1)
     {
+    	if(entitybullet.ticksExisted < 2)
+    	{
+    		return;
+    	}
+    	
         GL11.glPushMatrix();
         bindTexture(getEntityTexture(entitybullet));
         GL11.glTranslatef((float)d, (float)d1, (float)d2);
@@ -64,17 +69,13 @@ public class RenderBulletLaser extends Render
         GL11.glPopMatrix();
     }
 
-    /**
-     * Actually renders the given argument. This is a synthetic bridge method, always casting down its argument and then
-     * handing it off to a worker function which does the actual work. In all probabilty, the class Render is generic
-     * (Render<T extends Entity) and this method has signature public void doRender(T entity, double d, double d1,
-     * double d2, float f, float f1). But JAD is pre 1.5 so doesn't do that.
-     */
+    @Override
     public void doRender(Entity entity, double d, double d1, double d2, float f, float f1)
     {
         renderArrow((EntityBullet)entity, d, d1, d2, f, f1);
     }
     
+    @Override
     protected ResourceLocation getEntityTexture(Entity par1Entity)
     {
         return new ResourceLocation("modernwarfare:render/Laser.png");

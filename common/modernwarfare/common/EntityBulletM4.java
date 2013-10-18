@@ -15,11 +15,12 @@ public class EntityBulletM4 extends EntityBullet
         super(world, d, d1, d2);
     }
 
-    public EntityBulletM4(World world, Entity entity, ItemGun itemgun, float f, float f1, float f2, float f3, float f4)
+    public EntityBulletM4(World world, Entity entity, ItemGun itemgun)
     {
-        super(world, entity, itemgun, f, f1, f2, f3, f4);
+        super(world, entity, itemgun);
     }
 
+    @Override
     public void playServerSound(World world)
     {
         world.playSoundAtEntity(this, ((ItemGun)ModernWarfare.itemGunM4).firingSound, ((ItemGun)ModernWarfare.itemGunM4).soundRangeFactor, 1.0F / (rand.nextFloat() * 0.1F + 0.95F));

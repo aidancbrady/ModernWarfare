@@ -19,14 +19,14 @@ public class ItemGunDeagle extends ItemGun
     }
 
     @Override
-    public EntityBullet getBulletEntity(World world, Entity entity, float f, float f1, float f2, float f3, float f4)
+    public EntityBullet getBulletEntity(World world, Entity entity)
     {
-        return new EntityBulletDeagle(world, entity, this, f, f1, f2, f3, f4);
+        return new EntityBulletDeagle(world, entity, this);
     }
 
     @Override
-    public EntityBulletCasing getBulletCasingEntity(World world, Entity entity, float f)
+    public EntityBulletCasing getBulletCasingEntity(World world, Entity entity)
     {
-        return new EntityBulletCasing(world, entity, f);
+        return new EntityBulletCasing(world, entity);
     }
 }

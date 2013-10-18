@@ -20,7 +20,7 @@ public class ItemWar extends Item
 	{
     	if(itemID == ModernWarfare.itemLightometer.itemID)
     	{
-    		itemIcon = (Icon)ModernWarfare.proxy.reloadLightometerIcon();
+    		itemIcon = (Icon)ModernWarfare.proxy.getLightometerIcon();
     		return;
     	}
     	
