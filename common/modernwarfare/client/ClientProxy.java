@@ -131,7 +131,6 @@ public class ClientProxy extends CommonProxy
 	{
 		ModernWarfareClient.jetPackReady = false;
 		ModernWarfareClient.jetPackOn = false;
-		ModernWarfareClient.jetPackLastSound = 0L;
 		ModernWarfareClient.currentUtilityZoom = 1.0F;
 		ModernWarfareClient.lastUtilityZoom = ModernWarfareClient.currentUtilityZoom;
 		ModernWarfareClient.currentGunZoom = 1.0F;

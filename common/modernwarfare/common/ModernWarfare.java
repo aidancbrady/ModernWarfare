@@ -27,6 +27,7 @@ import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.registry.EntityRegistry;
@@ -134,6 +135,8 @@ public class ModernWarfare
     public static Map isSniperZoomedIn = new HashMap();
     public static Map isJetpackOn = new HashMap();
     
+    public static Map<String, Long> jetPackLastSound = new HashMap<String, Long>();
+    
     public static Set<EntityPlayer> shooting = new HashSet<EntityPlayer>();
     
     public static Class sentryEntityClasses[] = (new Class[] 
@@ -147,9 +150,6 @@ public class ModernWarfare
         "AK47", "MP5", "Shotgun", "Desert Eagle", "Rocket Launcher", "Laser-Guided Rocket Launcher", "Sniper Rifle", "Flamethrower", "SG552", "Minigun",
         "Laser", "M4"
     };
-    
-    private static final double JET_PACK_LIFT = 0.06D;
-    private static final double JET_PACK_MAX_LIFT = 0.3D;
     
     public static int monsterSpawns = 70;
     
@@ -180,6 +180,17 @@ public class ModernWarfare
         
         NetworkRegistry.instance().registerConnectionHandler(new CommonConnectionHandler());
         NetworkRegistry.instance().registerGuiHandler(this, proxy);
+    }
+    
+    @EventHandler
+    public void serverStopping(FMLServerStoppingEvent event)
+    {
+    	grapplingHooks = new HashMap();
+    	reloadTimes = new HashMap();
+    	isSniperZoomedIn = new HashMap();
+    	isJetpackOn = new HashMap();
+    	
+    	jetPackLastSound = new HashMap<String, Long>();
     }
 
     public void addTileEntities()
@@ -661,7 +672,7 @@ public class ModernWarfare
 
                     i++;
                 }
-                while (true);
+                while(true);
 
                 if(!flag)
                 {
@@ -682,7 +693,7 @@ public class ModernWarfare
 
                         j++;
                     }
-                    while (true);
+                    while(true);
                 }
             }
 
@@ -853,6 +864,18 @@ public class ModernWarfare
         {
             entityplayermp.motionY = Math.min(entityplayermp.motionY + 0.06D + 0.06D, 0.3D);
             entityplayermp.fallDistance = 0.0F;
+            
+    		if(world.getWorldTime() - getJetPackSound(entityplayermp) < 0L) 
+			{
+				jetPackLastSound.put(entityplayermp.username, world.getWorldTime() - 15L);
+			}
+
+			if(getJetPackSound(entityplayermp) == 0L || world.getWorldTime() - getJetPackSound(entityplayermp) > 15L) 
+			{
+				world.playSoundAtEntity(entityplayermp, "modernwarfare:jetpack", 0.25F, 1.0F / (WarTools.random.nextFloat() * 0.1F + 0.95F));
+				jetPackLastSound.put(entityplayermp.username, world.getWorldTime());
+			}
+			
             return true;
         }
         else {
@@ -875,5 +898,15 @@ public class ModernWarfare
     {
         Boolean boolean1 = (Boolean)isSniperZoomedIn.get(entityplayer);
         return boolean1 == null ? false : boolean1.booleanValue();
+    }
+    
+    public static long getJetPackSound(EntityPlayerMP player)
+    {
+    	if(jetPackLastSound.get(player.username) == null)
+    	{
+    		return 0;
+    	}
+    	
+    	return jetPackLastSound.get(player.username);
     }
 }

@@ -49,9 +49,6 @@ public class ModernWarfareClient extends ModernWarfare
     
     public static boolean jetPackReady;
     public static boolean jetPackOn;
-    public static long jetPackLastSound;
-    
-    public static final int JET_PACK_SOUND_INTERVAL = 15;
     
     private static final float DEFAULT_ZOOM = 1F;
     private static final float ZOOM_INCREMENT = 0.0625F;
@@ -131,17 +128,6 @@ public class ModernWarfareClient extends ModernWarfare
 				{
 					spawnJetPackParticle(minecraft, "flame");
 					spawnJetPackParticle(minecraft, "smoke");
-				}
-
-				if(minecraft.theWorld.getWorldTime() - jetPackLastSound < 0L) 
-				{
-					jetPackLastSound = minecraft.theWorld.getWorldTime() - 15L;
-				}
-
-				if(jetPackLastSound == 0L || minecraft.theWorld.getWorldTime() - jetPackLastSound > 15L) 
-				{
-					minecraft.theWorld.playSoundAtEntity(minecraft.thePlayer, "modernwarfare:jetpack", 0.25F, 1.0F / (WarTools.random.nextFloat() * 0.1F + 0.95F));
-					jetPackLastSound = minecraft.theWorld.getWorldTime();
 				}
 
 				return true;
