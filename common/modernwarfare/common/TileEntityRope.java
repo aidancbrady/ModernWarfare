@@ -13,22 +13,19 @@ public class TileEntityRope extends TileEntity
         delay = 5;
     }
 
-    /**
-     * Allows the entity to update its state. Overridden in most subclasses, e.g. the mob spawner uses this to count
-     * ticks and creates a new spawn inside its implementation.
-     */
+    @Override
     public void updateEntity()
     {
-        if (delay == 0)
+        if(delay == 0)
         {
-            if (worldObj.getBlockId(xCoord, yCoord - 1, zCoord) == 0 || worldObj.getBlockId(xCoord, yCoord - 1, zCoord) == Block.snow.blockID)
+            if(worldObj.getBlockId(xCoord, yCoord - 1, zCoord) == 0 || worldObj.getBlockId(xCoord, yCoord - 1, zCoord) == Block.snow.blockID)
             {
                 worldObj.setBlock(xCoord, yCoord - 1, zCoord, ModernWarfare.blockRope.blockID);
                 worldObj.setBlockMetadataWithNotify(xCoord, yCoord - 1, zCoord, worldObj.getBlockMetadata(xCoord, yCoord, zCoord), 3);
                 delay--;
             }
         }
-        else if (delay > 0)
+        else if(delay > 0)
         {
             delay--;
         }
@@ -36,18 +33,14 @@ public class TileEntityRope extends TileEntity
         super.updateEntity();
     }
 
-    /**
-     * Reads a tile entity from NBT.
-     */
+    @Override
     public void readFromNBT(NBTTagCompound nbttagcompound)
     {
         super.readFromNBT(nbttagcompound);
         delay = nbttagcompound.getShort("Delay");
     }
 
-    /**
-     * Writes a tile entity to NBT.
-     */
+    @Override
     public void writeToNBT(NBTTagCompound nbttagcompound)
     {
         super.writeToNBT(nbttagcompound);

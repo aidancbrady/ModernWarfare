@@ -62,7 +62,7 @@ public class PacketHandler implements IPacketHandler
 
                     if(entityplayer.ridingEntity instanceof EntityAtv)
                     {
-                        entityplayer.openGui(ModernWarfare.instance, 1, entityplayer.worldObj, 0, 0, 0);
+                        entityplayer.openGui(ModernWarfare.instance, 1, entityplayer.worldObj, entityplayer.ridingEntity.entityId, 0, 0);
                     }
                     else if(entityplayer.openContainer instanceof ContainerAtv)
                     {

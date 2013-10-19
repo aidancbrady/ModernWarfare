@@ -22,7 +22,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.src.ModLoader;
 import net.minecraft.world.World;
 import cpw.mods.fml.client.registry.KeyBindingRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -43,7 +42,7 @@ public class ClientProxy extends CommonProxy
 			case 0:
 				return new GuiCraftingPack(WarTools.minecraft.thePlayer.inventory, world);
 			case 1:
-				return new GuiAtv(WarTools.minecraft.thePlayer.inventory, new EntityAtv(WarTools.minecraft.theWorld));
+				return new GuiAtv(WarTools.minecraft.thePlayer.inventory, (EntityAtv)WarTools.minecraft.theWorld.getEntityByID(x));
 		}
 
 		return null;

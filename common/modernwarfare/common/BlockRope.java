@@ -6,41 +6,32 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import modernwarfare.client.ClientProxy;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 
 public class BlockRope extends BlockContainerWar
 {
-    public float ascensionSpeed;
-    public float descensionSpeed;
-
     public BlockRope(int i, int k)
     {
         super(i, Material.cloth);
-        ascensionSpeed = 0.2F;
-        descensionSpeed = -0.15F;
     }
+    
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerIcons(IconRegister register)
+	{
+		blockIcon = register.registerIcon("modernwarfare:blockRope");
+	}
 
     @Override
-    public void onEntityCollidedWithBlock(World world, int i, int j, int k, Entity entity)
+    public boolean isLadder(World world, int x, int y, int z, EntityLivingBase entity)
     {
-        if (entity instanceof EntityLiving)
-        {
-            entity.fallDistance = 0.0F;
-
-            if (entity.motionY < (double)descensionSpeed)
-            {
-                entity.motionY = descensionSpeed;
-            }
-
-            if (entity.isCollidedHorizontally)
-            {
-                entity.motionY = ascensionSpeed;
-            }
-        }
+        return true;
     }
 
     @Override

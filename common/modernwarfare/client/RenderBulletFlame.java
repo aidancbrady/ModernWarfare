@@ -19,6 +19,7 @@ public class RenderBulletFlame extends Render
     	}
     	
         GL11.glPushMatrix();
+        WarRenderer.glowOn();
         bindTexture(getEntityTexture(entitybullet));
         GL11.glTranslatef((float)d, (float)d1, (float)d2);
         GL11.glRotatef((entitybullet.prevRotationYaw + (entitybullet.rotationYaw - entitybullet.prevRotationYaw) * f1) - 90F, 0.0F, 1.0F, 0.0F);
@@ -66,6 +67,7 @@ public class RenderBulletFlame extends Render
         }
 
         GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+        WarRenderer.glowOff();
         GL11.glPopMatrix();
     }
 

@@ -5,6 +5,7 @@ import java.util.Random;
 import modernwarfare.client.ClientProxy;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
@@ -19,54 +20,47 @@ public class BlockGrapplingHook extends BlockWar
         super(i, Material.wood);
         setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 0.125F, 1.0F);
     }
+    
+	@Override
+	@SideOnly(Side.CLIENT)
+	public void registerIcons(IconRegister register)
+	{
+		blockIcon = register.registerIcon("modernwarfare:blockGrapplingHook");
+	}
 
-    /**
-     * Returns a bounding box from the pool of bounding boxes (this means this box can change after the pool has been
-     * cleared to be reused)
-     */
+	@Override
     public AxisAlignedBB getCollisionBoundingBoxFromPool(World world, int i, int j, int k)
     {
         return null;
     }
 
-    /**
-     * Is this block (a) opaque and (b) a full 1m cube?  This determines whether or not to render the shared face of two
-     * adjacent blocks and also whether the player can attach torches, redstone wire, etc to this block.
-     */
+    @Override
     public boolean isOpaqueCube()
     {
         return false;
     }
 
-    /**
-     * If this block doesn't render as an ordinary block it will return False (examples: signs, buttons, stairs, etc)
-     */
+    @Override
     public boolean renderAsNormalBlock()
     {
         return false;
     }
 
-    /**
-     * Checks to see if its valid to put this block at the specified coordinates. Args: world, x, y, z
-     */
+    @Override
     public boolean canPlaceBlockAt(World world, int i, int j, int k)
     {
         int l = world.getBlockId(i, j - 1, k);
 
-        if (l == 0 || !Block.blocksList[l].isOpaqueCube())
+        if(l == 0 || !Block.blocksList[l].isOpaqueCube())
         {
             return false;
         }
-        else
-        {
+        else {
             return world.getBlockMaterial(i, j - 1, k).isSolid();
         }
     }
 
-    /**
-     * Lets the block know when one of its neighbor changes. Doesn't know which neighbor changed (coordinates passed are
-     * their own) Args: x, y, z, neighbor blockID
-     */
+    @Override
     public void onNeighborBlockChange(World world, int i, int j, int k, int l)
     {
         canSnowStay(world, i, j, k);
@@ -74,48 +68,38 @@ public class BlockGrapplingHook extends BlockWar
 
     private boolean canSnowStay(World world, int i, int j, int k)
     {
-        if (!canPlaceBlockAt(world, i, j, k))
+        if(!canPlaceBlockAt(world, i, j, k))
         {
             dropBlockAsItem(world, i, j, k, world.getBlockMetadata(i, j, k), 0);
             world.setBlockToAir(i, j, k);
             onBlockDestroyed(world, i, j, k);
             return false;
         }
-        else
-        {
+        else {
             return true;
         }
     }
 
-    /**
-     * Returns the ID of the items to drop on destruction.
-     */
+    @Override
     public int idDropped(int i, Random random, int j)
     {
         return ModernWarfare.itemGrapplingHook.itemID;
     }
 
-    /**
-     * Returns the quantity of items to drop on block destruction.
-     */
+    @Override
     public int quantityDropped(Random random)
     {
         return 1;
     }
 
-    /**
-     * The type of render function that is called for this block
-     */
+    @Override
     @SideOnly(Side.CLIENT)
     public int getRenderType()
     {
         return ClientProxy.RENDER_ID;
     }
 
-    /**
-     * Returns true if the given side of this block type should be rendered, if the adjacent block is at the given
-     * coordinates.  Args: blockAccess, x, y, z, side
-     */
+    @Override
     public boolean shouldSideBeRendered(IBlockAccess iblockaccess, int i, int j, int k, int l)
     {
         Material material = iblockaccess.getBlockMaterial(i, j, k);
@@ -125,27 +109,22 @@ public class BlockGrapplingHook extends BlockWar
             return true;
         }
 
-        if (material == blockMaterial)
+        if(material == blockMaterial)
         {
             return false;
         }
-        else
-        {
+        else {
             return super.shouldSideBeRendered(iblockaccess, i, j, k, l);
         }
     }
 
-    /**
-     * Called right before the block is destroyed by a player.  Args: world, x, y, z, metaData
-     */
+    @Override
     public void onBlockDestroyedByPlayer(World world, int i, int j, int k, int l)
     {
         onBlockDestroyed(world, i, j, k);
     }
 
-    /**
-     * Called upon the block being destroyed by an explosion
-     */
+    @Override
     public void onBlockDestroyedByExplosion(World world, int i, int j, int k, Explosion explosion)
     {
         onBlockDestroyed(world, i, j, k);
@@ -155,15 +134,10 @@ public class BlockGrapplingHook extends BlockWar
     {
         int ai[][] =
         {
-            {
-                i - 1, j - 1, k
-            }, {
-                i + 1, j - 1, k
-            }, {
-                i, j - 1, k - 1
-            }, {
-                i, j - 1, k + 1
-            }
+            {i - 1, j - 1, k}, 
+            {i + 1, j - 1, k}, 
+            {i, j - 1, k - 1}, 
+            {i, j - 1, k + 1}
         };
 
         for (int l = 0; l < ai.length; l++)

@@ -10,7 +10,12 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
-public class EntityAtv extends EntityLandVehicle implements IInventory
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
+
+import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
+
+public class EntityAtv extends EntityLandVehicle implements IInventory, IEntityAdditionalSpawnData
 {
     public ItemStack gunA;
     public ItemStack gunB;
@@ -39,10 +44,12 @@ public class EntityAtv extends EntityLandVehicle implements IInventory
     public EntityAtv(World world, double d, double d1, double d2)
     {
         this(world);
-        setPosition(d, d1 + (double)yOffset, d2);
+        setPosition(d, d1 + yOffset, d2);
+        
         motionX = 0.0D;
         motionY = 0.0D;
         motionZ = 0.0D;
+        
         prevPosX = d;
         prevPosY = d1;
         prevPosZ = d2;
@@ -85,10 +92,10 @@ public class EntityAtv extends EntityLandVehicle implements IInventory
     public void onUpdate()
     {
         super.onUpdate();
-
+        
         if(rand.nextInt(MAX_HEALTH) > health * 2)
         {
-            if (Math.random() < 0.75D)
+            if(Math.random() < 0.75D)
             {
                 spawnParticles("smoke", 4, false);
             }
@@ -113,7 +120,7 @@ public class EntityAtv extends EntityLandVehicle implements IInventory
                 spawnParticles("smoke", 64, true);
                 setDead();
             }
-            else if (rand.nextInt(DEATH_TIME_MAX) > deathTime)
+            else if(rand.nextInt(DEATH_TIME_MAX) > deathTime)
             {
                 spawnParticles("flame", 8, false);
             }
@@ -138,11 +145,11 @@ public class EntityAtv extends EntityLandVehicle implements IInventory
 
     public void spawnParticles(String s, int i, boolean flag)
     {
-        for (int j = 0; j < i; j++)
+        for(int j = 0; j < i; j++)
         {
-            double d = (posX + rand.nextDouble() * (double)width * 1.5D) - (double)width * 0.75D;
-            double d1 = ((posY + rand.nextDouble() * (double)height) - (double)height * 0.5D) + 0.25D;
-            double d2 = (posZ + rand.nextDouble() * (double)width) - (double)width * 0.5D;
+            double d = (posX + rand.nextDouble() * width * 1.5D) - width * 0.75D;
+            double d1 = ((posY + rand.nextDouble() * height) - height * 0.5D) + 0.25D;
+            double d2 = (posZ + rand.nextDouble() * width) - width * 0.5D;
             double d3 = flag ? rand.nextDouble() - 0.5D : 0.0D;
             double d4 = flag ? rand.nextDouble() - 0.5D : 0.0D;
             double d5 = flag ? rand.nextDouble() - 0.5D : 0.0D;
@@ -197,7 +204,9 @@ public class EntityAtv extends EntityLandVehicle implements IInventory
         NBTTagList nbttaglist = nbttagcompound.getTagList("Pos");
         NBTTagList nbttaglist1 = nbttagcompound.getTagList("Motion");
         NBTTagList nbttaglist2 = nbttagcompound.getTagList("Rotation");
+        
         setPosition(0.0D, 0.0D, 0.0D);
+        
         motionX = ((NBTTagDouble)nbttaglist1.tagAt(0)).data;
         motionY = ((NBTTagDouble)nbttaglist1.tagAt(1)).data;
         motionZ = ((NBTTagDouble)nbttaglist1.tagAt(2)).data;
@@ -220,13 +229,19 @@ public class EntityAtv extends EntityLandVehicle implements IInventory
         prevPosX = lastTickPosX = posX = ((NBTTagDouble)nbttaglist.tagAt(0)).data;
         prevPosY = lastTickPosY = posY = ((NBTTagDouble)nbttaglist.tagAt(1)).data;
         prevPosZ = lastTickPosZ = posZ = ((NBTTagDouble)nbttaglist.tagAt(2)).data;
+        
         prevRotationYaw = rotationYaw = ((NBTTagFloat)nbttaglist2.tagAt(0)).data;
         prevRotationPitch = rotationPitch = ((NBTTagFloat)nbttaglist2.tagAt(1)).data;
+        
         fallDistance = nbttagcompound.getFloat("FallDistance");
+        
         setFire(nbttagcompound.getShort("Fire"));
         setAir(nbttagcompound.getShort("Air"));
+        
         onGround = nbttagcompound.getBoolean("OnGround");
+        
         setPosition(posX, posY, posZ);
+        
         readEntityFromNBT(nbttagcompound);
     }
 
@@ -320,8 +335,7 @@ public class EntityAtv extends EntityLandVehicle implements IInventory
         {
             return gunA;
         }
-
-        if(i == 1)
+        else if(i == 1)
         {
             return gunB;
         }
@@ -339,8 +353,7 @@ public class EntityAtv extends EntityLandVehicle implements IInventory
             gunA = null;
             return itemstack;
         }
-
-        if(i == 1)
+        else if(i == 1)
         {
             ItemStack itemstack1 = gunB;
             gunB = null;
@@ -373,13 +386,13 @@ public class EntityAtv extends EntityLandVehicle implements IInventory
 	@Override
     public void setInventorySlotContents(int i, ItemStack itemstack)
     {
-        if (itemstack == null || (itemstack.getItem() instanceof ItemGun))
+        if(itemstack == null || (itemstack.getItem() instanceof ItemGun))
         {
-            if (i == 0)
+            if(i == 0)
             {
                 gunA = itemstack;
             }
-            else if (i == 1)
+            else if(i == 1)
             {
                 gunB = itemstack;
             }
@@ -422,6 +435,33 @@ public class EntityAtv extends EntityLandVehicle implements IInventory
 	@Override
 	public boolean isItemValidForSlot(int i, ItemStack itemstack)
 	{
-		return true;
+		return itemstack.getItem() instanceof ItemGun;
+	}
+	
+	@Override
+	public void writeSpawnData(ByteArrayDataOutput data) 
+	{
+		data.writeInt(gunA == null ? 0 : gunA.itemID);
+		data.writeInt(gunB == null ? 0 : gunB.itemID);
+	}
+
+	@Override
+	public void readSpawnData(ByteArrayDataInput data) 
+	{
+		try {
+			int aID = data.readInt();
+			
+			if(aID != 0)
+			{
+				gunA = new ItemStack(aID, 1, 0);
+			}
+			
+			int bID = data.readInt();
+			
+			if(bID != 0)
+			{
+				gunB = new ItemStack(bID, 1, 0);
+			}
+		} catch(Exception e) {}
 	}
 }

@@ -50,35 +50,19 @@ public class RenderAtv extends Render
             }
             else {
                 itemstack = entityatv.gunB;
-                GL11.glTranslatef(0.0F, 0.0F, -1.25F);
+                GL11.glTranslatef(0.0F, 0.0F, -1.35F);
             }
 
-            /*if(itemstack != null)
+            if(itemstack != null)
             {
-                int j = itemstack.getIconIndex();
-                loadTexture("/war/items.png");
-                float f3 = (float)((j % 16) * 16 + 0) / 256F;
-                float f4 = (float)((j % 16) * 16 + 16) / 256F;
-                float f5 = (float)((j / 16) * 16 + 0) / 256F;
-                float f6 = (float)((j / 16) * 16 + 16) / 256F;
-                float f7 = 1.0F;
-                float f8 = 0.5F;
-                float f9 = 0.25F;
-                GL11.glPushMatrix();
-                tessellator.startDrawingQuads();
-                tessellator.setColorOpaque_F(f1, f1, f1);
-                tessellator.setNormal(0.0F, 1.0F, 0.0F);
-                tessellator.addVertexWithUV(0.0F - f8, 0.0F - f9, 0.0D, f3, f6);
-                tessellator.addVertexWithUV(f7 - f8, 0.0F - f9, 0.0D, f4, f6);
-                tessellator.addVertexWithUV(f7 - f8, 1.0F - f9, 0.0D, f4, f5);
-                tessellator.addVertexWithUV(0.0F - f8, 1.0F - f9, 0.0D, f3, f5);
-                tessellator.addVertexWithUV(0.0F - f8, 1.0F - f9, 0.0D, f3, f5);
-                tessellator.addVertexWithUV(f7 - f8, 1.0F - f9, 0.0D, f4, f5);
-                tessellator.addVertexWithUV(f7 - f8, 0.0F - f9, 0.0D, f4, f6);
-                tessellator.addVertexWithUV(0.0F - f8, 0.0F - f9, 0.0D, f3, f6);
-                tessellator.draw();
-                GL11.glPopMatrix();
-            }*/
+            	GL11.glPushMatrix();
+            	
+            	GL11.glRotatef(180, 0, 1, 0);
+            	GL11.glTranslatef(-1F, -.8F, 0);
+            	WarRenderer.renderItem(itemstack);
+            	
+            	GL11.glPopMatrix();
+            }
         }
 
         GL11.glPopMatrix();
