@@ -56,6 +56,8 @@ public class EntityBulletRocketLaser extends EntityBullet
     public void onUpdate()
     {
         onEntityUpdate();
+        
+        canRender = true;
 
         if (timeInAir > 5)
         {

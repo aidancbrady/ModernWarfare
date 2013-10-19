@@ -54,6 +54,8 @@ public class EntityBulletLaser extends EntityBullet
     public void onUpdate()
     {
         onEntityUpdate();
+        
+        canRender = true;
 
         if(timeInAir == 200)
         {

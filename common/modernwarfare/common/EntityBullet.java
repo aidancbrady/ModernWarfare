@@ -212,6 +212,8 @@ public abstract class EntityBullet extends Entity implements IEntityAdditionalSp
     public void onUpdate()
     {
         super.onUpdate();
+        
+        canRender = true;
 
         if(serverSpawned && !serverSoundPlayed)
         {

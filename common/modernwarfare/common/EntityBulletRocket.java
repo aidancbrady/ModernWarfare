@@ -50,6 +50,8 @@ public class EntityBulletRocket extends EntityBullet
     public void onUpdate()
     {
         onEntityUpdate();
+        
+        canRender = true;
 
         if (timeInAir == 200)
         {
