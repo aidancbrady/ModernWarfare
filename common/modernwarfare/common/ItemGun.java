@@ -1,8 +1,5 @@
 package modernwarfare.common;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -17,7 +14,6 @@ public abstract class ItemGun extends ItemWar
     public int useDelay;
     public int numBullets;
     public int damage;
-    public float headshotMultiplier;
     public float muzzleVelocity;
     public float spread;
     public float recoil;
@@ -31,7 +27,6 @@ public abstract class ItemGun extends ItemWar
         super(i);
         numBullets = 1;
         damage = 0;
-        headshotMultiplier = 2.0F;
         muzzleVelocity = 1.5F;
         spread = 1.0F;
         recoil = 1.0F;
@@ -118,35 +113,6 @@ public abstract class ItemGun extends ItemWar
 
                 if(entity instanceof EntityPlayer)
                 {
-                    double verticalRecoil = Math.min(recoil, entity.rotationPitch + 90F);
-                    double horizontalRecoil = world.rand.nextFloat() * recoil * 0.5F - recoil * 0.25F;
-
-                    if(!entity.isSneaking())
-                    {
-                        verticalRecoil *= 2D;
-                        horizontalRecoil *= 2D;
-
-                        if(this instanceof ItemGunMinigun)
-                        {
-                            verticalRecoil *= 2D;
-                            horizontalRecoil *= 2D;
-                        }
-                    }
-
-                    if(!entity.onGround)
-                    {
-                        verticalRecoil *= 2D;
-                        horizontalRecoil *= 2D;
-                    }
-
-                    if(world.isRemote)
-                    {
-                    	ModernWarfare.proxy.doRecoil(verticalRecoil, horizontalRecoil);
-                    }
-                    
-                    entity.rotationPitch -= verticalRecoil;
-                    entity.rotationYaw += horizontalRecoil;
-
                     if(ammoUsed == 2 && !(this instanceof ItemGunMinigun) && !(this instanceof ItemGunLaser))
                     {
                         ModernWarfare.handleReload(world, (EntityPlayer)entity, true);

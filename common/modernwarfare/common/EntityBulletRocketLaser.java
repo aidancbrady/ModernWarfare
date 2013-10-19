@@ -28,18 +28,21 @@ public class EntityBulletRocketLaser extends EntityBullet
     public EntityBulletRocketLaser(World world)
     {
         super(world);
+        System.out.println("CREATED1");
         setSize(0.25F, 0.25F);
     }
 
     public EntityBulletRocketLaser(World world, double d, double d1, double d2)
     {
         super(world, d, d1, d2);
+        System.out.println("CREATED2");
         setSize(0.25F, 0.25F);
     }
 
     public EntityBulletRocketLaser(World world, Entity entity, ItemGun itemgun)
     {
         super(world, entity, itemgun);
+        System.out.println("CREATED3");
         setSize(0.25F, 0.25F);
     }
 
@@ -169,8 +172,7 @@ public class EntityBulletRocketLaser extends EntityBullet
                     {
                         WarTools.attackEntityIgnoreDelay((EntityLiving)movingobjectposition.entityHit, DamageSource.causeThrownDamage(this, owner), l);
                     }
-                    else
-                    {
+                    else {
                         movingobjectposition.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, owner), l);
                     }
                 }

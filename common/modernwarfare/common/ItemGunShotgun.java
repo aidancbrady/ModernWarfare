@@ -21,7 +21,7 @@ public class ItemGunShotgun extends ItemGun
     @Override
     public EntityBullet getBulletEntity(World world, Entity entity)
     {
-        return new EntityBulletShot(world, entity, this);
+        return new EntityBulletShotgun(world, entity, this);
     }
 
     @Override

@@ -55,16 +55,16 @@ public class EntityBulletLaser extends EntityBullet
     {
         onEntityUpdate();
 
-        if (timeInAir == 200)
+        if(timeInAir == 200)
         {
             setEntityDead();
         }
 
-        if (inGround)
+        if(inGround)
         {
             int i = worldObj.getBlockId(xTile, yTile, zTile);
 
-            if (i != inTile)
+            if(i != inTile)
             {
                 inGround = false;
                 motionX *= rand.nextFloat() * 0.2F;
@@ -74,8 +74,7 @@ public class EntityBulletLaser extends EntityBullet
                 timeInAir = 0;
             }
         }
-        else
-        {
+        else {
             timeInAir++;
         }
 
@@ -268,8 +267,6 @@ public class EntityBulletLaser extends EntityBullet
                 i = (i * 3) / 2;
             }
         }
-
-        i = checkHeadshot(movingobjectposition, vec3d, i);
 
         if (movingobjectposition.entityHit instanceof EntityLiving)
         {

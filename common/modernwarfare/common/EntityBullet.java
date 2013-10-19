@@ -5,14 +5,9 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.entity.monster.EntityCreeper;
-import net.minecraft.entity.monster.EntityEnderman;
-import net.minecraft.entity.monster.EntitySkeleton;
-import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.src.ModLoader;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
@@ -20,21 +15,36 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
-public abstract class EntityBullet extends Entity
+import com.google.common.io.ByteArrayDataInput;
+import com.google.common.io.ByteArrayDataOutput;
+
+import cpw.mods.fml.common.registry.IEntityAdditionalSpawnData;
+
+public abstract class EntityBullet extends Entity implements IEntityAdditionalSpawnData
 {
+	public boolean canRender = false;
+	
     protected int xTile;
     protected int yTile;
     protected int zTile;
+    
     protected int inTile;
+    
     protected boolean inGround;
+    
     public Entity owner;
+    
     protected int timeInTile;
     protected int timeInAir;
+    
     protected int damage;
-    protected float headshotMultiplier;
+    
     protected boolean serverSpawned;
+    
     protected String firingSound;
+    
     protected float soundRangeFactor;
+    
     protected boolean serverSoundPlayed;
 
     public EntityBullet(World world)
@@ -66,20 +76,23 @@ public abstract class EntityBullet extends Entity
         this(world);
         owner = entity;
         damage = itemgun.damage;
-        headshotMultiplier = itemgun.headshotMultiplier;
+        
         setLocationAndAngles(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ, entity.rotationYaw, entity.rotationPitch);
+        
         posX -= MathHelper.cos((rotationYaw / 180F) * (float)Math.PI) * 0.16F;
         posY -= 0.1D;
         posZ -= MathHelper.sin((rotationYaw / 180F) * (float)Math.PI) * 0.16F;
+        
         setPosition(posX, posY, posZ);
         yOffset = 0.0F;
+        
         float f7 = itemgun.spread;
 
-        if (entity instanceof EntityLiving)
+        if(entity instanceof EntityLiving)
         {
             boolean flag = Math.abs(entity.motionX) > 0.1D || Math.abs(entity.motionY) > 0.1D || Math.abs(entity.motionZ) > 0.1D;
 
-            if (flag)
+            if(flag)
             {
                 f7 *= 2.0F;
 
@@ -105,17 +118,17 @@ public abstract class EntityBullet extends Entity
 
                 if(flag)
                 {
-                    f7 = (float)((double)f7 + 0.25D);
+                    f7 = (float)(f7 + 0.25D);
                 }
 
                 if(!entity.onGround)
                 {
-                    f7 = (float)((double)f7 + 0.25D);
+                    f7 = (float)(f7 + 0.25D);
                 }
 
                 if(!entityplayer.isSneaking())
                 {
-                    f7 = (float)((double)f7 + 0.25D);
+                    f7 = (float)(f7 + 0.25D);
                 }
 
                 if(!ModernWarfare.getSniperZoomedIn(entityplayer))
@@ -133,7 +146,9 @@ public abstract class EntityBullet extends Entity
         motionX = -MathHelper.sin((rotationYaw / 180F) * (float)Math.PI) * MathHelper.cos((rotationPitch / 180F) * (float)Math.PI);
         motionZ = MathHelper.cos((rotationYaw / 180F) * (float)Math.PI) * MathHelper.cos((rotationPitch / 180F) * (float)Math.PI);
         motionY = -MathHelper.sin((rotationPitch / 180F) * (float)Math.PI);
+        
         setBulletHeading(motionX, motionY, motionZ, itemgun.muzzleVelocity, f7 / 2.0F);
+        
         double d2 = 0.0D;
         double d3 = 0.0D;
         double d4 = 0.0D;
@@ -159,24 +174,31 @@ public abstract class EntityBullet extends Entity
     @Override
     protected void entityInit() {}
 
-    public void setBulletHeading(double d, double d1, double d2, float f, float f1)
+    public void setBulletHeading(double d, double d1, double d2, float spread, float speed)
     {
         float f2 = MathHelper.sqrt_double(d * d + d1 * d1 + d2 * d2);
+        
         d /= f2;
         d1 /= f2;
         d2 /= f2;
-        d += rand.nextGaussian() * 0.0075D * (double)f1;
-        d1 += rand.nextGaussian() * 0.0075D * (double)f1;
-        d2 += rand.nextGaussian() * 0.0075D * (double)f1;
-        d *= f;
-        d1 *= f;
-        d2 *= f;
+        
+        d += rand.nextGaussian() * 0.005D * speed;
+        d1 += rand.nextGaussian() * 0.005D * speed;
+        d2 += rand.nextGaussian() * 0.005D * speed;
+        
+        d *= spread;
+        d1 *= spread;
+        d2 *= spread;
+        
         motionX = d;
         motionY = d1;
         motionZ = d2;
+        
         float f3 = MathHelper.sqrt_double(d * d + d2 * d2);
+        
         prevRotationYaw = rotationYaw = (float)((Math.atan2(d, d2) * 180D) / Math.PI);
         prevRotationPitch = rotationPitch = (float)((Math.atan2(d1, f3) * 180D) / Math.PI);
+        
         timeInTile = 0;
     }
 
@@ -208,6 +230,7 @@ public abstract class EntityBullet extends Entity
         if(prevRotationPitch == 0.0F && prevRotationYaw == 0.0F)
         {
             float f = MathHelper.sqrt_double(motionX * motionX + motionZ * motionZ);
+            
             prevRotationYaw = rotationYaw = (float)((Math.atan2(motionX, motionZ) * 180D) / Math.PI);
             prevRotationPitch = rotationPitch = (float)((Math.atan2(motionY, f) * 180D) / Math.PI);
         }
@@ -266,6 +289,7 @@ public abstract class EntityBullet extends Entity
             }
 
             float f4 = 0.3F;
+            
             AxisAlignedBB axisalignedbb = entity1.boundingBox.expand(f4, f4, f4);
             MovingObjectPosition movingobjectposition1 = axisalignedbb.calculateIntercept(vec3d, vec3d1);
 
@@ -317,8 +341,6 @@ public abstract class EntityBullet extends Entity
                         }
                     }
 
-                    l = checkHeadshot(movingobjectposition, vec3d2, l);
-
                     if(movingobjectposition.entityHit instanceof EntityLiving)
                     {
                         WarTools.attackEntityIgnoreDelay((EntityLiving)movingobjectposition.entityHit, DamageSource.causeThrownDamage(this, owner), l);
@@ -327,31 +349,33 @@ public abstract class EntityBullet extends Entity
                         movingobjectposition.entityHit.attackEntityFrom(DamageSource.causeThrownDamage(this, owner), l);
                     }
                 }
-                else
-                {
+                else {
                     xTile = movingobjectposition.blockX;
                     yTile = movingobjectposition.blockY;
                     zTile = movingobjectposition.blockZ;
+                    
                     inTile = k;
+                    
                     motionX = (float)(movingobjectposition.hitVec.xCoord - posX);
                     motionY = (float)(movingobjectposition.hitVec.yCoord - posY);
                     motionZ = (float)(movingobjectposition.hitVec.zCoord - posZ);
+                    
                     float f2 = MathHelper.sqrt_double(motionX * motionX + motionY * motionY + motionZ * motionZ);
-                    posX -= (motionX / (double)f2) * 0.050000000000000003D;
-                    posY -= (motionY / (double)f2) * 0.050000000000000003D;
-                    posZ -= (motionZ / (double)f2) * 0.050000000000000003D;
+                    
+                    posX -= (motionX / f2) * 0.05D;
+                    posY -= (motionY / f2) * 0.05D;
+                    posZ -= (motionZ / f2) * 0.05D;
                     inGround = true;
 
-                    if (ModernWarfare.bulletsDestroyGlass && (inTile == Block.glass.blockID || inTile == Block.thinGlass.blockID))
+                    if(ModernWarfare.bulletsDestroyGlass && (inTile == Block.glass.blockID || inTile == Block.thinGlass.blockID))
                     {
                         Block block;
 
-                        if (inTile == Block.glass.blockID)
+                        if(inTile == Block.glass.blockID)
                         {
                             block = Block.glass;
                         }
-                        else
-                        {
+                        else {
                             block = Block.thinGlass;
                         }
 
@@ -373,22 +397,22 @@ public abstract class EntityBullet extends Entity
         float f1 = MathHelper.sqrt_double(motionX * motionX + motionZ * motionZ);
         rotationYaw = (float)((Math.atan2(motionX, motionZ) * 180D) / Math.PI);
 
-        for (rotationPitch = (float)((Math.atan2(motionY, f1) * 180D) / Math.PI); rotationPitch - prevRotationPitch < -180F; prevRotationPitch -= 360F) { }
+        for(rotationPitch = (float)((Math.atan2(motionY, f1) * 180D) / Math.PI); rotationPitch - prevRotationPitch < -180F; prevRotationPitch -= 360F) { }
 
-        for (; rotationPitch - prevRotationPitch >= 180F; prevRotationPitch += 360F) { }
+        for(; rotationPitch - prevRotationPitch >= 180F; prevRotationPitch += 360F) { }
 
-        for (; rotationYaw - prevRotationYaw < -180F; prevRotationYaw -= 360F) { }
+        for(; rotationYaw - prevRotationYaw < -180F; prevRotationYaw -= 360F) { }
 
-        for (; rotationYaw - prevRotationYaw >= 180F; prevRotationYaw += 360F) { }
+        for(; rotationYaw - prevRotationYaw >= 180F; prevRotationYaw += 360F) { }
 
         rotationPitch = prevRotationPitch + (rotationPitch - prevRotationPitch) * 0.2F;
         rotationYaw = prevRotationYaw + (rotationYaw - prevRotationYaw) * 0.2F;
         float f3 = 1.0F;
         float f5 = 0.0F;
 
-        if (handleWaterMovement())
+        if(handleWaterMovement())
         {
-            for (int i1 = 0; i1 < 4; i1++)
+            for(int i1 = 0; i1 < 4; i1++)
             {
                 float f6 = 0.25F;
                 worldObj.spawnParticle("bubble", posX - motionX * (double)f6, posY - motionY * (double)f6, posZ - motionZ * (double)f6, motionX, motionY, motionZ);
@@ -403,38 +427,6 @@ public abstract class EntityBullet extends Entity
         motionZ *= f3;
         motionY -= f5;
         setPosition(posX, posY, posZ);
-    }
-
-    protected int checkHeadshot(MovingObjectPosition movingobjectposition, Vec3 vec3d, int i)
-    {
-        float f = 0.0F;
-
-        if ((movingobjectposition.entityHit instanceof EntityPlayer) || (movingobjectposition.entityHit instanceof EntityZombie) || (movingobjectposition.entityHit instanceof EntitySkeleton))
-        {
-            f = 0.25F;
-        }
-        else if (movingobjectposition.entityHit instanceof EntityCreeper)
-        {
-            f = 0.3076923F;
-        }
-        else if (movingobjectposition.entityHit instanceof EntityEnderman)
-        {
-            f = 0.173913F;
-        }
-
-        if (f > 0.0F)
-        {
-            double d = movingobjectposition.entityHit.boundingBox.maxY;
-            double d1 = movingobjectposition.entityHit.boundingBox.minY;
-            double d2 = d - d1;
-
-            if (vec3d.yCoord > d - d2 * (double)f)
-            {
-                i = Math.round((float)i * headshotMultiplier);
-            }
-        }
-
-        return i;
     }
 
     @Override
@@ -462,6 +454,36 @@ public abstract class EntityBullet extends Entity
     {
         return 0.0F;
     }
+    
+	@Override
+	public void writeSpawnData(ByteArrayDataOutput data) 
+	{
+		if(owner == null)
+		{
+			data.writeUTF("null");
+		}
+		else {
+			data.writeUTF(owner.getEntityName());
+		}
+	}
+
+	@Override
+	public void readSpawnData(ByteArrayDataInput data) 
+	{
+		try {
+			String name = data.readUTF();
+			
+			for(Object obj : worldObj.playerEntities)
+			{
+				if(((EntityPlayer)obj).username.equals(name))
+				{
+					owner = (EntityPlayer)obj;
+				}
+			}
+		} catch(Exception e) {
+			setEntityDead();
+		}
+	}
 
     public void setEntityDead()
     {

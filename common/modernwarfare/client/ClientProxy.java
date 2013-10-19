@@ -12,7 +12,7 @@ import modernwarfare.common.EntityBulletFlame;
 import modernwarfare.common.EntityBulletLaser;
 import modernwarfare.common.EntityBulletRocket;
 import modernwarfare.common.EntityBulletRocketLaser;
-import modernwarfare.common.EntityBulletShot;
+import modernwarfare.common.EntityBulletShotgun;
 import modernwarfare.common.EntityGrapplingHook;
 import modernwarfare.common.EntityParachute;
 import modernwarfare.common.EntitySentry;
@@ -53,7 +53,7 @@ public class ClientProxy extends CommonProxy
 	public void loadRenderers()
 	{
         RenderingRegistry.registerEntityRenderingHandler(EntityBullet.class, new RenderBullet());
-        RenderingRegistry.registerEntityRenderingHandler(EntityBulletShot.class, new RenderBulletShot());
+        RenderingRegistry.registerEntityRenderingHandler(EntityBulletShotgun.class, new RenderBulletShotgun());
         RenderingRegistry.registerEntityRenderingHandler(EntityBulletCasing.class, new RenderBulletCasing());
         RenderingRegistry.registerEntityRenderingHandler(EntityBulletCasingShell.class, new RenderBulletCasingShell());
         RenderingRegistry.registerEntityRenderingHandler(EntitySentry.class, new RenderSentry());

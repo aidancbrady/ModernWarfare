@@ -45,6 +45,8 @@ public class EntityBulletFlame extends EntityBullet
     public void onUpdate()
     {
         onEntityUpdate();
+        
+        canRender = true;
 
         if (timeInAir == 30)
         {
@@ -143,8 +145,6 @@ public class EntityBulletFlame extends EntityBullet
                         k = (k * 3) / 2;
                     }
                 }
-
-                k = checkHeadshot(movingobjectposition, vec3d2, k);
 
                 if(movingobjectposition.entityHit instanceof EntityLiving)
                 {
