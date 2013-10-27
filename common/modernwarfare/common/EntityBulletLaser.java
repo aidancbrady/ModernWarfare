@@ -409,8 +409,7 @@ public class EntityBulletLaser extends EntityBullet
                 {
                     byte0 = 4;
                 }
-                else
-                {
+                else {
                     byte0 = 5;
                 }
 
@@ -424,8 +423,7 @@ public class EntityBulletLaser extends EntityBullet
                 {
                     byte0 = 0;
                 }
-                else
-                {
+                else {
                     byte0 = 1;
                 }
 
@@ -433,14 +431,12 @@ public class EntityBulletLaser extends EntityBullet
                 vec3d.yCoord = d1;
                 vec3d.zCoord += d8 * d4;
             }
-            else
-            {
+            else {
                 if (k > j1)
                 {
                     byte0 = 2;
                 }
-                else
-                {
+                else {
                     byte0 = 3;
                 }
 
