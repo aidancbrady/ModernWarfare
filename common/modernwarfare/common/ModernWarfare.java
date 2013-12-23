@@ -832,8 +832,7 @@ public class ModernWarfare
 
                     reload(world, entityplayer);
                     break;
-                }
-                while(k != -1 && (item.getMaxDamage() != 0 || j != item.getItemStackLimit(itemstack)) && (item.getMaxDamage() <= 0 || j != item.getMaxDamage() + 1));
+                }  while(k != -1 && (item.getMaxDamage() != 0 || j != item.getItemStackLimit(itemstack)) && (item.getMaxDamage() <= 0 || j != item.getMaxDamage() + 1));
             }
         }
     }
@@ -843,7 +842,7 @@ public class ModernWarfare
     	MinecraftServer server = FMLCommonHandler.instance().getMinecraftServerInstance();
         ItemStack itemstack = entityplayer.inventory.armorInventory[2];
 
-        if (itemstack != null && itemstack.itemID == itemParachute.itemID)
+        if(itemstack != null && itemstack.itemID == itemParachute.itemID)
         {
             for(Object obj : server.getConfigurationManager().playerEntityList)
             {

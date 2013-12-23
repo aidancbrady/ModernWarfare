@@ -172,9 +172,9 @@ public abstract class EntityLandVehicle extends Entity
 
         if(getSpeed() > 0.0D)
         {
-            double d = getMotionYaw();
-            double d1 = rotationYaw - d;
-            projectMotion(d1);
+            double motionYaw = getMotionYaw();
+            double yawDiff = rotationYaw - motionYaw;
+            projectMotion(yawDiff);
         }
 
         boolean flag = false;
@@ -195,24 +195,24 @@ public abstract class EntityLandVehicle extends Entity
 
                 if(getSpeed() != 0.0D)
                 {
-                    double d4 = 0.0D;
+                    double newMotion = 0.0D;
 
                     if(minecraft.currentScreen == null && Keyboard.isKeyDown(minecraft.gameSettings.keyBindLeft.keyCode))
                     {
-                        d4 = -getTurnSpeed() * (flag1 ? 1 : -1);
+                        newMotion = -getTurnSpeed() * (flag1 ? 1 : -1);
                     }
                     else if(minecraft.currentScreen == null && Keyboard.isKeyDown(minecraft.gameSettings.keyBindRight.keyCode))
                     {
-                        d4 = getTurnSpeed() * (flag1 ? 1 : -1);
+                        newMotion = getTurnSpeed() * (flag1 ? 1 : -1);
                     }
 
-                    if(d4 != 0.0D)
+                    if(newMotion != 0.0D)
                     {
-                        rotationYaw += d4;
-                        projectMotion(d4);
+                        rotationYaw += newMotion;
+                        projectMotion(newMotion);
                     }
 
-                    lastTurnSpeed = d4 * (flag1 ? 1 : -1);
+                    lastTurnSpeed = newMotion * (flag1 ? 1 : -1);
                 }
 
                 double d5 = 0.0D;
@@ -290,7 +290,7 @@ public abstract class EntityLandVehicle extends Entity
             motionY -= 0.001D;
         }
         else {
-            setRotationPitch(Math.max(Math.min((float)((-90D * motionY) / getSpeed()) * (float)i, 90F), -90F) / 2.0F);
+            setRotationPitch(Math.max(Math.min((float)((-90D*motionY)/getSpeed())*(float)i, 90F), -90F) / 2.0F);
             motionY = posY - prevPosY - FALL_SPEED;
         }
 
@@ -413,7 +413,7 @@ public abstract class EntityLandVehicle extends Entity
 
     public double scaleOnSpeed(double d, double d1)
     {
-        return d - (d - d1) * (getSpeed() / MAX_SPEED);
+        return d - (d - d1)*(getSpeed()/MAX_SPEED);
     }
 
     public void handleCollision(Entity entity)
@@ -443,11 +443,11 @@ public abstract class EntityLandVehicle extends Entity
 
     public double getPrevSpeed()
     {
-        return Math.sqrt(prevMotionX * prevMotionX + prevMotionZ * prevMotionZ);
+        return Math.sqrt((prevMotionX*prevMotionX) + (prevMotionZ*prevMotionZ));
     }
 
     public float getTurnSpeedForRender()
     {
-        return (float)(lastTurnSpeed * TURN_SPEED_RENDER_MULT);
+        return (float)(lastTurnSpeed*TURN_SPEED_RENDER_MULT);
     }
 }

@@ -68,11 +68,13 @@ public abstract class ItemGun extends ItemWar
 
             if(entity instanceof EntityPlayer)
             {
-                ammoUsed = WarTools.useItemInInventory((EntityPlayer)entity, requiredBullet.itemID, true);
+            	boolean creative = ((EntityPlayer)entity).capabilities.isCreativeMode;
+                ammoUsed = WarTools.useItemInInventory((EntityPlayer)entity, requiredBullet.itemID, !creative);
             }
-            else if (entity.riddenByEntity != null && (entity.riddenByEntity instanceof EntityPlayer))
+            else if(entity.riddenByEntity != null && (entity.riddenByEntity instanceof EntityPlayer))
             {
-                ammoUsed = WarTools.useItemInInventory((EntityPlayer)entity.riddenByEntity, requiredBullet.itemID, true);
+            	boolean creative = ((EntityPlayer)entity.riddenByEntity).capabilities.isCreativeMode;
+                ammoUsed = WarTools.useItemInInventory((EntityPlayer)entity.riddenByEntity, requiredBullet.itemID, !creative);
             }
             else {
                 ammoUsed = 1;

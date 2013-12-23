@@ -21,24 +21,25 @@ public class Pair
         return right;
     }
 
+    @Override
     public int hashCode()
     {
         return left.hashCode() ^ right.hashCode();
     }
 
+    @Override
     public boolean equals(Object obj)
     {
-        if (obj == null)
+        if(obj == null)
         {
             return false;
         }
 
-        if (!(obj instanceof Pair))
+        if(!(obj instanceof Pair))
         {
             return false;
         }
-        else
-        {
+        else {
             Pair pair = (Pair)obj;
             return left.equals(pair.getLeft()) && right.equals(pair.getRight());
         }

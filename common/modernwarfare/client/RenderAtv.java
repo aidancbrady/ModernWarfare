@@ -20,14 +20,14 @@ public class RenderAtv extends Render
         model = new ModelAtv();
     }
 
-    public void render(EntityAtv entityatv, double d, double d1, double d2, float f, float f1)
+    public void render(EntityAtv entityatv, double x, double y, double z, float f, float partialTick)
     {
         GL11.glPushMatrix();
         bindTexture(getEntityTexture(entityatv));
-        float f2 = entityatv.prevRotationPitch + (entityatv.rotationPitch - entityatv.prevRotationPitch) * f1;
-        GL11.glTranslatef((float)d, (float)d1, (float)d2);
+        float rotation = entityatv.prevRotationPitch + (entityatv.rotationPitch - entityatv.prevRotationPitch) * partialTick;
+        GL11.glTranslatef((float)x, (float)y, (float)z);
         GL11.glRotatef(180F - f, 0.0F, 1.0F, 0.0F);
-        GL11.glRotatef(-f2, 0.0F, 0.0F, 1.0F);
+        GL11.glRotatef(-rotation, 0.0F, 0.0F, 1.0F);
         GL11.glScalef(-1F, -1F, 1.0F);
         GL11.glRotatef(180F, 0.0F, 1.0F, 0.0F);
         GL11.glScalef(1.5F, 1.5F, 1.5F);
@@ -71,9 +71,9 @@ public class RenderAtv extends Render
     }
     
     @Override
-    public void doRender(Entity entity, double d, double d1, double d2, float f, float f1)
+    public void doRender(Entity entity, double x, double y, double z, float f, float partialTick)
     {
-        render((EntityAtv)entity, d, d1, d2, f, f1);
+        render((EntityAtv)entity, x, y, z, f, partialTick);
     }
     
     @Override
